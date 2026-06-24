@@ -1,0 +1,49 @@
+name: flutter_starter_kit
+publish_to: none
+
+environment:
+  sdk: ">=3.12.2 <4.0.0"
+
+workspace:
+  - apps/main
+  - packages/core
+  - packages/core_network
+  - packages/core_storage
+  - packages/core_ui
+  - packages/core_l10n
+  - packages/shared/shared_auth
+  - packages/shared/shared_assessment
+  - packages/features/feature_auth
+  - packages/features/feature_assessment
+  - packages/features/feature_dashboard
+  - packages/features/feature_profile
+  - packages/features/feature_notification
+
+dev_dependencies:
+  melos: ^8.0.0
+
+melos:
+  scripts:
+    analyze:
+      run: melos exec -- dart analyze .
+      description: "Analisis static seluruh workspace"
+
+    format:check:
+      run: melos exec -- dart format --set-exit-if-changed .
+      description: "Cek formatting seluruh workspace"
+
+    format:fix:
+      run: melos exec -- dart format .
+      description: "Auto-fix formatting seluruh workspace"
+
+    test:
+      run: >
+        melos exec
+        --fail-fast
+        --dir-exists=test
+        -- flutter test --coverage
+      description: "Jalankan semua test"
+
+    clean:all:
+      run: melos exec -- flutter clean
+      description: "Clean semua package"

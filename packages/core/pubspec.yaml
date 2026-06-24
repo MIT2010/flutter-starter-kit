@@ -1,0 +1,8 @@
+name: core
+description: "Shared infrastructure: error, env, logger, security, di, utils"
+publish_to: none
+version: 0.0.1
+resolution: workspace
+
+environment:
+  sdk: ">=3.12.2 <4.0.0"

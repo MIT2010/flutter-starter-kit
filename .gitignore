@@ -1,0 +1,42 @@
+# Dart & Flutter
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+pubspec.lock
+
+# Environment — JANGAN pernah commit file ini
+.env
+.env.*
+*.dart-define
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+lcov.info
+
+# Generated files — di-generate ulang dengan build_runner
+*.g.dart
+*.freezed.dart
+*.gen.dart
+
+# Android
+**/android/.gradle/
+**/android/local.properties
+**/android/captures/
+
+# iOS
+**/ios/Pods/
+**/ios/.symlinks/
+
+# Kecualikan lock file milik app — perlu di-commit untuk konsistensi
+!apps/main/pubspec.lock

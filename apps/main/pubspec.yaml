@@ -1,0 +1,24 @@
+name: main_app
+description: "Flutter Starter Kit - Main Application"
+publish_to: none
+version: 1.0.0+1
+resolution: workspace
+
+environment:
+  sdk: ">=3.12.2 <4.0.0"
+  flutter: ">=3.44.3"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  generate: true
