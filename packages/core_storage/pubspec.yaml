@@ -1,8 +1,22 @@
 name: core_storage
-description: "Local storage: Hive dan SecureStorage"
+description: "Local storage: Hive CE untuk cache dan SecureStorage untuk data sensitif"
 publish_to: none
 version: 0.0.1
 resolution: workspace
 
 environment:
   sdk: ">=3.12.2 <4.0.0"
+  flutter: ">=3.44.3"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  core:
+    path: ../core
+  hive_ce_flutter: ^2.3.4
+  flutter_secure_storage: ^10.3.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
