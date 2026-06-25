@@ -23,6 +23,7 @@ dev_dependencies:
 
 melos:
   scripts:
+    # ── Analisis & formatting ──────────────────────────────
     analyze:
       run: melos exec -- dart analyze .
       description: "Analisis static seluruh workspace"
@@ -35,14 +36,72 @@ melos:
       run: melos exec -- dart format .
       description: "Auto-fix formatting seluruh workspace"
 
+    lint:
+      run: |
+        melos run analyze
+        melos run format:check
+      description: "Jalankan analyze + format check sekaligus"
+
+    # ── Testing ───────────────────────────────────────────
     test:
       run: >
         melos exec
         --fail-fast
         --dir-exists=test
         -- flutter test --coverage
-      description: "Jalankan semua test"
+      description: "Jalankan semua test di seluruh workspace"
 
-    clean:all:
+    test:unit:
+      run: >
+        melos exec
+        --dir-exists=test/unit
+        -- flutter test test/unit
+      description: "Jalankan unit test saja"
+
+    test:widget:
+      run: >
+        melos exec
+        --dir-exists=test/widget
+        -- flutter test test/widget
+      description: "Jalankan widget test saja"
+
+    # ── Code generation ───────────────────────────────────
+    gen:
+      run: >
+        melos exec
+        --depends-on="build_runner"
+        -- dart run build_runner build --delete-conflicting-outputs
+      description: "Jalankan build_runner di package yang membutuhkannya"
+
+    gen:watch:
+      run: >
+        melos exec
+        --depends-on="build_runner"
+        -- dart run build_runner watch --delete-conflicting-outputs
+      description: "Watch mode untuk code generation"
+
+    gen:l10n:
+      run: cd apps/main && flutter gen-l10n
+      description: "Generate localization dari ARB files"
+
+    # ── Utilities ─────────────────────────────────────────
+    clean:
       run: melos exec -- flutter clean
       description: "Clean semua package"
+
+    get:
+      run: dart pub get
+      description: "Update semua dependencies"
+
+    upgrade:
+      run: dart pub upgrade
+      description: "Upgrade semua dependencies ke versi terbaru"
+
+    outdated:
+      run: melos exec -- dart pub outdated
+      description: "Cek dependency yang outdated di semua package"
+
+    # ── Feature scaffolding ───────────────────────────────
+    feature:new:
+      run: cd tools/mason && mason make feature_brick
+      description: "Buat fitur baru dengan Mason brick"
