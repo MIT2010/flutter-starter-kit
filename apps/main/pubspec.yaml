@@ -14,6 +14,45 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
+  # Core packages
+  core:
+    path: ../../packages/core
+  core_network:
+    path: ../../packages/core_network
+  core_storage:
+    path: ../../packages/core_storage
+  core_ui:
+    path: ../../packages/core_ui
+
+  # Shared packages
+  shared_auth:
+    path: ../../packages/shared/shared_auth
+  shared_assessment:
+    path: ../../packages/shared/shared_assessment
+
+  # Feature packages
+  feature_auth:
+    path: ../../packages/features/feature_auth
+  feature_assessment:
+    path: ../../packages/features/feature_assessment
+  feature_dashboard:
+    path: ../../packages/features/feature_dashboard
+  feature_profile:
+    path: ../../packages/features/feature_profile
+  feature_notification:
+    path: ../../packages/features/feature_notification
+
+  # Navigation
+  go_router: ^17.3.0
+
+  # State management
+  flutter_bloc: ^9.1.1
+  bloc: ^9.2.1
+
+  # DI
+  get_it: ^9.2.1
+  injectable: ^3.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
