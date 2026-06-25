@@ -1,0 +1,103 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      flavor:
+        description: 'Build flavor'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+
+jobs:
+  build_android:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.3'
+          channel: stable
+          cache: true
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install Melos
+        run: dart pub global activate melos
+
+      - name: Bootstrap workspace
+        run: dart pub get
+
+      - name: Generate l10n
+        run: melos run gen:l10n
+
+      - name: Build APK (staging)
+        run: |
+          cd apps/main
+          flutter build apk \
+            --target lib/main_staging.dart \
+            --dart-define=ENV=staging \
+            --dart-define=BASE_URL=${{ secrets.STAGING_BASE_URL }} \
+            --dart-define=WS_URL=${{ secrets.STAGING_WS_URL }}
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-staging.apk
+          path: apps/main/build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 7
+
+  build_web:
+    name: Build PWA
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.3'
+          channel: stable
+          cache: true
+
+      - name: Install Melos
+        run: dart pub global activate melos
+
+      - name: Bootstrap workspace
+        run: dart pub get
+
+      - name: Generate l10n
+        run: melos run gen:l10n
+
+      - name: Build Web
+        run: |
+          cd apps/main
+          flutter build web \
+            --target lib/main_staging.dart \
+            --dart-define=ENV=staging \
+            --dart-define=BASE_URL=${{ secrets.STAGING_BASE_URL }} \
+            --dart-define=WS_URL=${{ secrets.STAGING_WS_URL }}
+
+      - name: Upload Web build
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: apps/main/build/web/
+          retention-days: 7
