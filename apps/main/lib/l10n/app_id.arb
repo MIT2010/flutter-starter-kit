@@ -82,6 +82,6 @@
   "question": "Pertanyaan",
   "@question": { "description": "Label pertanyaan" },
 
-  "of": "dari",
-  "@of": { "description": "Kata 'dari' untuk progress (contoh: 1 dari 10)" }
+  "ofWord": "dari",
+  "@ofWord": { "description": "Kata dari untuk progress (contoh: 1 dari 10)" }
 }

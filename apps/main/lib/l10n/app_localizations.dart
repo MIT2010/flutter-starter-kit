@@ -260,11 +260,11 @@ abstract class AppLocalizations {
   /// **'Pertanyaan'**
   String get question;
 
-  /// Kata 'dari' untuk progress (contoh: 1 dari 10)
+  /// Kata dari untuk progress (contoh: 1 dari 10)
   ///
   /// In id, this message translates to:
   /// **'dari'**
-  String get of;
+  String get ofWord;
 }
 
 class _AppLocalizationsDelegate

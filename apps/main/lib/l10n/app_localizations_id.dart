@@ -91,5 +91,5 @@ class AppLocalizationsId extends AppLocalizations {
   String get question => 'Pertanyaan';
 
   @override
-  String get of => 'dari';
+  String get ofWord => 'dari';
 }

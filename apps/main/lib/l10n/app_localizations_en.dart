@@ -91,5 +91,5 @@ class AppLocalizationsEn extends AppLocalizations {
   String get question => 'Question';
 
   @override
-  String get of => 'of';
+  String get ofWord => 'of';
 }
