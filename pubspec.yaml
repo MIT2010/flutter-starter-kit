@@ -10,7 +10,6 @@ workspace:
   - packages/core_network
   - packages/core_storage
   - packages/core_ui
-  - packages/core_l10n
   - packages/shared/shared_auth
   - packages/shared/shared_assessment
   - packages/features/feature_auth
