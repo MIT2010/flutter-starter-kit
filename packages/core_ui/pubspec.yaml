@@ -7,3 +7,14 @@ resolution: workspace
 environment:
   sdk: ">=3.12.2 <4.0.0"
   flutter: ">=3.44.3"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  google_fonts: ^8.1.0
+  flutter_screenutil: ^5.9.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
