@@ -1,5 +1,5 @@
 name: feature_assessment
-description: "Feature: Assessment"
+description: "Feature: Assessment — pengerjaan tes psikologi"
 publish_to: none
 version: 0.0.1
 resolution: workspace
@@ -7,3 +7,28 @@ resolution: workspace
 environment:
   sdk: ">=3.12.2 <4.0.0"
   flutter: ">=3.44.3"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  core:
+    path: ../../core
+  core_network:
+    path: ../../core_network
+  core_ui:
+    path: ../../core_ui
+  core_storage:
+    path: ../../core_storage
+  shared_auth:
+    path: ../../shared/shared_auth
+  shared_assessment:
+    path: ../../shared/shared_assessment
+  flutter_bloc: ^9.1.1
+  bloc: ^9.2.1
+  fpdart: ^1.2.0
+  equatable: ^2.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
