@@ -23,6 +23,14 @@ dev_dependencies:
 
 melos:
   scripts:
+    # ── Setup ─────────────────────────────────────────────
+    setup:
+      run: |
+        dart pub get
+        melos run gen:l10n
+        melos run gen
+      description: "Setup awal — install deps, generate l10n dan mock files. Jalankan ini setelah clone repo."
+
     # ── Analisis & formatting ──────────────────────────────
     analyze:
       run: melos exec -- dart analyze .
@@ -70,14 +78,14 @@ melos:
       run: >
         melos exec
         --depends-on="build_runner"
-        -- dart run build_runner build --delete-conflicting-outputs
+        -- dart run build_runner build
       description: "Jalankan build_runner di package yang membutuhkannya"
 
     gen:watch:
       run: >
         melos exec
         --depends-on="build_runner"
-        -- dart run build_runner watch --delete-conflicting-outputs
+        -- dart run build_runner watch
       description: "Watch mode untuk code generation"
 
     gen:l10n:

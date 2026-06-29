@@ -40,3 +40,6 @@ lcov.info
 
 # Kecualikan lock file milik app — perlu di-commit untuk konsistensi
 !apps/main/pubspec.lock
+
+# Generated mock files — di-generate ulang dengan build_runner
+**/*.mocks.dart
