@@ -31,6 +31,105 @@ melos:
         melos run gen
       description: "Setup awal — install deps, generate l10n dan mock files. Jalankan ini setelah clone repo."
 
+    # ── Run app ───────────────────────────────────────────
+    run:dev:
+      run: >
+        cd apps/main &&
+        flutter run
+        --target lib/main.dart
+        --dart-define-from-file=../../config/development.json
+      description: "Jalankan app di mode development"
+
+    run:dev:android:
+      run: >
+        cd apps/main &&
+        flutter run
+        --target lib/main.dart
+        --dart-define-from-file=../../config/development.json
+        -d android
+      description: "Jalankan app di Android (development)"
+
+    run:dev:ios:
+      run: >
+        cd apps/main &&
+        flutter run
+        --target lib/main.dart
+        --dart-define-from-file=../../config/development.json
+        -d ios
+      description: "Jalankan app di iOS (development)"
+
+    run:dev:web:
+      run: >
+        cd apps/main &&
+        flutter run
+        --target lib/main.dart
+        --dart-define-from-file=../../config/development.json
+        -d chrome
+      description: "Jalankan app di Chrome (development)"
+
+    run:staging:
+      run: >
+        cd apps/main &&
+        flutter run
+        --target lib/main_staging.dart
+        --dart-define-from-file=../../config/staging.json
+      description: "Jalankan app di mode staging"
+
+    # ── Build ─────────────────────────────────────────────
+    build:android:staging:
+      run: >
+        cd apps/main &&
+        flutter build apk
+        --target lib/main_staging.dart
+        --dart-define-from-file=../../config/staging.json
+        --release
+      description: "Build Android APK (staging)"
+
+    build:android:prod:
+      run: >
+        cd apps/main &&
+        flutter build apk
+        --target lib/main_production.dart
+        --dart-define-from-file=../../config/production.json
+        --release
+      description: "Build Android APK (production)"
+
+    build:ios:staging:
+      run: >
+        cd apps/main &&
+        flutter build ipa
+        --target lib/main_staging.dart
+        --dart-define-from-file=../../config/staging.json
+        --release
+      description: "Build iOS IPA (staging)"
+
+    build:ios:prod:
+      run: >
+        cd apps/main &&
+        flutter build ipa
+        --target lib/main_production.dart
+        --dart-define-from-file=../../config/production.json
+        --release
+      description: "Build iOS IPA (production)"
+
+    build:web:staging:
+      run: >
+        cd apps/main &&
+        flutter build web
+        --target lib/main_staging.dart
+        --dart-define-from-file=../../config/staging.json
+        --release
+      description: "Build PWA (staging)"
+
+    build:web:prod:
+      run: >
+        cd apps/main &&
+        flutter build web
+        --target lib/main_production.dart
+        --dart-define-from-file=../../config/production.json
+        --release
+      description: "Build PWA (production)"
+
     # ── Analisis & formatting ──────────────────────────────
     analyze:
       run: melos exec -- dart analyze .

@@ -43,3 +43,7 @@ lcov.info
 
 # Generated mock files — di-generate ulang dengan build_runner
 **/*.mocks.dart
+
+# Config files — berisi data sensitif, JANGAN commit
+config/staging.json
+config/production.json
