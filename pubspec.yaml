@@ -54,17 +54,9 @@ melos:
     test:
       run: >
         melos exec
-        --fail-fast
-        --dir-exists=test
-        -- flutter test --coverage
-      description: "Jalankan semua test di seluruh workspace"
-
-    test:unit:
-      run: >
-        melos exec
         --dir-exists=test/unit
-        -- flutter test test/unit
-      description: "Jalankan unit test saja"
+        -- flutter test test/unit --coverage
+      description: "Jalankan semua unit test di seluruh workspace"
 
     test:widget:
       run: >
