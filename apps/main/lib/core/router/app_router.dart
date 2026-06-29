@@ -23,10 +23,8 @@ class AppRouter {
     routes: [
       GoRoute(
         path: LoginPage.routePath,
-        builder: (context, state) => BlocProvider.value(
-          value: _authBloc,
-          child: const LoginPage(),
-        ),
+        builder: (context, state) =>
+            BlocProvider.value(value: _authBloc, child: const LoginPage()),
       ),
       GoRoute(
         path: '/home',
@@ -35,7 +33,7 @@ class AppRouter {
     ],
   );
 
-  static String? _authGuard(context, state) {
+  static String? _authGuard(BuildContext context, GoRouterState state) {
     final authState = _authBloc.state;
     final isOnLogin = state.matchedLocation == LoginPage.routePath;
 
