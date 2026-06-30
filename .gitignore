@@ -48,3 +48,8 @@ lcov.info
 config/development.json
 config/staging.json
 config/production.json
+
+# Obfuscation symbols — JANGAN dihapus atau di-commit ke git biasa
+# Simpan di tempat aman terpisah (misal: secrets manager, S3 private bucket)
+# Dibutuhkan untuk de-obfuscate crash report production
+build/symbols/

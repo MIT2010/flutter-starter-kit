@@ -75,7 +75,7 @@ melos:
         --dart-define-from-file=../../config/staging.json
       description: "Jalankan app di mode staging"
 
-    # ── Build ─────────────────────────────────────────────
+    # ── Build (staging — tanpa obfuscation, untuk testing) ──
     build:android:staging:
       run: >
         cd apps/main &&
@@ -83,16 +83,7 @@ melos:
         --target lib/main_staging.dart
         --dart-define-from-file=../../config/staging.json
         --release
-      description: "Build Android APK (staging)"
-
-    build:android:prod:
-      run: >
-        cd apps/main &&
-        flutter build apk
-        --target lib/main_production.dart
-        --dart-define-from-file=../../config/production.json
-        --release
-      description: "Build Android APK (production)"
+      description: "Build Android APK (staging, tanpa obfuscation)"
 
     build:ios:staging:
       run: >
@@ -101,16 +92,7 @@ melos:
         --target lib/main_staging.dart
         --dart-define-from-file=../../config/staging.json
         --release
-      description: "Build iOS IPA (staging)"
-
-    build:ios:prod:
-      run: >
-        cd apps/main &&
-        flutter build ipa
-        --target lib/main_production.dart
-        --dart-define-from-file=../../config/production.json
-        --release
-      description: "Build iOS IPA (production)"
+      description: "Build iOS IPA (staging, tanpa obfuscation)"
 
     build:web:staging:
       run: >
@@ -121,6 +103,29 @@ melos:
         --release
       description: "Build PWA (staging)"
 
+    # ── Build (production — DENGAN obfuscation) ──────────────
+    build:android:prod:
+      run: >
+        cd apps/main &&
+        flutter build apk
+        --target lib/main_production.dart
+        --dart-define-from-file=../../config/production.json
+        --release
+        --obfuscate
+        --split-debug-info=build/symbols/android
+      description: "Build Android APK (production, dengan obfuscation)"
+
+    build:ios:prod:
+      run: >
+        cd apps/main &&
+        flutter build ipa
+        --target lib/main_production.dart
+        --dart-define-from-file=../../config/production.json
+        --release
+        --obfuscate
+        --split-debug-info=build/symbols/ios
+      description: "Build iOS IPA (production, dengan obfuscation)"
+
     build:web:prod:
       run: >
         cd apps/main &&
@@ -128,7 +133,7 @@ melos:
         --target lib/main_production.dart
         --dart-define-from-file=../../config/production.json
         --release
-      description: "Build PWA (production)"
+      description: "Build PWA (production) — obfuscation tidak didukung untuk Web"
 
     # ── Analisis & formatting ──────────────────────────────
     analyze:
@@ -197,7 +202,7 @@ melos:
       description: "Update semua dependencies"
 
     upgrade:
-      run: dart pub upgrade --major-versions
+      run: dart pub upgrade
       description: "Upgrade semua dependencies ke versi terbaru"
 
     outdated:
