@@ -1,3 +1,5 @@
 library feature_assessment;
 
-// Barrel export — akan diisi saat implementasi
+// Queue
+export 'src/queue/answer_queue_handler.dart';
+export 'src/queue/answer_submission_service.dart';
