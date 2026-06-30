@@ -45,5 +45,6 @@ lcov.info
 **/*.mocks.dart
 
 # Config files — berisi data sensitif, JANGAN commit
+config/development.json
 config/staging.json
 config/production.json

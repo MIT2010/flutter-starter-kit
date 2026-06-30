@@ -1,3 +1,5 @@
 bricks:
   feature_brick:
     path: bricks/feature_brick
+  test_brick:
+    path: bricks/test_brick

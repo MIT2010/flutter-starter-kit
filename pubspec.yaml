@@ -164,6 +164,10 @@ melos:
         -- flutter test test/widget
       description: "Jalankan widget test saja"
 
+    test:generate:
+      run: bash tools/scripts/generate_test.sh
+      description: "Generate unit test untuk feature. Usage: melos run test:generate -- product"
+
     # ── Code generation ───────────────────────────────────
     gen:
       run: >
