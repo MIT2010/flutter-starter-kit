@@ -10,3 +10,8 @@ export 'src/network_info.dart';
 
 // WebSocket
 export 'src/websocket/reverb_manager.dart';
+
+// Security
+export 'src/security/certificate_pinning_interceptor.dart';
+export 'src/security/device_security_service.dart';
+export 'src/security/security_interceptor.dart';

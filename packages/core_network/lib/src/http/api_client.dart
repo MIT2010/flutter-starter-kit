@@ -5,16 +5,25 @@ import 'interceptors/error_interceptor.dart';
 import 'interceptors/logging_interceptor.dart';
 import '../models/api_response.dart';
 import '../models/response_parser.dart';
+import '../security/security_interceptor.dart';
 
 /// HTTP client terpusat berbasis Dio.
 /// Di-setup sekali di bootstrap, diakses via DI.
 class ApiClient {
-  ApiClient({required Future<String?> Function() getAccessToken})
-      : _dio = _createDio(getAccessToken);
+  ApiClient({
+    required Future<String?> Function() getAccessToken,
+    bool enableSecurityCheck = true,
+  }) : _dio = _createDio(
+          getAccessToken: getAccessToken,
+          enableSecurityCheck: enableSecurityCheck,
+        );
 
   final Dio _dio;
 
-  static Dio _createDio(Future<String?> Function() getAccessToken) {
+  static Dio _createDio({
+    required Future<String?> Function() getAccessToken,
+    required bool enableSecurityCheck,
+  }) {
     final dio = Dio(
       BaseOptions(
         baseUrl: AppEnv.baseUrl,
@@ -28,15 +37,23 @@ class ApiClient {
     );
 
     dio.interceptors.addAll([
+      // Security check — dijalankan pertama sebelum request apapun
+      if (enableSecurityCheck)
+        SecurityInterceptor(),
+
+      // Auth — attach token
       AuthInterceptor(getAccessToken: getAccessToken),
+
+      // Error mapping
       ErrorInterceptor(),
+
+      // Logging — hanya di development
       LoggingInterceptor(),
     ]);
 
     return dio;
   }
 
-  /// GET request — otomatis parse response ke ApiResponse<T>
   Future<ApiResponse<T>> get<T>(
     String path, {
     Map<String, dynamic>? queryParameters,
@@ -51,7 +68,6 @@ class ApiClient {
     return ResponseParser.parse<T>(response.data!, fromData);
   }
 
-  /// POST request
   Future<ApiResponse<T>> post<T>(
     String path, {
     dynamic data,
@@ -66,7 +82,6 @@ class ApiClient {
     return ResponseParser.parse<T>(response.data!, fromData);
   }
 
-  /// PUT request
   Future<ApiResponse<T>> put<T>(
     String path, {
     dynamic data,
@@ -81,7 +96,6 @@ class ApiClient {
     return ResponseParser.parse<T>(response.data!, fromData);
   }
 
-  /// PATCH request
   Future<ApiResponse<T>> patch<T>(
     String path, {
     dynamic data,
@@ -96,7 +110,6 @@ class ApiClient {
     return ResponseParser.parse<T>(response.data!, fromData);
   }
 
-  /// DELETE request
   Future<ApiResponse<T>> delete<T>(
     String path, {
     dynamic data,

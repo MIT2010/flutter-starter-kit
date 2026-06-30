@@ -197,7 +197,7 @@ melos:
       description: "Update semua dependencies"
 
     upgrade:
-      run: dart pub upgrade
+      run: dart pub upgrade --major-versions
       description: "Upgrade semua dependencies ke versi terbaru"
 
     outdated:
