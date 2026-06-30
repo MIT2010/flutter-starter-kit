@@ -2,6 +2,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:core/core.dart';
 import 'package:core_network/core_network.dart';
 import 'package:core_storage/core_storage.dart';
+import 'package:feature_assessment/feature_assessment.dart';
 import 'package:feature_auth/feature_auth.dart';
 
 Future<void> configureDependencies() async {
@@ -24,11 +25,44 @@ Future<void> configureDependencies() async {
 
   // Network
   getIt.registerSingleton<Connectivity>(Connectivity());
-
   getIt.registerSingleton<NetworkInfo>(NetworkInfoImpl(getIt<Connectivity>()));
 
   getIt.registerSingleton<ApiClient>(
     ApiClient(getAccessToken: () => sessionManager.getAccessToken()),
+  );
+
+  // ── Offline Queue ─────────────────────────────────────────
+
+  // Assessment queue — retry SELAMANYA, data tidak boleh hilang
+  final assessmentQueueManager = QueueSyncManager(
+    storage: QueueStorage('queue_assessment_answers'),
+    networkInfo: getIt<NetworkInfo>(),
+    retryPolicy: const RetryPolicy.unlimited(),
+  );
+  assessmentQueueManager.registerHandler(
+    AnswerQueueHandler(getIt<ApiClient>()),
+  );
+  assessmentQueueManager.startAutoSync();
+  getIt.registerSingleton<QueueSyncManager>(
+    assessmentQueueManager,
+    instanceName: 'assessmentQueue',
+  );
+
+  // Generic queue — retry maksimal 5x, untuk operasi non-kritis
+  final genericQueueManager = QueueSyncManager(
+    storage: QueueStorage('queue_generic_mutations'),
+    networkInfo: getIt<NetworkInfo>(),
+    retryPolicy: const RetryPolicy.limited(maxAttempts: 5),
+  );
+  genericQueueManager.startAutoSync();
+  getIt.registerSingleton<QueueSyncManager>(
+    genericQueueManager,
+    instanceName: 'genericQueue',
+  );
+
+  // Answer submission service — pakai assessment queue
+  getIt.registerSingleton<AnswerSubmissionService>(
+    AnswerSubmissionService(assessmentQueueManager),
   );
 
   // ── Feature Auth ──────────────────────────────────────────
