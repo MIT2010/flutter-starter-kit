@@ -15,3 +15,8 @@ export 'src/websocket/reverb_manager.dart';
 export 'src/security/certificate_pinning_interceptor.dart';
 export 'src/security/device_security_service.dart';
 export 'src/security/security_interceptor.dart';
+
+// Queue
+export 'src/queue/queue_handler.dart';
+export 'src/queue/queue_sync_manager.dart';
+export 'src/queue/retry_policy.dart';

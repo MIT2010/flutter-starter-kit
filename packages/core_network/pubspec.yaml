@@ -1,5 +1,5 @@
 name: core_network
-description: "HTTP client, interceptors, WebSocket manager, dan security layer"
+description: "HTTP client, interceptors, WebSocket manager, security, dan offline queue"
 publish_to: none
 version: 0.0.1
 resolution: workspace
@@ -13,6 +13,8 @@ dependencies:
     sdk: flutter
   core:
     path: ../core
+  core_storage:
+    path: ../core_storage
   dio: ^5.9.2
   connectivity_plus: ^7.1.1
   dart_pusher_channels: ^1.3.1
