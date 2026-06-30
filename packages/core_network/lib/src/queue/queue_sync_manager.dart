@@ -8,7 +8,7 @@ import 'retry_policy.dart';
 /// Orchestrator untuk offline queue.
 ///
 /// Tanggung jawab:
-/// - Listen perubahan koneksi
+/// - Listen perubahan koneksi secara OTOMATIS
 /// - Proses item queue secara PARALEL saat online
 /// - Terapkan retry policy (unlimited / limited)
 /// - Pindahkan item ke failed status jika limit tercapai
@@ -31,13 +31,36 @@ class QueueSyncManager {
 
   final Map<String, QueueHandler> _handlers = {};
 
+  StreamSubscription<bool>? _connectivitySubscription;
   bool _isSyncing = false;
+  bool _wasOffline = false;
 
   /// Daftarkan handler untuk tipe data tertentu.
   /// Panggil ini saat bootstrap untuk setiap fitur yang pakai queue.
   void registerHandler(QueueHandler handler) {
     _handlers[handler.type] = handler;
     AppLogger.debug('[Queue] Handler registered: ${handler.type}');
+  }
+
+  /// Mulai listen perubahan koneksi — panggil sekali saat bootstrap.
+  /// Saat koneksi berubah dari offline → online, otomatis trigger sync.
+  void startAutoSync() {
+    _connectivitySubscription?.cancel();
+    _connectivitySubscription = _networkInfo.onConnectivityChanged.listen(
+      (isOnline) {
+        if (isOnline && _wasOffline) {
+          AppLogger.info('[Queue] Connection restored, auto-syncing...');
+          syncAll();
+        }
+        _wasOffline = !isOnline;
+      },
+    );
+    AppLogger.debug('[Queue] Auto-sync listener started');
+  }
+
+  void stopAutoSync() {
+    _connectivitySubscription?.cancel();
+    _connectivitySubscription = null;
   }
 
   /// Tambahkan item baru ke queue.
@@ -51,7 +74,6 @@ class QueueSyncManager {
       return;
     }
 
-    // Online — coba kirim langsung
     final success = await _tryHandle(item);
     if (!success) {
       await _storage.save(item);
@@ -86,7 +108,6 @@ class QueueSyncManager {
 
       AppLogger.info('[Queue] Syncing ${pending.length} items in parallel');
 
-      // Kirim semua item secara PARALEL — sesuai keputusan desain
       await Future.wait(
         pending.map((item) => _processItem(item)),
       );
@@ -110,7 +131,6 @@ class QueueSyncManager {
       return;
     }
 
-    // Gagal — cek retry policy
     final newRetryCount = item.retryCount + 1;
 
     if (_retryPolicy.shouldRetry(newRetryCount)) {
@@ -152,7 +172,6 @@ class QueueSyncManager {
   }
 
   /// Retry manual item yang sudah failed — dipanggil dari UI
-  /// saat user pilih "coba lagi" di failed queue
   Future<void> retryFailed(String itemId) async {
     final all = await _storage.getAll();
     final item = all.where((i) => i.id == itemId).firstOrNull;
@@ -175,4 +194,8 @@ class QueueSyncManager {
   /// Daftar item yang gagal permanen — untuk ditampilkan di UI
   Future<List<QueueItem>> get failedItems =>
       _storage.getByStatus(QueueItemStatus.failed);
+
+  void dispose() {
+    stopAutoSync();
+  }
 }

@@ -3,6 +3,10 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 /// Cek status koneksi internet.
 abstract class NetworkInfo {
   Future<bool> get isConnected;
+
+  /// Stream perubahan status koneksi — true = online, false = offline
+  /// Dipakai QueueSyncManager untuk trigger sync otomatis.
+  Stream<bool> get onConnectivityChanged;
 }
 
 class NetworkInfoImpl implements NetworkInfo {
@@ -14,5 +18,12 @@ class NetworkInfoImpl implements NetworkInfo {
   Future<bool> get isConnected async {
     final result = await _connectivity.checkConnectivity();
     return !result.contains(ConnectivityResult.none);
+  }
+
+  @override
+  Stream<bool> get onConnectivityChanged {
+    return _connectivity.onConnectivityChanged.map(
+      (results) => !results.contains(ConnectivityResult.none),
+    );
   }
 }
