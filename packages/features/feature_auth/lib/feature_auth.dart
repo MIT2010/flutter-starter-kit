@@ -1,4 +1,4 @@
-library feature_auth;
+library;
 
 // Domain
 export 'src/domain/entities/otp_entity.dart';

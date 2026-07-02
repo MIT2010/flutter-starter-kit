@@ -18,12 +18,10 @@ import 'retry_policy.dart';
 /// untuk tipe data yang dimilikinya.
 class QueueSyncManager {
   QueueSyncManager({
-    required QueueStorage storage,
-    required NetworkInfo networkInfo,
-    required RetryPolicy retryPolicy,
-  })  : _storage = storage,
-        _networkInfo = networkInfo,
-        _retryPolicy = retryPolicy;
+    required this._storage,
+    required this._networkInfo,
+    required this._retryPolicy,
+  });
 
   final QueueStorage _storage;
   final NetworkInfo _networkInfo;
@@ -47,15 +45,15 @@ class QueueSyncManager {
   /// Saat koneksi berubah dari offline → online, otomatis trigger sync.
   void startAutoSync() {
     _connectivitySubscription?.cancel();
-    _connectivitySubscription = _networkInfo.onConnectivityChanged.listen(
-      (isOnline) {
-        if (isOnline && _wasOffline) {
-          AppLogger.info('[Queue] Connection restored, auto-syncing...');
-          syncAll();
-        }
-        _wasOffline = !isOnline;
-      },
-    );
+    _connectivitySubscription = _networkInfo.onConnectivityChanged.listen((
+      isOnline,
+    ) {
+      if (isOnline && _wasOffline) {
+        AppLogger.info('[Queue] Connection restored, auto-syncing...');
+        syncAll();
+      }
+      _wasOffline = !isOnline;
+    });
     AppLogger.debug('[Queue] Auto-sync listener started');
   }
 
@@ -126,9 +124,7 @@ class QueueSyncManager {
         AppLogger.debug('[Queue] All pending items still in backoff window');
       } else {
         AppLogger.info('[Queue] Syncing ${ready.length} items in parallel');
-        await Future.wait(
-          ready.map((item) => _processItem(item)),
-        );
+        await Future.wait(ready.map((item) => _processItem(item)));
       }
 
       if (nextRetryIn != null) {
@@ -146,8 +142,7 @@ class QueueSyncManager {
       return Duration.zero;
     }
     final delay = _retryPolicy.delayForAttempt(item.retryCount);
-    final remaining =
-        item.lastAttemptAt!.add(delay).difference(DateTime.now());
+    final remaining = item.lastAttemptAt!.add(delay).difference(DateTime.now());
     return remaining.isNegative ? Duration.zero : remaining;
   }
 

@@ -15,6 +15,7 @@ dependencies:
     path: ../core
   hive_ce_flutter: ^2.3.4
   flutter_secure_storage: ^10.3.1
+  equatable: ^2.0.8
 
 dev_dependencies:
   flutter_test:

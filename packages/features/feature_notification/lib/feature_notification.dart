@@ -1,3 +1,3 @@
-library feature_notification;
+library;
 
 // Barrel export — akan diisi saat implementasi

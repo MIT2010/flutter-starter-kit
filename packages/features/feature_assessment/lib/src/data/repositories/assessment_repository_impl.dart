@@ -13,10 +13,9 @@ class AssessmentRepositoryImpl implements AssessmentRepository {
   const AssessmentRepositoryImpl({
     required AssessmentRemoteDataSource remoteDataSource,
     required AssessmentLocalDataSource localDataSource,
-    required NetworkInfo networkInfo,
+    required this._networkInfo,
   }) : _remote = remoteDataSource,
-       _local = localDataSource,
-       _networkInfo = networkInfo;
+       _local = localDataSource;
 
   final AssessmentRemoteDataSource _remote;
   final AssessmentLocalDataSource _local;

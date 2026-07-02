@@ -13,10 +13,9 @@ class AuthRepositoryImpl implements AuthRepository {
   const AuthRepositoryImpl({
     required AuthRemoteDataSource remoteDataSource,
     required AuthLocalDataSource localDataSource,
-    required NetworkInfo networkInfo,
-  })  : _remote = remoteDataSource,
-        _local = localDataSource,
-        _networkInfo = networkInfo;
+    required this._networkInfo,
+  }) : _remote = remoteDataSource,
+       _local = localDataSource;
 
   final AuthRemoteDataSource _remote;
   final AuthLocalDataSource _local;

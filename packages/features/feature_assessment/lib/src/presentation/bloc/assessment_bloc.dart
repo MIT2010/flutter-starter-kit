@@ -14,19 +14,13 @@ part 'assessment_state.dart';
 
 class AssessmentBloc extends Bloc<AssessmentEvent, AssessmentState> {
   AssessmentBloc({
-    required GetAssessmentUseCase getAssessment,
-    required StartAssessmentSessionUseCase startSession,
-    required GetActiveSessionUseCase getActiveSession,
-    required SaveSessionProgressUseCase saveProgress,
-    required SubmitAnswerUseCase submitAnswer,
-    required CompleteAssessmentSessionUseCase completeSession,
-  }) : _getAssessment = getAssessment,
-       _startSession = startSession,
-       _getActiveSession = getActiveSession,
-       _saveProgress = saveProgress,
-       _submitAnswer = submitAnswer,
-       _completeSession = completeSession,
-       super(AssessmentLoading()) {
+    required this._getAssessment,
+    required this._startSession,
+    required this._getActiveSession,
+    required this._saveProgress,
+    required this._submitAnswer,
+    required this._completeSession,
+  }) : super(AssessmentLoading()) {
     on<AssessmentLoadRequested>(_onLoadRequested);
     on<AssessmentStartRequested>(_onStartRequested);
     on<AssessmentAnswerSubmitted>(_onAnswerSubmitted);

@@ -1,4 +1,4 @@
-library shared_assessment;
+library;
 
 // Enums
 export 'src/enums/assessment_enums.dart';

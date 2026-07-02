@@ -1,4 +1,4 @@
-library core_storage;
+library;
 
 export 'src/app_storage.dart';
 export 'src/hive_storage.dart';

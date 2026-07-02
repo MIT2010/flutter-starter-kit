@@ -4,7 +4,7 @@ import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 /// Digunakan untuk cache data yang tidak sensitif.
 ///
 /// Contoh penggunaan:
-///   final storage = HiveStorage<String>('user_cache');
+///   final storage = `HiveStorage<String>`('user_cache');
 ///   await storage.put('name', 'Budi');
 ///   final name = await storage.get('name');
 class HiveStorage<T> {

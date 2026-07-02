@@ -1,4 +1,4 @@
-library shared_auth;
+library;
 
 // Entities
 export 'src/entities/auth_token_entity.dart';

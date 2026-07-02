@@ -1,4 +1,4 @@
-library core_network;
+library;
 
 // HTTP
 export 'src/http/api_client.dart';

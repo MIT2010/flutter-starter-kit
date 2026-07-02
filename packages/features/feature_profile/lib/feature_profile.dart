@@ -1,3 +1,3 @@
-library feature_profile;
+library;
 
 // Barrel export — akan diisi saat implementasi

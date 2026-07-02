@@ -1,3 +1,3 @@
-library feature_dashboard;
+library;
 
 // Barrel export — akan diisi saat implementasi

@@ -1,4 +1,4 @@
-library feature_assessment;
+library;
 
 // Domain
 export 'src/domain/repositories/assessment_repository.dart';

@@ -1,3 +1,3 @@
-library core_l10n;
+library;
 
 export 'src/generated/strings.g.dart';

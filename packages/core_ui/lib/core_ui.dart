@@ -1,4 +1,4 @@
-library core_ui;
+library;
 
 // Tokens
 export 'src/tokens/app_colors.dart';

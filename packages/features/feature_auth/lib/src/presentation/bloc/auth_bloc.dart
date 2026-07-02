@@ -14,19 +14,13 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc({
-    required LoginWithEmailPasswordUseCase loginWithEmailPassword,
-    required RequestOtpUseCase requestOtp,
-    required VerifyOtpUseCase verifyOtp,
-    required LogoutUseCase logout,
-    required GetCurrentUserUseCase getCurrentUser,
-    required SessionManagerImpl sessionManager,
-  })  : _loginWithEmailPassword = loginWithEmailPassword,
-        _requestOtp = requestOtp,
-        _verifyOtp = verifyOtp,
-        _logout = logout,
-        _getCurrentUser = getCurrentUser,
-        _sessionManager = sessionManager,
-        super(AuthChecking()) {
+    required this._loginWithEmailPassword,
+    required this._requestOtp,
+    required this._verifyOtp,
+    required this._logout,
+    required this._getCurrentUser,
+    required this._sessionManager,
+  }) : super(AuthChecking()) {
     on<AuthCheckStatusEvent>(_onCheckStatus);
     on<AuthLoginWithEmailPasswordEvent>(_onLoginWithEmailPassword);
     on<AuthRequestOtpEvent>(_onRequestOtp);
@@ -51,12 +45,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (_sessionManager.currentStatus == AuthStatus.authenticated) {
       // Ambil data user terbaru dari API
       final result = await _getCurrentUser();
-      result.fold(
-        (failure) => emit(AuthUnauthenticated()),
-        (user) {
-          emit(AuthAuthenticated(user));
-        },
-      );
+      result.fold((failure) => emit(AuthUnauthenticated()), (user) {
+        emit(AuthAuthenticated(user));
+      });
     } else {
       emit(AuthUnauthenticated());
     }
@@ -104,33 +95,26 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(AuthLoading());
     final result = await _verifyOtp(
-      VerifyOtpParams(
-        destination: event.destination,
-        code: event.code,
-      ),
+      VerifyOtpParams(destination: event.destination, code: event.code),
     );
 
-    await result.fold(
-      (failure) async => emit(AuthError(failure.message)),
-      (token) async {
-        // Setelah OTP verified, ambil data user
-        final userResult = await _getCurrentUser();
-        await userResult.fold(
-          (failure) async => emit(AuthError(failure.message)),
-          (user) async {
-            await _sessionManager.saveSession(token: token, user: user);
-            emit(AuthAuthenticated(user));
-          },
-        );
-      },
-    );
+    await result.fold((failure) async => emit(AuthError(failure.message)), (
+      token,
+    ) async {
+      // Setelah OTP verified, ambil data user
+      final userResult = await _getCurrentUser();
+      await userResult.fold(
+        (failure) async => emit(AuthError(failure.message)),
+        (user) async {
+          await _sessionManager.saveSession(token: token, user: user);
+          emit(AuthAuthenticated(user));
+        },
+      );
+    });
   }
 
   /// Logout
-  Future<void> _onLogout(
-    AuthLogoutEvent event,
-    Emitter<AuthState> emit,
-  ) async {
+  Future<void> _onLogout(AuthLogoutEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
     await _logout();
     await _sessionManager.clearSession();

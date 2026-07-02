@@ -23,16 +23,12 @@ class ReverbEvent {
 /// dan listen event masing-masing tanpa perlu tahu detail koneksi.
 class ReverbManager {
   ReverbManager({
-    required String host,
-    required int port,
-    required String appKey,
-    required Future<String?> Function() getAccessToken,
-    required String authEndpoint,
-  }) : _host = host,
-       _port = port,
-       _appKey = appKey,
-       _getAccessToken = getAccessToken,
-       _authEndpoint = authEndpoint;
+    required this._host,
+    required this._port,
+    required this._appKey,
+    required this._getAccessToken,
+    required this._authEndpoint,
+  });
 
   final String _host;
   final int _port;
