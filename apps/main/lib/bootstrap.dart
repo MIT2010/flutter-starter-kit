@@ -6,6 +6,7 @@ import 'package:core_network/core_network.dart';
 import 'package:core_storage/core_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'core/di/injection.dart';
 import 'core/observer/app_bloc_observer.dart';
 import 'app.dart';
@@ -37,14 +38,30 @@ Future<void> bootstrap({AppFlavor flavor = AppFlavor.development}) async {
   // 6. Localization — deteksi locale device, load terjemahan yang aktif
   await LocaleSettings.useDeviceLocale();
 
-  // 7. Tangkap Flutter errors
-  FlutterError.onError = (details) {
-    AppLogger.error(
-      'Flutter error',
-      details.exception,
-      details.stack,
-    );
-  };
+  // 7. Crash reporting — hanya aktif kalau SENTRY_DSN diisi (lihat
+  // config/*.json). Tanpa DSN, error tetap dicatat lokal lewat AppLogger,
+  // sama seperti sebelumnya.
+  if (AppEnv.hasSentry) {
+    AppLogger.registerErrorReporter((error, stackTrace) {
+      Sentry.captureException(error, stackTrace: stackTrace);
+    });
 
-  runApp(TranslationProvider(child: const App()));
+    await SentryFlutter.init(
+      (options) {
+        options.dsn = AppEnv.sentryDsn;
+        options.environment = AppEnv.environment;
+        options.tracesSampleRate = flavor.isProduction ? 0.2 : 1.0;
+      },
+      appRunner: () => runApp(TranslationProvider(child: const App())),
+    );
+  } else {
+    FlutterError.onError = (details) {
+      AppLogger.error(
+        'Flutter error',
+        details.exception,
+        details.stack,
+      );
+    };
+    runApp(TranslationProvider(child: const App()));
+  }
 }

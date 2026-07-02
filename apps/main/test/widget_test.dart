@@ -1,30 +1,60 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
+import 'package:core_l10n/core_l10n.dart';
+import 'package:feature_auth/feature_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
 
-import 'package:main_app/app.dart';
+import 'widget_test.mocks.dart';
 
+@GenerateMocks([
+  LoginWithEmailPasswordUseCase,
+  RequestOtpUseCase,
+  VerifyOtpUseCase,
+  LogoutUseCase,
+  GetCurrentUserUseCase,
+  SessionManagerImpl,
+])
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const App());
+  testWidgets(
+    'LoginPage menampilkan form email/password saat pertama dibuka',
+    (tester) async {
+      final authBloc = AuthBloc(
+        loginWithEmailPassword: MockLoginWithEmailPasswordUseCase(),
+        requestOtp: MockRequestOtpUseCase(),
+        verifyOtp: MockVerifyOtpUseCase(),
+        logout: MockLogoutUseCase(),
+        getCurrentUser: MockGetCurrentUserUseCase(),
+        sessionManager: MockSessionManagerImpl(),
+      );
+      addTearDown(authBloc.close);
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+      await tester.pumpWidget(
+        TranslationProvider(
+          child: MaterialApp(
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: AppLocaleUtils.supportedLocales,
+            home: BlocProvider.value(
+              value: authBloc,
+              child: const LoginPage(),
+            ),
+          ),
+        ),
+      );
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
-  });
+      // State awal AuthBloc adalah AuthChecking, yang oleh LoginPage
+      // dirender sebagai EmailPasswordForm (Pola B) tanpa perlu
+      // menunggu event apa pun.
+      expect(find.text(t.auth.welcomeBack), findsOneWidget);
+      expect(find.text(t.auth.loginSubtitle), findsOneWidget);
+      expect(find.text(t.auth.email), findsOneWidget);
+      expect(find.text(t.auth.password), findsOneWidget);
+      expect(find.text(t.auth.login), findsOneWidget);
+    },
+  );
 }

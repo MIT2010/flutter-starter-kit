@@ -6,6 +6,7 @@ class AppLogger {
   AppLogger._();
 
   static late final Talker _talker;
+  static void Function(dynamic error, StackTrace? stackTrace)? _errorReporter;
 
   static void init({bool verbose = false}) {
     _talker = TalkerFlutter.init(
@@ -17,6 +18,16 @@ class AppLogger {
     );
   }
 
+  /// Daftarkan sink error eksternal (mis. Sentry) — dipanggil setiap kali
+  /// [error] atau [critical] dipakai. core sengaja tidak punya dependency
+  /// langsung ke provider crash-reporting manapun; wiring-nya dilakukan
+  /// di app layer (lihat apps/main/lib/bootstrap.dart).
+  static void registerErrorReporter(
+    void Function(dynamic error, StackTrace? stackTrace) reporter,
+  ) {
+    _errorReporter = reporter;
+  }
+
   static void debug(dynamic message, [Object? error, StackTrace? stackTrace]) =>
       _talker.debug(message, error, stackTrace);
 
@@ -26,11 +37,15 @@ class AppLogger {
   static void warning(dynamic message, [Object? error, StackTrace? stackTrace]) =>
       _talker.warning(message, error, stackTrace);
 
-  static void error(dynamic message, [Object? error, StackTrace? stackTrace]) =>
-      _talker.error(message, error, stackTrace);
+  static void error(dynamic message, [Object? error, StackTrace? stackTrace]) {
+    _talker.error(message, error, stackTrace);
+    _errorReporter?.call(error ?? message, stackTrace);
+  }
 
-  static void critical(dynamic message, [Object? error, StackTrace? stackTrace]) =>
-      _talker.critical(message, error, stackTrace);
+  static void critical(dynamic message, [Object? error, StackTrace? stackTrace]) {
+    _talker.critical(message, error, stackTrace);
+    _errorReporter?.call(error ?? message, stackTrace);
+  }
 
   /// Akses langsung ke instance Talker
   /// Dipakai untuk integrasi dengan Dio, BLoC observer, dst.
