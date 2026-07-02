@@ -19,7 +19,7 @@ class {{name.pascalCase()}}RemoteDataSourceImpl implements {{name.pascalCase()}}
     );
 
     if (!response.isSuccess || response.data == null) {
-      throw ServerException(message: response.message);
+      throw ServerException(message: response.errorText);
     }
 
     return {{name.pascalCase()}}Model.fromJson(response.data!);

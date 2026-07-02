@@ -131,6 +131,22 @@ void main() {
   });
 
   // ================================================================
-  // TODO: Tambahkan group test untuk event lain jika ada
+  // TODO: Tambahkan group test untuk event lain jika ada.
+  //
+  // Kalau event barunya butuh state awal tertentu (bukan mulai dari
+  // {{name.pascalCase()}}Initial), pakai `seed:` alih-alih replay event —
+  // lebih ringkas dan tidak rapuh terhadap urutan timing:
+  //
+  // blocTest<{{name.pascalCase()}}Bloc, {{name.pascalCase()}}State>(
+  //   'deskripsi perilaku saat sudah dalam kondisi X',
+  //   build: () => bloc,
+  //   seed: () => {{name.pascalCase()}}Loaded(t{{name.pascalCase()}}),
+  //   act: (b) => b.add(SomeOtherEvent()),
+  //   expect: () => [ /* state yang diharapkan setelah event ini saja */ ],
+  // );
+  //
+  // Kalau justru perlu menjalankan beberapa event berurutan (mis. event A
+  // mengisi field privat yang dibutuhkan event B), pakai `skip:` untuk
+  // melewati state dari event sebelumnya, bukan claim manual per emit.
   // ================================================================
 }

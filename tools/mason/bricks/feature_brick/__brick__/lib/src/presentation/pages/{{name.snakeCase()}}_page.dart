@@ -16,13 +16,15 @@ class {{name.pascalCase()}}Page extends StatelessWidget {
       create: (context) => {{name.pascalCase()}}Bloc(
         get{{name.pascalCase()}}: context.read(),
       )..add(Load{{name.pascalCase()}}Event(id: id)),
-      child: const _{{name.pascalCase()}}View(),
+      child: _{{name.pascalCase()}}View(id: id),
     );
   }
 }
 
 class _{{name.pascalCase()}}View extends StatelessWidget {
-  const _{{name.pascalCase()}}View();
+  const _{{name.pascalCase()}}View({required this.id});
+
+  final String id;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +44,7 @@ class _{{name.pascalCase()}}View extends StatelessWidget {
                 message: message,
                 onRetry: () => context
                     .read<{{name.pascalCase()}}Bloc>()
-                    .add(Refresh{{name.pascalCase()}}Event(id: data.id)),
+                    .add(Refresh{{name.pascalCase()}}Event(id: id)),
               ),
           };
         },
