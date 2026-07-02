@@ -1,0 +1,83 @@
+{
+  "common": {
+    "loading": "Memuat...",
+    "retry": "Coba Lagi",
+    "cancel": "Batal",
+    "save": "Simpan",
+    "delete": "Hapus",
+    "confirm": "Konfirmasi",
+    "close": "Tutup",
+    "next": "Selanjutnya",
+    "back": "Kembali",
+    "finish": "Selesai",
+    "submit": "Kirim",
+    "yes": "Ya",
+    "no": "Tidak",
+    "search": "Cari",
+    "from": "dari"
+  },
+  "error": {
+    "generic": "Terjadi kesalahan, silakan coba lagi",
+    "noInternet": "Tidak ada koneksi internet",
+    "timeout": "Koneksi timeout, periksa jaringan kamu",
+    "unauthorized": "Sesi kamu telah berakhir, silakan login kembali",
+    "notFound": "Data tidak ditemukan",
+    "server": "Terjadi kesalahan pada server",
+    "unknown": "Terjadi kesalahan yang tidak diketahui"
+  },
+  "auth": {
+    "login": "Masuk",
+    "logout": "Keluar",
+    "register": "Daftar",
+    "email": "Email",
+    "password": "Kata Sandi",
+    "confirmPassword": "Konfirmasi Kata Sandi",
+    "forgotPassword": "Lupa Kata Sandi?",
+    "welcomeBack": "Selamat Datang Kembali",
+    "loginSubtitle": "Masuk ke akun kamu",
+    "emailHint": "Masukkan email kamu",
+    "passwordHint": "Masukkan kata sandi kamu",
+    "emailRequired": "Email wajib diisi",
+    "passwordRequired": "Kata sandi wajib diisi",
+    "otp": {
+      "title": "Verifikasi OTP",
+      "subtitle": "Kode OTP telah dikirim ke $destination",
+      "inputLabel": "Kode OTP",
+      "inputHint": "Masukkan 6 digit kode",
+      "resend": "Kirim Ulang OTP",
+      "resendIn": "Kirim ulang dalam",
+      "verify": "Verifikasi",
+      "required": "Kode OTP wajib diisi",
+      "invalidLength": "Kode OTP harus 6 digit",
+      "phoneOrEmail": "Nomor HP / Email",
+      "sendOtp": "Kirim OTP"
+    }
+  },
+  "assessment": {
+    "startTest": "Mulai Tes",
+    "continueTest": "Lanjutkan Tes",
+    "submitTest": "Kirim Jawaban",
+    "timeRemaining": "Waktu Tersisa",
+    "question": "Pertanyaan",
+    "noAnswer": "Belum dijawab",
+    "answerSaved": "Jawaban tersimpan",
+    "syncing": "Menyinkronkan jawaban...",
+    "pendingAnswers": "$count jawaban menunggu sinkronisasi"
+  },
+  "profile": {
+    "title": "Profil",
+    "editProfile": "Edit Profil",
+    "name": "Nama",
+    "phone": "Nomor HP",
+    "saveChanges": "Simpan Perubahan"
+  },
+  "notification": {
+    "title": "Notifikasi",
+    "empty": "Belum ada notifikasi",
+    "markAllRead": "Tandai Semua Dibaca"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Selamat datang, $name!"
+  }
+}

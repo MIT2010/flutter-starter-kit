@@ -1,0 +1,83 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "confirm": "Confirm",
+    "close": "Close",
+    "next": "Next",
+    "back": "Back",
+    "finish": "Finish",
+    "submit": "Submit",
+    "yes": "Yes",
+    "no": "No",
+    "search": "Search",
+    "from": "of"
+  },
+  "error": {
+    "generic": "Something went wrong, please try again",
+    "noInternet": "No internet connection",
+    "timeout": "Connection timeout, please check your network",
+    "unauthorized": "Your session has expired, please login again",
+    "notFound": "Data not found",
+    "server": "Server error occurred",
+    "unknown": "An unknown error occurred"
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "forgotPassword": "Forgot Password?",
+    "welcomeBack": "Welcome Back",
+    "loginSubtitle": "Login to your account",
+    "emailHint": "Enter your email",
+    "passwordHint": "Enter your password",
+    "emailRequired": "Email is required",
+    "passwordRequired": "Password is required",
+    "otp": {
+      "title": "OTP Verification",
+      "subtitle": "OTP code has been sent to $destination",
+      "inputLabel": "OTP Code",
+      "inputHint": "Enter 6 digit code",
+      "resend": "Resend OTP",
+      "resendIn": "Resend in",
+      "verify": "Verify",
+      "required": "OTP code is required",
+      "invalidLength": "OTP code must be 6 digits",
+      "phoneOrEmail": "Phone / Email",
+      "sendOtp": "Send OTP"
+    }
+  },
+  "assessment": {
+    "startTest": "Start Test",
+    "continueTest": "Continue Test",
+    "submitTest": "Submit Answers",
+    "timeRemaining": "Time Remaining",
+    "question": "Question",
+    "noAnswer": "Not answered",
+    "answerSaved": "Answer saved",
+    "syncing": "Syncing answers...",
+    "pendingAnswers": "$count answers waiting to sync"
+  },
+  "profile": {
+    "title": "Profile",
+    "editProfile": "Edit Profile",
+    "name": "Name",
+    "phone": "Phone Number",
+    "saveChanges": "Save Changes"
+  },
+  "notification": {
+    "title": "Notifications",
+    "empty": "No notifications yet",
+    "markAllRead": "Mark All as Read"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome, $name!"
+  }
+}

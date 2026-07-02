@@ -10,6 +10,7 @@ workspace:
   - packages/core_network
   - packages/core_storage
   - packages/core_ui
+  - packages/core_l10n
   - packages/shared/shared_auth
   - packages/shared/shared_assessment
   - packages/features/feature_auth
@@ -23,7 +24,6 @@ dev_dependencies:
 
 melos:
   scripts:
-    # ── Setup ─────────────────────────────────────────────
     setup:
       run: |
         dart pub get
@@ -31,7 +31,6 @@ melos:
         melos run gen
       description: "Setup awal — install deps, generate l10n dan mock files. Jalankan ini setelah clone repo."
 
-    # ── Run app ───────────────────────────────────────────
     run:dev:
       run: >
         cd apps/main &&
@@ -75,7 +74,6 @@ melos:
         --dart-define-from-file=../../config/staging.json
       description: "Jalankan app di mode staging"
 
-    # ── Build (staging — tanpa obfuscation, untuk testing) ──
     build:android:staging:
       run: >
         cd apps/main &&
@@ -103,7 +101,6 @@ melos:
         --release
       description: "Build PWA (staging)"
 
-    # ── Build (production — DENGAN obfuscation) ──────────────
     build:android:prod:
       run: >
         cd apps/main &&
@@ -133,9 +130,8 @@ melos:
         --target lib/main_production.dart
         --dart-define-from-file=../../config/production.json
         --release
-      description: "Build PWA (production) — obfuscation tidak didukung untuk Web"
+      description: "Build PWA (production)"
 
-    # ── Analisis & formatting ──────────────────────────────
     analyze:
       run: melos exec -- dart analyze .
       description: "Analisis static seluruh workspace"
@@ -154,7 +150,6 @@ melos:
         melos run format:check
       description: "Jalankan analyze + format check sekaligus"
 
-    # ── Testing ───────────────────────────────────────────
     test:
       run: >
         melos exec
@@ -171,9 +166,8 @@ melos:
 
     test:generate:
       run: bash tools/scripts/generate_test.sh
-      description: "Generate unit test untuk feature. Usage: melos run test:generate -- product"
+      description: "Generate unit test untuk feature. Usage: ./tools/scripts/generate_test.sh <nama_fitur>"
 
-    # ── Code generation ───────────────────────────────────
     gen:
       run: >
         melos exec
@@ -189,10 +183,9 @@ melos:
       description: "Watch mode untuk code generation"
 
     gen:l10n:
-      run: cd apps/main && flutter gen-l10n
-      description: "Generate localization dari ARB files"
+      run: cd packages/core_l10n && dart run slang
+      description: "Generate localization dari JSON files menggunakan slang"
 
-    # ── Utilities ─────────────────────────────────────────
     clean:
       run: melos exec -- flutter clean
       description: "Clean semua package"
@@ -202,14 +195,13 @@ melos:
       description: "Update semua dependencies"
 
     upgrade:
-      run: dart pub upgrade
+      run: dart pub upgrade --major-versions
       description: "Upgrade semua dependencies ke versi terbaru"
 
     outdated:
       run: melos exec -- dart pub outdated
       description: "Cek dependency yang outdated di semua package"
 
-    # ── Feature scaffolding ───────────────────────────────
     feature:new:
       run: cd tools/mason && mason make feature_brick
       description: "Buat fitur baru dengan Mason brick"
