@@ -209,3 +209,9 @@ cd packages/features/feature_product
 dart run build_runner build
 flutter test test/unit/
 ```
+
+---
+
+## License
+
+[MIT](LICENSE) — bebas dipakai, dimodifikasi, dan didistribusikan ulang, termasuk untuk proyek komersial.
