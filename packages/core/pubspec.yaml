@@ -14,9 +14,7 @@ dependencies:
   equatable: ^2.0.8
   fpdart: ^1.2.0
   get_it: ^9.2.1
-  injectable: ^3.0.0
   talker_flutter: ^5.1.17
-  flutter_secure_storage: ^10.3.1
 
 dev_dependencies:
   flutter_test:
