@@ -14,6 +14,7 @@ pubspec.lock
 # IDE
 .idea/
 .vscode/
+.claude/
 *.iml
 
 # OS
@@ -38,8 +39,11 @@ lcov.info
 **/ios/Pods/
 **/ios/.symlinks/
 
-# Kecualikan lock file milik app — perlu di-commit untuk konsistensi
-!apps/main/pubspec.lock
+# Kecualikan lock file workspace — perlu di-commit untuk konsistensi.
+# Catatan: dengan Dart native workspace, hanya ada satu pubspec.lock
+# di root (bukan satu per package/app), jadi yang di-exclude di sini
+# adalah file root-nya, bukan apps/main/pubspec.lock (yang tidak pernah ada).
+!/pubspec.lock
 
 # Generated mock files — di-generate ulang dengan build_runner
 **/*.mocks.dart
