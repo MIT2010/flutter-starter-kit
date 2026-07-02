@@ -123,6 +123,8 @@ Edit setiap file dengan nilai yang sesuai:
 }
 ```
 
+`SENTRY_DSN` mengaktifkan crash reporting (Sentry) kalau diisi — kosongkan untuk development, error tetap tercatat lokal lewat `AppLogger`.
+
 ---
 
 ## Struktur Project
@@ -152,13 +154,13 @@ flutter_starter_kit/
 │   ├── core_network/       # ApiClient, ResponseParser, ReverbManager
 │   ├── core_storage/       # HiveStorage, SecureStorage
 │   ├── core_ui/            # Design system — tokens, theme, components
-│   ├── core_l10n/          # Localization (slang) — id/en
+│   ├── core_l10n/          # Localization (slang) — id/en, dipakai feature_auth & feature_assessment
 │   ├── shared/
 │   │   ├── shared_auth/        # UserEntity, SessionManager contract
 │   │   └── shared_assessment/  # Assessment entities (sealed class)
 │   └── features/
 │       ├── feature_auth/         # ✅ Login, OTP, session (lengkap)
-│       ├── feature_assessment/   # 🔲 Skeleton
+│       ├── feature_assessment/   # ✅ Intro, soal (4 tipe), submit, resume offline (lengkap)
 │       ├── feature_dashboard/    # 🔲 Skeleton
 │       ├── feature_profile/      # 🔲 Skeleton
 │       └── feature_notification/ # 🔲 Skeleton
