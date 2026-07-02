@@ -1,0 +1,9 @@
+# Copy file ini menjadi "key.properties" (di folder yang sama) dan isi
+# dengan data keystore rilis kamu sendiri. JANGAN commit key.properties
+# atau file keystore-nya — keduanya sudah di-gitignore.
+#
+# Cara membuat keystore rilis: https://flutter.dev/to/reference-keystore
+storePassword=<password keystore>
+keyPassword=<password key>
+keyAlias=upload
+storeFile=<path absolut ke file .jks, mis. /Users/nama/upload-keystore.jks>
