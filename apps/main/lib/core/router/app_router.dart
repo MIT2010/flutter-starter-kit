@@ -1,4 +1,5 @@
 import 'package:core/core.dart';
+import 'package:core_l10n/core_l10n.dart';
 import 'package:feature_auth/feature_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -51,7 +52,7 @@ class _PlaceholderHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Home')),
+      appBar: AppBar(title: Text(context.t.dashboard.title)),
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -62,7 +63,7 @@ class _PlaceholderHome extends StatelessWidget {
               onPressed: () {
                 AppRouter._authBloc.add(const AuthLogoutEvent());
               },
-              child: const Text('Logout'),
+              child: Text(context.t.auth.logout),
             ),
           ],
         ),

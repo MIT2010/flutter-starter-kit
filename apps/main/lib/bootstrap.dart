@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:core/core.dart';
+import 'package:core_l10n/core_l10n.dart';
 import 'package:core_network/core_network.dart';
 import 'package:core_storage/core_storage.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +34,10 @@ Future<void> bootstrap({AppFlavor flavor = AppFlavor.development}) async {
   // 5. Dependency injection
   await configureDependencies();
 
-  // 6. Tangkap Flutter errors
+  // 6. Localization — deteksi locale device, load terjemahan yang aktif
+  await LocaleSettings.useDeviceLocale();
+
+  // 7. Tangkap Flutter errors
   FlutterError.onError = (details) {
     AppLogger.error(
       'Flutter error',
@@ -42,5 +46,5 @@ Future<void> bootstrap({AppFlavor flavor = AppFlavor.development}) async {
     );
   };
 
-  runApp(const App());
+  runApp(TranslationProvider(child: const App()));
 }

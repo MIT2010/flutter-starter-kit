@@ -12,9 +12,11 @@ import '../security/security_interceptor.dart';
 class ApiClient {
   ApiClient({
     required Future<String?> Function() getAccessToken,
+    Future<bool> Function()? refreshToken,
     bool enableSecurityCheck = true,
   }) : _dio = _createDio(
           getAccessToken: getAccessToken,
+          refreshToken: refreshToken,
           enableSecurityCheck: enableSecurityCheck,
         );
 
@@ -22,6 +24,7 @@ class ApiClient {
 
   static Dio _createDio({
     required Future<String?> Function() getAccessToken,
+    required Future<bool> Function()? refreshToken,
     required bool enableSecurityCheck,
   }) {
     final dio = Dio(
@@ -41,8 +44,12 @@ class ApiClient {
       if (enableSecurityCheck)
         SecurityInterceptor(),
 
-      // Auth — attach token
-      AuthInterceptor(getAccessToken: getAccessToken),
+      // Auth — attach token, dan refresh otomatis sekali saat 401
+      AuthInterceptor(
+        getAccessToken: getAccessToken,
+        refreshToken: refreshToken,
+        dio: dio,
+      ),
 
       // Error mapping
       ErrorInterceptor(),

@@ -32,6 +32,7 @@ class QueueSyncManager {
   final Map<String, QueueHandler> _handlers = {};
 
   StreamSubscription<bool>? _connectivitySubscription;
+  Timer? _backoffTimer;
   bool _isSyncing = false;
   bool _wasOffline = false;
 
@@ -96,6 +97,7 @@ class QueueSyncManager {
     }
 
     _isSyncing = true;
+    _backoffTimer?.cancel();
     AppLogger.info('[Queue] Starting sync...');
 
     try {
@@ -106,14 +108,57 @@ class QueueSyncManager {
         return;
       }
 
-      AppLogger.info('[Queue] Syncing ${pending.length} items in parallel');
+      // Item yang sudah pernah gagal harus menunggu exponential backoff-nya
+      // sebelum dicoba lagi, supaya tidak membanjiri server saat koneksi flapping.
+      final ready = <QueueItem>[];
+      Duration? nextRetryIn;
 
-      await Future.wait(
-        pending.map((item) => _processItem(item)),
-      );
+      for (final item in pending) {
+        final waitLeft = _backoffRemaining(item);
+        if (waitLeft <= Duration.zero) {
+          ready.add(item);
+        } else if (nextRetryIn == null || waitLeft < nextRetryIn) {
+          nextRetryIn = waitLeft;
+        }
+      }
+
+      if (ready.isEmpty) {
+        AppLogger.debug('[Queue] All pending items still in backoff window');
+      } else {
+        AppLogger.info('[Queue] Syncing ${ready.length} items in parallel');
+        await Future.wait(
+          ready.map((item) => _processItem(item)),
+        );
+      }
+
+      if (nextRetryIn != null) {
+        _scheduleBackoffRetry(nextRetryIn);
+      }
     } finally {
       _isSyncing = false;
     }
+  }
+
+  /// Sisa waktu tunggu sebelum item boleh dicoba lagi (exponential backoff).
+  /// [Duration.zero] jika item belum pernah dicoba atau backoff sudah lewat.
+  Duration _backoffRemaining(QueueItem item) {
+    if (item.retryCount == 0 || item.lastAttemptAt == null) {
+      return Duration.zero;
+    }
+    final delay = _retryPolicy.delayForAttempt(item.retryCount);
+    final remaining =
+        item.lastAttemptAt!.add(delay).difference(DateTime.now());
+    return remaining.isNegative ? Duration.zero : remaining;
+  }
+
+  /// Jadwalkan sync ulang otomatis setelah backoff item tercepat selesai,
+  /// supaya item tidak menunggu event konektivitas berikutnya untuk di-retry.
+  void _scheduleBackoffRetry(Duration delay) {
+    _backoffTimer?.cancel();
+    _backoffTimer = Timer(delay, () {
+      AppLogger.debug('[Queue] Backoff elapsed, retrying...');
+      syncAll();
+    });
   }
 
   Future<void> _processItem(QueueItem item) async {
@@ -197,5 +242,6 @@ class QueueSyncManager {
 
   void dispose() {
     stopAutoSync();
+    _backoffTimer?.cancel();
   }
 }

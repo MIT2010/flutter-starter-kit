@@ -23,6 +23,8 @@ dependencies:
     path: ../../packages/core_storage
   core_ui:
     path: ../../packages/core_ui
+  core_l10n:
+    path: ../../packages/core_l10n
 
   # Shared packages
   shared_auth:
@@ -51,7 +53,6 @@ dependencies:
 
   # DI
   get_it: ^9.2.1
-  injectable: ^3.0.0
   connectivity_plus: ^7.1.1
 
 dev_dependencies:
@@ -61,4 +62,3 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  generate: true

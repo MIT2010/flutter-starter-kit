@@ -138,7 +138,6 @@ flutter_starter_kit/
 │   │       ├── di/                 # dependency injection
 │   │       ├── router/             # go_router + auth guard
 │   │       └── observer/           # BLoC observer
-│   └── lib/l10n/           # ARB localization files
 │
 ├── config/                 # Environment config per flavor
 │   ├── development.json            # ⚠️ tidak di-commit
@@ -153,6 +152,7 @@ flutter_starter_kit/
 │   ├── core_network/       # ApiClient, ResponseParser, ReverbManager
 │   ├── core_storage/       # HiveStorage, SecureStorage
 │   ├── core_ui/            # Design system — tokens, theme, components
+│   ├── core_l10n/          # Localization (slang) — id/en
 │   ├── shared/
 │   │   ├── shared_auth/        # UserEntity, SessionManager contract
 │   │   └── shared_assessment/  # Assessment entities (sealed class)

@@ -48,6 +48,17 @@ class AnswerQueueHandler implements QueueHandler {
         '[AssessmentQueue] Validation error untuk soal $questionId: ${e.message}',
       );
       return true; // anggap selesai agar tidak retry tanpa akhir
+    } on UnauthorizedException catch (e) {
+      // ApiClient sudah otomatis mencoba refresh token sekali sebelum
+      // exception ini sampai ke sini — jika masih 401, refresh token juga
+      // sudah tidak valid (sesi benar-benar habis). Tetap di-retry (bukan
+      // discard) karena jawaban tidak boleh hilang, tapi log secara
+      // eksplisit supaya kegagalan ini tidak tenggelam sebagai "unexpected error"
+      // dan bisa diselidiki (misal: butuh UI yang minta user login ulang).
+      AppLogger.error(
+        '[AssessmentQueue] Sesi tidak valid untuk soal $questionId: ${e.message}',
+      );
+      return false;
     } on NetworkException {
       // Masalah koneksi — boleh di-retry
       return false;

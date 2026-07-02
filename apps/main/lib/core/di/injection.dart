@@ -28,7 +28,25 @@ Future<void> configureDependencies() async {
   getIt.registerSingleton<NetworkInfo>(NetworkInfoImpl(getIt<Connectivity>()));
 
   getIt.registerSingleton<ApiClient>(
-    ApiClient(getAccessToken: () => sessionManager.getAccessToken()),
+    ApiClient(
+      getAccessToken: () => sessionManager.getAccessToken(),
+      // Refresh token otomatis saat request gagal dengan 401.
+      // Lookup AuthRepository lewat getIt (bukan reference langsung) karena
+      // repository itu sendiri baru diregistrasi belakangan dan butuh
+      // ApiClient ini — closure ini baru dieksekusi saat ada 401 di runtime,
+      // jauh setelah semua dependency selesai didaftarkan.
+      refreshToken: () async {
+        final storedRefreshToken = await sessionManager.getRefreshToken();
+        if (storedRefreshToken == null) return false;
+
+        final result = await getIt<RefreshTokenUseCase>()(storedRefreshToken);
+        if (result.isLeft()) {
+          await sessionManager.clearSession();
+          return false;
+        }
+        return true;
+      },
+    ),
   );
 
   // ── Offline Queue ─────────────────────────────────────────
@@ -49,6 +67,10 @@ Future<void> configureDependencies() async {
   );
 
   // Generic queue — retry maksimal 5x, untuk operasi non-kritis
+  // Belum ada handler terdaftar karena belum ada fitur (profile, dll)
+  // yang pakai queue ini. Saat fitur tsb diimplementasikan, panggil
+  // genericQueueManager.registerHandler(...) di sini untuk tiap tipe
+  // operasinya — item yang di-enqueue tanpa handler akan gagal terus.
   final genericQueueManager = QueueSyncManager(
     storage: QueueStorage('queue_generic_mutations'),
     networkInfo: getIt<NetworkInfo>(),
@@ -89,4 +111,5 @@ Future<void> configureDependencies() async {
   getIt.registerFactory(() => VerifyOtpUseCase(getIt<AuthRepository>()));
   getIt.registerFactory(() => LogoutUseCase(getIt<AuthRepository>()));
   getIt.registerFactory(() => GetCurrentUserUseCase(getIt<AuthRepository>()));
+  getIt.registerFactory(() => RefreshTokenUseCase(getIt<AuthRepository>()));
 }
