@@ -1,3 +1,4 @@
+import 'package:core_l10n/core_l10n.dart';
 import 'package:core_ui/core_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -84,29 +85,29 @@ class _OtpOnlyFormState extends State<_OtpOnlyForm> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const SizedBox(height: AppSpacing.xxl),
-            AppText.headingLg('Masuk'),
+            AppText.headingLg(context.t.auth.login),
             const SizedBox(height: AppSpacing.sm),
             AppText.bodyMd(
-              'Masukkan nomor HP atau email kamu',
+              context.t.auth.otp.destinationHint,
               color: AppColors.textSecondary,
             ),
             const SizedBox(height: AppSpacing.xl),
             AppTextField(
-              label: 'Nomor HP / Email',
+              label: context.t.auth.otp.phoneOrEmail,
               controller: _destinationController,
               keyboardType: TextInputType.emailAddress,
               textInputAction: TextInputAction.done,
               onSubmitted: (_) => _onSubmit(),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Nomor HP atau email wajib diisi';
+                  return context.t.auth.otp.destinationRequired;
                 }
                 return null;
               },
             ),
             const SizedBox(height: AppSpacing.xl),
             AppButton(
-              label: 'Kirim OTP',
+              label: context.t.auth.otp.sendOtp,
               onPressed: _onSubmit,
             ),
           ],

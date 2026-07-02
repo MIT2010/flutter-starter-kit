@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:core_l10n/core_l10n.dart';
 import 'package:core_ui/core_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -79,15 +80,15 @@ class _OtpFormState extends State<OtpForm> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const SizedBox(height: AppSpacing.xxl),
-            AppText.headingLg('Verifikasi OTP'),
+            AppText.headingLg(context.t.auth.otp.title),
             const SizedBox(height: AppSpacing.sm),
             AppText.bodyMd(
-              'Kode OTP telah dikirim ke ${widget.otp.destination}',
+              context.t.auth.otp.subtitle(destination: widget.otp.destination),
               color: AppColors.textSecondary,
             ),
             const SizedBox(height: AppSpacing.xl),
             AppTextField(
-              label: 'Kode OTP',
+              label: context.t.auth.otp.inputLabel,
               controller: _otpController,
               keyboardType: TextInputType.number,
               textInputAction: TextInputAction.done,
@@ -96,10 +97,10 @@ class _OtpFormState extends State<OtpForm> {
               onSubmitted: (_) => _onSubmit(),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Kode OTP wajib diisi';
+                  return context.t.auth.otp.required;
                 }
                 if (value.length != 6) {
-                  return 'Kode OTP harus 6 digit';
+                  return context.t.auth.otp.invalidLength;
                 }
                 return null;
               },
@@ -110,7 +111,7 @@ class _OtpFormState extends State<OtpForm> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (_remainingSeconds > 0) ...[
-                  AppText.bodyMd('Kirim ulang dalam '),
+                  AppText.bodyMd('${context.t.auth.otp.resendIn} '),
                   AppText.labelMd(
                     _timerText,
                     color: _remainingSeconds <= 10
@@ -120,13 +121,13 @@ class _OtpFormState extends State<OtpForm> {
                 ] else
                   TextButton(
                     onPressed: _onResend,
-                    child: const Text('Kirim Ulang OTP'),
+                    child: Text(context.t.auth.otp.resend),
                   ),
               ],
             ),
             const SizedBox(height: AppSpacing.xl),
             AppButton(
-              label: 'Verifikasi',
+              label: context.t.auth.otp.verify,
               onPressed: _remainingSeconds > 0 ? _onSubmit : null,
               isDisabled: _remainingSeconds <= 0,
             ),

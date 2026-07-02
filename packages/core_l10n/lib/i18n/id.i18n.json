@@ -50,7 +50,9 @@
       "required": "Kode OTP wajib diisi",
       "invalidLength": "Kode OTP harus 6 digit",
       "phoneOrEmail": "Nomor HP / Email",
-      "sendOtp": "Kirim OTP"
+      "sendOtp": "Kirim OTP",
+      "destinationHint": "Masukkan nomor HP atau email kamu",
+      "destinationRequired": "Nomor HP atau email wajib diisi"
     }
   },
   "assessment": {

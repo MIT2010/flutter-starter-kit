@@ -1,3 +1,4 @@
+import 'package:core_l10n/core_l10n.dart';
 import 'package:core_ui/core_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,28 +45,28 @@ class _EmailPasswordFormState extends State<EmailPasswordForm> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const SizedBox(height: AppSpacing.xxl),
-            AppText.headingLg('Selamat Datang'),
+            AppText.headingLg(context.t.auth.welcomeBack),
             const SizedBox(height: AppSpacing.sm),
             AppText.bodyMd(
-              'Masuk ke akun kamu',
+              context.t.auth.loginSubtitle,
               color: AppColors.textSecondary,
             ),
             const SizedBox(height: AppSpacing.xl),
             AppTextField(
-              label: 'Email',
+              label: context.t.auth.email,
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
               textInputAction: TextInputAction.next,
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Email wajib diisi';
+                  return context.t.auth.emailRequired;
                 }
                 return null;
               },
             ),
             const SizedBox(height: AppSpacing.md),
             AppTextField(
-              label: 'Kata Sandi',
+              label: context.t.auth.password,
               controller: _passwordController,
               obscureText: _obscurePassword,
               textInputAction: TextInputAction.done,
@@ -81,14 +82,14 @@ class _EmailPasswordFormState extends State<EmailPasswordForm> {
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Kata sandi wajib diisi';
+                  return context.t.auth.passwordRequired;
                 }
                 return null;
               },
             ),
             const SizedBox(height: AppSpacing.xl),
             AppButton(
-              label: 'Masuk',
+              label: context.t.auth.login,
               onPressed: _onSubmit,
             ),
           ],
