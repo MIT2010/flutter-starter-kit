@@ -1,11 +1,11 @@
 {
-    "name": "main_app",
-    "short_name": "main_app",
+    "name": "Flutter Starter Kit",
+    "short_name": "Starter Kit",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Monorepo Flutter dengan Clean Architecture, BLoC, dan code generation otomatis.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
