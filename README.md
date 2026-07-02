@@ -2,6 +2,10 @@
 
 Monorepo Flutter dengan Clean Architecture, BLoC, dan code generation otomatis.
 
+> Butuh gambaran arsitektur menyeluruh (bagaimana semua package saling
+> terhubung, alur data end-to-end, keputusan desain)? Lihat
+> [ARCHITECTURE.md](ARCHITECTURE.md).
+
 ## Quick Start
 
 ```bash

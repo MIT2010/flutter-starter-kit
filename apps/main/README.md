@@ -20,7 +20,8 @@ lib/
     └── observer/app_bloc_observer.dart  # log semua event/state/error BLoC
 
 test/
-└── widget_test.dart           # smoke test: LoginPage merender dengan benar
+└── widget/
+    └── widget_test.dart       # smoke test: LoginPage merender dengan benar
 ```
 
 Tiga entry point (`main*.dart`) semuanya cuma memanggil
@@ -90,12 +91,13 @@ dicoba tanpa perlu halaman daftar tes.
 ## Testing
 
 ```bash
-flutter test test/widget_test.dart
+melos run test:widget
+# atau langsung:
+flutter test test/widget
 ```
 
 Satu smoke test: pump `LoginPage` (use case di-mock, mengikuti pola
 `feature_auth`'s `auth_bloc_test.dart`) dibungkus `TranslationProvider`,
-lalu pastikan form email/password beneran muncul. Catatan: file ini ada
-langsung di `test/`, bukan `test/unit/` atau `test/widget/`, jadi
-**tidak** ikut ter-cover oleh script `melos run test`/`test:widget` di
-root — jalankan langsung seperti di atas.
+lalu pastikan form email/password beneran muncul. File-nya ada di
+`test/widget/`, jadi otomatis ikut ter-cover oleh `melos run test:widget`
+di root (dan dijalankan di CI).
