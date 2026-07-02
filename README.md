@@ -132,6 +132,8 @@ Edit setiap file dengan nilai yang sesuai:
 ---
 
 ## Struktur Project
+
+```
 flutter_starter_kit/
 ├── apps/main/              # Entry point — Android, iOS, PWA
 │   ├── lib/
@@ -144,6 +146,8 @@ flutter_starter_kit/
 │   │       ├── di/                 # dependency injection
 │   │       ├── router/             # go_router + auth guard
 │   │       └── observer/           # BLoC observer
+│   └── test/
+│       └── widget/                 # widget test
 │
 ├── config/                 # Environment config per flavor
 │   ├── development.json            # ⚠️ tidak di-commit
@@ -155,8 +159,8 @@ flutter_starter_kit/
 │
 ├── packages/
 │   ├── core/               # Error, env, logger, DI, utils
-│   ├── core_network/       # ApiClient, ResponseParser, ReverbManager
-│   ├── core_storage/       # HiveStorage, SecureStorage
+│   ├── core_network/       # ApiClient, interceptors, offline-queue orchestrator, ReverbManager
+│   ├── core_storage/       # HiveStorage, SecureStorage, primitif queue
 │   ├── core_ui/            # Design system — tokens, theme, components
 │   ├── core_l10n/          # Localization (slang) — id/en, dipakai feature_auth & feature_assessment
 │   ├── shared/
@@ -170,13 +174,14 @@ flutter_starter_kit/
 │       └── feature_notification/ # 🔲 Skeleton
 │
 └── tools/
-├── mason/
-│   └── bricks/
-│       ├── feature_brick/  # Generate struktur feature baru
-│       └── test_brick/     # Generate unit test scaffold
-└── scripts/
-├── generate_test.sh    # Wrapper untuk test_brick
-└── new_feature.sh      # (planned)
+    ├── mason/
+    │   └── bricks/
+    │       ├── feature_brick/  # Generate struktur feature baru
+    │       └── test_brick/     # Generate unit test scaffold
+    └── scripts/
+        └── generate_test.sh    # Wrapper untuk test_brick
+```
+
 ---
 
 ## Menambah Feature Baru
