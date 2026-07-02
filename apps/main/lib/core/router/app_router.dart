@@ -1,5 +1,6 @@
 import 'package:core/core.dart';
 import 'package:core_l10n/core_l10n.dart';
+import 'package:feature_assessment/feature_assessment.dart';
 import 'package:feature_auth/feature_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,6 +32,23 @@ class AppRouter {
         path: '/home',
         builder: (context, state) => const _PlaceholderHome(),
       ),
+      GoRoute(
+        path: AssessmentPage.routePath,
+        builder: (context, state) {
+          final assessmentId = state.pathParameters['id']!;
+          return BlocProvider(
+            create: (_) => AssessmentBloc(
+              getAssessment: getIt<GetAssessmentUseCase>(),
+              startSession: getIt<StartAssessmentSessionUseCase>(),
+              getActiveSession: getIt<GetActiveSessionUseCase>(),
+              saveProgress: getIt<SaveSessionProgressUseCase>(),
+              submitAnswer: getIt<SubmitAnswerUseCase>(),
+              completeSession: getIt<CompleteAssessmentSessionUseCase>(),
+            )..add(AssessmentLoadRequested(assessmentId: assessmentId)),
+            child: AssessmentPage(assessmentId: assessmentId),
+          );
+        },
+      ),
     ],
   );
 
@@ -58,6 +76,13 @@ class _PlaceholderHome extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             const Text('Berhasil login!'),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              // Belum ada feature_dashboard untuk daftar assessment,
+              // jadi entry point sementara ke satu assessment demo.
+              onPressed: () => context.go(AssessmentPage.path('demo-assessment')),
+              child: Text(context.t.assessment.startTest),
+            ),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {

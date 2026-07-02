@@ -87,6 +87,45 @@ Future<void> configureDependencies() async {
     AnswerSubmissionService(assessmentQueueManager),
   );
 
+  // ── Feature Assessment ────────────────────────────────────
+
+  // Datasources
+  getIt.registerSingleton<AssessmentRemoteDataSource>(
+    AssessmentRemoteDataSourceImpl(getIt<ApiClient>()),
+  );
+  getIt.registerSingleton<AssessmentLocalDataSource>(
+    AssessmentLocalDataSourceImpl(HiveStorage<String>('assessment_cache')),
+  );
+
+  // Repository
+  getIt.registerSingleton<AssessmentRepository>(
+    AssessmentRepositoryImpl(
+      remoteDataSource: getIt<AssessmentRemoteDataSource>(),
+      localDataSource: getIt<AssessmentLocalDataSource>(),
+      networkInfo: getIt<NetworkInfo>(),
+    ),
+  );
+
+  // Use cases
+  getIt.registerFactory(
+    () => GetAssessmentUseCase(getIt<AssessmentRepository>()),
+  );
+  getIt.registerFactory(
+    () => StartAssessmentSessionUseCase(getIt<AssessmentRepository>()),
+  );
+  getIt.registerFactory(
+    () => GetActiveSessionUseCase(getIt<AssessmentRepository>()),
+  );
+  getIt.registerFactory(
+    () => SaveSessionProgressUseCase(getIt<AssessmentRepository>()),
+  );
+  getIt.registerFactory(
+    () => CompleteAssessmentSessionUseCase(getIt<AssessmentRepository>()),
+  );
+  getIt.registerFactory(
+    () => SubmitAnswerUseCase(getIt<AnswerSubmissionService>()),
+  );
+
   // ── Feature Auth ──────────────────────────────────────────
 
   // Datasources
