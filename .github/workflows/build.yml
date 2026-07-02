@@ -1,27 +1,26 @@
+# CI ini sengaja cuma build flavor staging — starter kit ini belum tahu
+# strategi rilis production project kamu (Play Store vs internal distribution,
+# App Center, Fastlane, dll), jadi tidak diasumsikan di sini.
+#
+# Kalau nanti sudah siap nambah production build, groundwork-nya sudah ada:
+# - Signing Android: isi apps/main/android/key.properties dari
+#   apps/main/android/key.properties.example (lihat README di situ).
+# - Command build production sudah ada di melos: `melos run build:android:prod`,
+#   `melos run build:ios:prod`, `melos run build:web:prod` (pakai --obfuscate).
+# Tinggal duplikasi job di bawah ini per flavor, target ke main_production.dart,
+# dan suntik key.properties dari GitHub Secrets (base64 keystore + password)
+# sebelum step build.
 name: Build
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
-    inputs:
-      flavor:
-        description: 'Build flavor'
-        required: true
-        default: 'staging'
-        type: choice
-        options:
-          - development
-          - staging
-          - production
 
 jobs:
   build_android:
-    name: Build Android APK
+    name: Build Android APK (staging)
     runs-on: ubuntu-latest
-    # Push ke main selalu build staging. Flavor lain hanya lewat workflow_dispatch.
-    env:
-      FLAVOR: ${{ github.event.inputs.flavor || 'staging' }}
 
     steps:
       - name: Checkout
@@ -49,33 +48,7 @@ jobs:
       - name: Generate l10n
         run: melos run gen:l10n
 
-      # Signing rilis production — butuh secrets ANDROID_KEYSTORE_BASE64,
-      # ANDROID_KEY_ALIAS, ANDROID_KEY_PASSWORD, ANDROID_STORE_PASSWORD.
-      # Tanpa ini, build.gradle.kts fallback ke debug signing (lihat
-      # apps/main/android/key.properties.example) — APK tidak layak rilis.
-      - name: Setup Android release signing
-        if: env.FLAVOR == 'production'
-        run: |
-          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > apps/main/android/app/upload-keystore.jks
-          cat > apps/main/android/key.properties <<EOF
-          storePassword=${{ secrets.ANDROID_STORE_PASSWORD }}
-          keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}
-          keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}
-          storeFile=app/upload-keystore.jks
-          EOF
-
-      - name: Build APK (development)
-        if: env.FLAVOR == 'development'
-        run: |
-          cd apps/main
-          flutter build apk \
-            --target lib/main.dart \
-            --dart-define=ENV=development \
-            --dart-define=BASE_URL=${{ secrets.DEV_BASE_URL }} \
-            --dart-define=WS_URL=${{ secrets.DEV_WS_URL }}
-
       - name: Build APK (staging)
-        if: env.FLAVOR == 'staging'
         run: |
           cd apps/main
           flutter build apk \
@@ -84,42 +57,16 @@ jobs:
             --dart-define=BASE_URL=${{ secrets.STAGING_BASE_URL }} \
             --dart-define=WS_URL=${{ secrets.STAGING_WS_URL }}
 
-      - name: Build APK (production)
-        if: env.FLAVOR == 'production'
-        run: |
-          cd apps/main
-          flutter build apk \
-            --target lib/main_production.dart \
-            --dart-define=ENV=production \
-            --dart-define=BASE_URL=${{ secrets.PRODUCTION_BASE_URL }} \
-            --dart-define=WS_URL=${{ secrets.PRODUCTION_WS_URL }} \
-            --release \
-            --obfuscate \
-            --split-debug-info=build/symbols/android
-
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-${{ env.FLAVOR }}.apk
+          name: app-staging.apk
           path: apps/main/build/app/outputs/flutter-apk/app-release.apk
           retention-days: 7
 
-      # Simpan debug symbols supaya crash report production bisa di-deobfuscate
-      # (mis. lewat `flutter symbolize`). Tanpa ini symbol hilang begitu runner
-      # dibersihkan dan stack trace crash production tidak bisa dibaca lagi.
-      - name: Upload debug symbols
-        if: env.FLAVOR == 'production'
-        uses: actions/upload-artifact@v4
-        with:
-          name: android-debug-symbols
-          path: apps/main/build/symbols/android/
-          retention-days: 90
-
   build_web:
-    name: Build PWA
+    name: Build PWA (staging)
     runs-on: ubuntu-latest
-    env:
-      FLAVOR: ${{ github.event.inputs.flavor || 'staging' }}
 
     steps:
       - name: Checkout
@@ -141,18 +88,7 @@ jobs:
       - name: Generate l10n
         run: melos run gen:l10n
 
-      - name: Build Web (development)
-        if: env.FLAVOR == 'development'
-        run: |
-          cd apps/main
-          flutter build web \
-            --target lib/main.dart \
-            --dart-define=ENV=development \
-            --dart-define=BASE_URL=${{ secrets.DEV_BASE_URL }} \
-            --dart-define=WS_URL=${{ secrets.DEV_WS_URL }}
-
-      - name: Build Web (staging)
-        if: env.FLAVOR == 'staging'
+      - name: Build Web
         run: |
           cd apps/main
           flutter build web \
@@ -161,22 +97,9 @@ jobs:
             --dart-define=BASE_URL=${{ secrets.STAGING_BASE_URL }} \
             --dart-define=WS_URL=${{ secrets.STAGING_WS_URL }}
 
-      # Obfuscation Flutter tidak didukung untuk target Web, jadi production
-      # web build tidak pakai --obfuscate/--split-debug-info (beda dengan Android/iOS).
-      - name: Build Web (production)
-        if: env.FLAVOR == 'production'
-        run: |
-          cd apps/main
-          flutter build web \
-            --target lib/main_production.dart \
-            --dart-define=ENV=production \
-            --dart-define=BASE_URL=${{ secrets.PRODUCTION_BASE_URL }} \
-            --dart-define=WS_URL=${{ secrets.PRODUCTION_WS_URL }} \
-            --release
-
       - name: Upload Web build
         uses: actions/upload-artifact@v4
         with:
-          name: web-${{ env.FLAVOR }}
+          name: web-build
           path: apps/main/build/web/
           retention-days: 7
