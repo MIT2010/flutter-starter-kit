@@ -60,3 +60,9 @@ config/production.json
 # Simpan di tempat aman terpisah (misal: secrets manager, S3 private bucket)
 # Dibutuhkan untuk de-obfuscate crash report production
 build/symbols/
+
+# Mason cache/lock — berisi path absolut spesifik mesin yang menjalankan
+# `mason get`, tidak portable antar clone. Dijalankan ulang otomatis oleh
+# generate_feature.sh / generate_test.sh / create_app.dart sebelum dipakai.
+tools/mason/.mason/
+tools/mason/mason-lock.json
