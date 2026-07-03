@@ -40,9 +40,74 @@ String? readCurrentNamespace(String appDir) {
   return match?.group(1);
 }
 
+/// Kalau folder `android`/`ios`/`web` di `appDir` hilang (mis. terhapus
+/// manual), generate ulang lewat `flutter create --platforms=...` —
+/// diverifikasi langsung: tanpa ini, `rename` cuma error ("Missing
+/// build script...") dan folder yang hilang TETAP tidak ada setelahnya,
+/// karena `rename` cuma mengedit file yang sudah ada, tidak pernah
+/// membuatnya dari nol. `flutter create` terhadap project yang sudah
+/// ada aman — hanya menambah platform yang belum ada, tidak menimpa
+/// lib/ atau pubspec.yaml.
+Future<void> ensurePlatformFolders(String appDir) async {
+  var missing = [
+    for (final platform in ['android', 'ios', 'web'])
+      if (!Directory('$appDir/$platform').existsSync()) platform,
+  ];
+  if (missing.isEmpty) return;
+
+  print(
+    '⚠️  Folder platform hilang: ${missing.join(', ')} — mencoba restore dari git...',
+  );
+
+  // Kalau appDir bagian dari repo git yang sudah ter-commit (kasus apps/main
+  // di starter kit ini), git HEAD adalah sumber PALING BENAR untuk isi folder
+  // itu — sudah termasuk semua kustomisasi (signing scaffold di
+  // build.gradle.kts, namespace, lokasi package Kotlin, dst), bukan cuma
+  // template default Flutter. Coba ini duluan, baru `flutter create` sebagai
+  // fallback untuk platform yang memang belum pernah ter-commit (mis. app
+  // baru dari create_app.dart). Diverifikasi langsung: `flutter create` di
+  // folder yang di-delete total menghasilkan build.gradle.kts TANPA blok
+  // signingConfigs kustom — regresi kalau dibiarkan jadi satu-satunya cara.
+  for (final platform in missing) {
+    await Process.run('git', ['checkout', 'HEAD', '--', '$appDir/$platform']);
+  }
+
+  missing = [
+    for (final platform in missing)
+      if (!Directory('$appDir/$platform').existsSync()) platform,
+  ];
+  if (missing.isEmpty) {
+    print('✅ Folder platform berhasil di-restore dari git.');
+    return;
+  }
+
+  print(
+    '   Belum pernah ter-commit, generate baru lewat flutter create: ${missing.join(', ')}...',
+  );
+  final flutterBin = await resolveExecutable('flutter') ?? 'flutter';
+  final ok = await runProcess(flutterBin, [
+    'create',
+    '--platforms=${missing.join(',')}',
+    '.',
+  ], workingDirectory: appDir);
+  if (!ok) {
+    print('❌ flutter create gagal — lihat pesan error di atas.');
+    return;
+  }
+
+  // flutter create bikin test/widget_test.dart default (boilerplate counter
+  // test) — starter kit ini pakai test/widget/widget_test.dart, jadi yang
+  // default dibuang supaya tidak dobel/basi.
+  final defaultTest = File('$appDir/test/widget_test.dart');
+  if (defaultTest.existsSync()) defaultTest.deleteSync();
+}
+
 /// Ubah identitas app di `appDir` (nama tampilan + bundle id) lewat
 /// tool `rename`, plus perbaikan manual untuk 2 celah yang tidak
-/// ditangani tool itu.
+/// ditangani tool itu. Return `false` kalau salah satu langkah gagal —
+/// diverifikasi langsung: `rename` keluar dengan exit code 1 (bukan
+/// melempar exception Dart) kalau file yang diedit tidak ada, jadi
+/// harus dicek manual, tidak cukup andalkan try/catch.
 Future<bool> renameApp({
   required String appDir,
   required String appName,
@@ -56,7 +121,7 @@ Future<bool> renameApp({
     return false;
   }
 
-  await runProcess(renameBin, [
+  final setAppNameOk = await runProcess(renameBin, [
     'setAppName',
     '--targets',
     'ios,android,web',
@@ -64,13 +129,18 @@ Future<bool> renameApp({
     appName,
   ], workingDirectory: appDir);
 
-  await runProcess(renameBin, [
+  final setBundleIdOk = await runProcess(renameBin, [
     'setBundleId',
     '--targets',
     'ios,android',
     '--value',
     bundleId,
   ], workingDirectory: appDir);
+
+  if (!setAppNameOk || !setBundleIdOk) {
+    print('❌ Rename gagal — lihat pesan error di atas.');
+    return false;
+  }
 
   fixNamespaceAndKotlinPackage(
     appDir: appDir,
@@ -175,7 +245,11 @@ Future<String?> resolveExecutable(String name) async {
   return null;
 }
 
-Future<void> runProcess(
+/// Return `true` kalau exit code 0. `rename` (dan tool CLI lain) sering
+/// tidak melempar exception Dart saat gagal — cuma print pesan error dan
+/// keluar dengan exit code bukan 0 — jadi ini WAJIB dicek pemanggilnya,
+/// bukan cuma dianggap "kalau tidak crash berarti berhasil".
+Future<bool> runProcess(
   String executable,
   List<String> args, {
   required String workingDirectory,
@@ -185,8 +259,10 @@ Future<void> runProcess(
     args,
     workingDirectory: workingDirectory,
   );
+  stdout.write(result.stdout);
   if (result.exitCode != 0) {
     stderr.write(result.stderr);
+    return false;
   }
-  stdout.write(result.stdout);
+  return true;
 }

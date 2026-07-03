@@ -66,7 +66,7 @@ Future<void> main() async {
 
   final flutterBin = await resolveExecutable('flutter') ?? 'flutter';
   print('▶ flutter create...');
-  await runProcess(flutterBin, [
+  final createOk = await runProcess(flutterBin, [
     'create',
     '--project-name',
     snakeName,
@@ -75,6 +75,11 @@ Future<void> main() async {
     '--platforms=android,ios,web',
     appDir,
   ], workingDirectory: '.');
+  if (!createOk) {
+    print('❌ flutter create gagal — lihat pesan error di atas.');
+    exitCode = 1;
+    return;
+  }
 
   // flutter create bikin test/widget_test.dart default — brick di bawah
   // menaruh smoke test di test/widget/widget_test.dart, jadi yang lama
@@ -95,7 +100,7 @@ Future<void> main() async {
 
   final varsFile = File('${Directory.systemTemp.path}/app_brick_vars.json')
     ..writeAsStringSync('{"name": "$snakeName"}');
-  await runProcess(masonBin, [
+  final makeOk = await runProcess(masonBin, [
     'make',
     'app_brick',
     '--config-path',
@@ -106,6 +111,11 @@ Future<void> main() async {
     'overwrite',
   ], workingDirectory: 'tools/mason');
   varsFile.deleteSync();
+  if (!makeOk) {
+    print('❌ mason make app_brick gagal — lihat pesan error di atas.');
+    exitCode = 1;
+    return;
+  }
 
   print('▶ Set nama aplikasi & bundle id...');
   final renamed = await renameApp(

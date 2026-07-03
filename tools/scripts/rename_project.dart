@@ -18,6 +18,11 @@ import 'rename_helper.dart';
 const appDir = 'apps/main';
 
 Future<void> main() async {
+  // Selalu dicek, terlepas dari mau rename atau tidak — kalau
+  // android/ios/web pernah terhapus manual, `rename` cuma akan error
+  // ("Missing build script..."), tidak pernah membuat folder itu lagi.
+  await ensurePlatformFolders(appDir);
+
   stdout.write('Rename starter kit ini untuk project kamu sekarang? (y/N): ');
   final proceed = stdin.readLineSync()?.trim().toLowerCase();
   if (proceed != 'y' && proceed != 'yes') {
