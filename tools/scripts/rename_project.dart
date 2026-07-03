@@ -18,6 +18,13 @@ import 'rename_helper.dart';
 const appDir = 'apps/main';
 
 Future<void> main() async {
+  // config/*.json (development/staging/production) sengaja di-gitignore —
+  // JANGAN pernah ter-commit karena bisa berisi data sensitif (lihat
+  // .gitignore) — jadi checkout fresh dari clone tidak akan punya file-file
+  // ini sama sekali. Salin dari .example.json kalau belum ada, supaya
+  // `melos run run:dev` dkk langsung jalan tanpa langkah manual tambahan.
+  ensureConfigFiles();
+
   // Selalu dicek, terlepas dari mau rename atau tidak — kalau
   // android/ios/web pernah terhapus manual, `rename` cuma akan error
   // ("Missing build script..."), tidak pernah membuat folder itu lagi.
@@ -71,4 +78,19 @@ Future<void> main() async {
 
   print('');
   print('✅ Rename selesai. Cek hasilnya dengan `melos run analyze`.');
+}
+
+void ensureConfigFiles() {
+  for (final env in ['development', 'staging', 'production']) {
+    final target = File('config/$env.json');
+    if (target.existsSync()) continue;
+
+    final example = File('config/$env.example.json');
+    if (!example.existsSync()) continue;
+
+    example.copySync(target.path);
+    print(
+      '📄 config/$env.json dibuat dari config/$env.example.json — isi dengan nilai kamu sendiri.',
+    );
+  }
 }
