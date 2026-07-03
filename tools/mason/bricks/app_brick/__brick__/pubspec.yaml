@@ -1,0 +1,49 @@
+name: {{name.snakeCase()}}
+description: "{{name.titleCase()}}"
+publish_to: none
+version: 1.0.0+1
+resolution: workspace
+
+environment:
+  sdk: ">=3.12.2 <4.0.0"
+  flutter: ">=3.44.3"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # Core packages
+  core:
+    path: ../../packages/core
+  core_network:
+    path: ../../packages/core_network
+  core_storage:
+    path: ../../packages/core_storage
+  core_ui:
+    path: ../../packages/core_ui
+  core_l10n:
+    path: ../../packages/core_l10n
+
+  # Navigation
+  go_router: ^17.3.0
+
+  # State management
+  flutter_bloc: ^9.1.1
+  bloc: ^9.2.1
+
+  # DI
+  get_it: ^9.2.1
+  connectivity_plus: ^7.1.1
+  sentry_flutter: ^8.14.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  mockito: ^5.4.0
+  build_runner: ^2.15.0
+
+flutter:
+  uses-material-design: true

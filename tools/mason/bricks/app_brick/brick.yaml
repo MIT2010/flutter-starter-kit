@@ -1,0 +1,9 @@
+name: app_brick
+description: "Generator app baru dalam satu monorepo (satu produk, banyak app)"
+version: 0.1.0
+
+vars:
+  name:
+    type: string
+    description: "Nama app dalam snake_case (contoh: akujamin_biro, admin_panel)"
+    prompt: "Nama app baru (snake_case):"

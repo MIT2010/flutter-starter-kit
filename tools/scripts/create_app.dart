@@ -1,0 +1,296 @@
+// ================================================================
+// Buat app baru dalam satu monorepo (satu produk, banyak app) —
+// dipanggil dari `melos run app:new`. Dart murni (dart:io saja)
+// supaya bisa dijalankan langsung
+// `dart run tools/scripts/create_app.dart` tanpa pubspec.yaml sendiri.
+//
+// Alur: flutter create (identitas platform benar dari awal) ->
+// mason make app_brick (skeleton Dart, timpa default flutter create) ->
+// rename (nama tampilan, lihat rename_helper.dart) ->
+// daftarkan ke workspace + melos scripts root pubspec.yaml.
+// ================================================================
+
+import 'dart:io';
+
+import 'rename_helper.dart';
+
+Future<void> main() async {
+  final detectedOrg = _detectOrgFromMain();
+
+  String org;
+  while (true) {
+    final hint = detectedOrg != null ? ' [$detectedOrg]' : '';
+    stdout.write('Org / reverse-domain$hint (contoh: id.nusatalent): ');
+    final input = (stdin.readLineSync() ?? '').trim();
+    if (input.isEmpty && detectedOrg != null) {
+      org = detectedOrg;
+      break;
+    }
+    if (isValidOrg(input)) {
+      org = input;
+      break;
+    }
+    print(
+      'Format tidak valid — harus lowercase, minimal 2 segmen dipisah titik.',
+    );
+  }
+
+  String appName;
+  while (true) {
+    stdout.write('Nama aplikasi (contoh: AkuJamin Biro): ');
+    appName = (stdin.readLineSync() ?? '').trim();
+    if (appName.isNotEmpty) break;
+    print('Nama aplikasi tidak boleh kosong.');
+  }
+
+  final defaultSnake = toSnakeCase(appName);
+  stdout.write('Nama folder/package, snake_case [$defaultSnake]: ');
+  final snakeInput = (stdin.readLineSync() ?? '').trim();
+  final snakeName = snakeInput.isEmpty ? defaultSnake : toSnakeCase(snakeInput);
+
+  final appDir = 'apps/$snakeName';
+  if (Directory(appDir).existsSync()) {
+    print('❌ Error: $appDir sudah ada.');
+    exitCode = 1;
+    return;
+  }
+
+  final bundleId = '$org.$snakeName';
+
+  print('');
+  print('Akan membuat app baru:');
+  print('  Folder        : $appDir');
+  print('  Nama aplikasi : $appName');
+  print('  Package/Bundle: $bundleId');
+  print('');
+
+  final flutterBin = await resolveExecutable('flutter') ?? 'flutter';
+  print('▶ flutter create...');
+  await runProcess(flutterBin, [
+    'create',
+    '--project-name',
+    snakeName,
+    '--org',
+    org,
+    '--platforms=android,ios,web',
+    appDir,
+  ], workingDirectory: '.');
+
+  // flutter create bikin test/widget_test.dart default — brick di bawah
+  // menaruh smoke test di test/widget/widget_test.dart, jadi yang lama
+  // (boilerplate counter test) dibuang supaya tidak dobel/basi.
+  final defaultTest = File('$appDir/test/widget_test.dart');
+  if (defaultTest.existsSync()) defaultTest.deleteSync();
+
+  final masonBin = await resolveExecutable('mason');
+  if (masonBin == null) {
+    print('❌ Tool "mason" tidak ditemukan. Jalankan dulu:');
+    print('   dart pub global activate mason_cli');
+    exitCode = 1;
+    return;
+  }
+
+  print('▶ mason make app_brick...');
+  await runProcess(masonBin, ['get'], workingDirectory: 'tools/mason');
+
+  final varsFile = File('${Directory.systemTemp.path}/app_brick_vars.json')
+    ..writeAsStringSync('{"name": "$snakeName"}');
+  await runProcess(masonBin, [
+    'make',
+    'app_brick',
+    '--config-path',
+    varsFile.path,
+    '--output-dir',
+    '../../$appDir',
+    '--on-conflict',
+    'overwrite',
+  ], workingDirectory: 'tools/mason');
+  varsFile.deleteSync();
+
+  print('▶ Set nama aplikasi & bundle id...');
+  final renamed = await renameApp(
+    appDir: appDir,
+    appName: appName,
+    bundleId: bundleId,
+    oldNamespace: readCurrentNamespace(appDir),
+  );
+  if (!renamed) {
+    exitCode = 1;
+    return;
+  }
+
+  _registerWorkspace(snakeName);
+  _insertMelosScripts(snakeName);
+
+  print('');
+  print('✅ App baru dibuat di $appDir.');
+  print('');
+  print('📋 Langkah selanjutnya:');
+  print('  1. dart pub get');
+  print('  2. melos run gen:l10n && melos run gen');
+  print('  3. Copy config/*.example.json -> config/*.json kalau belum ada');
+  print('  4. melos run run:$snakeName:dev:web (atau :android / :ios)');
+  print('  5. Tambah fitur lewat melos run feature:new');
+}
+
+/// Kalau `apps/main` masih ada, saran org default diambil dari
+/// applicationId-nya (buang segmen terakhir) — app kedua dst dalam satu
+/// produk biasanya satu org yang sama.
+String? _detectOrgFromMain() {
+  final gradleFile = File('apps/main/android/app/build.gradle.kts');
+  if (!gradleFile.existsSync()) return null;
+  final match = RegExp(
+    r'applicationId\s*=\s*"([^"]+)"',
+  ).firstMatch(gradleFile.readAsStringSync());
+  final applicationId = match?.group(1);
+  if (applicationId == null) return null;
+  final segments = applicationId.split('.');
+  if (segments.length < 2) return null;
+  return segments.sublist(0, segments.length - 1).join('.');
+}
+
+/// Windows checkout git ini pakai CRLF (`\r\n`) — anchor match & insert
+/// harus toleran ke line ending itu, diverifikasi langsung: match gagal
+/// total kalau anchor di-hardcode pakai `\n` polos.
+String _lineEnding(String content) => content.contains('\r\n') ? '\r\n' : '\n';
+
+void _registerWorkspace(String snakeName) {
+  final file = File('pubspec.yaml');
+  final content = file.readAsStringSync();
+  final eol = _lineEnding(content);
+  final anchor = RegExp(r'  - apps/main\r?\n');
+  if (!anchor.hasMatch(content)) {
+    print(
+      '⚠️  Tidak menemukan "- apps/main" di pubspec.yaml — daftarkan apps/$snakeName manual ke workspace.',
+    );
+    return;
+  }
+  file.writeAsStringSync(
+    content.replaceFirstMapped(
+      anchor,
+      (m) => '${m.group(0)}  - apps/$snakeName$eol',
+    ),
+  );
+}
+
+void _insertMelosScripts(String snakeName) {
+  final file = File('pubspec.yaml');
+  final content = file.readAsStringSync();
+  final eol = _lineEnding(content);
+  final anchor = RegExp(r'      description: "Build PWA \(production\)"\r?\n');
+  if (!anchor.hasMatch(content)) {
+    print(
+      '⚠️  Tidak menemukan anchor melos scripts di pubspec.yaml — tambahkan script run:$snakeName:*/build:$snakeName:* manual.',
+    );
+    return;
+  }
+  final block = _melosScriptsBlock(snakeName).replaceAll('\n', eol);
+  file.writeAsStringSync(
+    content.replaceFirstMapped(anchor, (m) => '${m.group(0)}$eol$block'),
+  );
+}
+
+String _melosScriptsBlock(String name) {
+  return '''
+    run:$name:dev:
+      run: >
+        cd apps/$name &&
+        flutter run
+        --target lib/main.dart
+        --dart-define-from-file=../../config/development.json
+      description: "Jalankan $name di mode development"
+
+    run:$name:dev:android:
+      run: >
+        cd apps/$name &&
+        flutter run
+        --target lib/main.dart
+        --dart-define-from-file=../../config/development.json
+        -d android
+      description: "Jalankan $name di Android (development)"
+
+    run:$name:dev:ios:
+      run: >
+        cd apps/$name &&
+        flutter run
+        --target lib/main.dart
+        --dart-define-from-file=../../config/development.json
+        -d ios
+      description: "Jalankan $name di iOS (development)"
+
+    run:$name:dev:web:
+      run: >
+        cd apps/$name &&
+        flutter run
+        --target lib/main.dart
+        --dart-define-from-file=../../config/development.json
+        -d chrome
+      description: "Jalankan $name di Chrome (development)"
+
+    run:$name:staging:
+      run: >
+        cd apps/$name &&
+        flutter run
+        --target lib/main_staging.dart
+        --dart-define-from-file=../../config/staging.json
+      description: "Jalankan $name di mode staging"
+
+    build:$name:android:staging:
+      run: >
+        cd apps/$name &&
+        flutter build apk
+        --target lib/main_staging.dart
+        --dart-define-from-file=../../config/staging.json
+        --release
+      description: "Build $name Android APK (staging, tanpa obfuscation)"
+
+    build:$name:ios:staging:
+      run: >
+        cd apps/$name &&
+        flutter build ipa
+        --target lib/main_staging.dart
+        --dart-define-from-file=../../config/staging.json
+        --release
+      description: "Build $name iOS IPA (staging, tanpa obfuscation)"
+
+    build:$name:web:staging:
+      run: >
+        cd apps/$name &&
+        flutter build web
+        --target lib/main_staging.dart
+        --dart-define-from-file=../../config/staging.json
+        --release
+      description: "Build $name PWA (staging)"
+
+    build:$name:android:prod:
+      run: >
+        cd apps/$name &&
+        flutter build apk
+        --target lib/main_production.dart
+        --dart-define-from-file=../../config/production.json
+        --release
+        --obfuscate
+        --split-debug-info=build/symbols/$name-android
+      description: "Build $name Android APK (production, dengan obfuscation)"
+
+    build:$name:ios:prod:
+      run: >
+        cd apps/$name &&
+        flutter build ipa
+        --target lib/main_production.dart
+        --dart-define-from-file=../../config/production.json
+        --release
+        --obfuscate
+        --split-debug-info=build/symbols/$name-ios
+      description: "Build $name iOS IPA (production, dengan obfuscation)"
+
+    build:$name:web:prod:
+      run: >
+        cd apps/$name &&
+        flutter build web
+        --target lib/main_production.dart
+        --dart-define-from-file=../../config/production.json
+        --release
+      description: "Build $name PWA (production)"
+''';
+}

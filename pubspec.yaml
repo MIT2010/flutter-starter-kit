@@ -204,5 +204,9 @@ melos:
       description: "Cek dependency yang outdated di semua package"
 
     feature:new:
-      run: cd tools/mason && mason make feature_brick
-      description: "Buat fitur baru dengan Mason brick"
+      run: bash tools/scripts/generate_feature.sh
+      description: "Buat fitur baru dengan Mason brick. Usage: ./tools/scripts/generate_feature.sh <nama_fitur>"
+
+    app:new:
+      run: dart run tools/scripts/create_app.dart
+      description: "Buat app baru dalam satu monorepo (masih satu produk, bukan starter kit terpisah)"
