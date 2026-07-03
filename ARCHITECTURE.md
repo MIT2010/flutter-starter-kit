@@ -67,6 +67,16 @@ Prinsip yang dipegang:
   `feature_profile`, `feature_notification` tidak diisi implementasi
   palsu — itu tempat kamu mulai bekerja, dengan `pubspec.yaml` dan
   struktur folder yang sudah benar dari `feature_brick`.
+- **Satu monorepo boleh berisi lebih dari satu app — selama masih satu
+  produk.** `apps/main` adalah app pertama; `melos run app:new`
+  (lihat bagian "Feature & App Scaffolding" di [README.md](README.md))
+  menambah app lain yang tetap memakai `core`/`core_network`/
+  `core_storage`/`core_ui`/`core_l10n` yang SAMA (bukan disalin). Cocok
+  untuk kasus
+  seperti satu app pengguna + satu app khusus staf/mitra untuk produk
+  yang sama. Kalau appnya sebetulnya produk yang BEDA (bukan cuma peran
+  pengguna yang beda), itu artinya butuh clone starter kit baru yang
+  terpisah, bukan app kedua di monorepo yang sama.
 
 ## Tech Stack
 

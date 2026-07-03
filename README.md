@@ -13,20 +13,23 @@ Monorepo Flutter dengan Clean Architecture, BLoC, dan code generation otomatis.
 git clone <repo-url>
 cd flutter_starter_kit
 
-# 2. Install Melos (sekali saja)
+# 2. Install Melos, Mason, dan rename (sekali saja)
 dart pub global activate melos
-
-# 3. Install Mason (sekali saja)
 dart pub global activate mason_cli
+dart pub global activate rename
 
-# 4. Setup — install deps + generate semua file
+# 3. Setup — install deps, rename project (opsional), generate semua file
 melos run setup
+# → Akan tanya: mau rename starter kit ini untuk project kamu sekarang?
+#   Jawab "y" lalu isi org (com.tokokita) dan nama aplikasi (Toko Kita) —
+#   apps/main langsung berganti identitas (Android/iOS/Web). Jawab "n"
+#   atau Enter untuk skip, bisa dijalankan lagi kapan saja.
 
-# 5. Buat config development (copy dari example)
+# 4. Buat config development (copy dari example)
 cp config/development.example.json config/development.json
 # Edit config/development.json sesuai environment kamu
 
-# 6. Jalankan aplikasi
+# 5. Jalankan aplikasi
 melos run run:dev:web
 ```
 
@@ -80,12 +83,12 @@ melos run gen:watch      # watch mode
 melos run gen:l10n       # generate localization
 ```
 
-### Feature Scaffolding
+### Feature & App Scaffolding
 
 ```bash
 # Buat fitur baru (generate seluruh clean architecture)
 melos run feature:new
-# → Mason akan prompt: nama fitur (snake_case)
+# → Tanya nama fitur (snake_case) kalau tidak dikasih argumen
 # → Output: packages/features/feature_<nama>/
 
 # Generate unit test untuk fitur yang sudah ada
@@ -96,6 +99,16 @@ melos run feature:new
 # → Output: packages/features/feature_<nama>/test/unit/
 # → Edit TODO sections sesuai entity dan use case
 # → Jalankan: cd packages/features/feature_<nama> && dart run build_runner build
+
+# Buat app BARU dalam satu monorepo — dipakai kalau satu produk memang
+# butuh lebih dari satu aplikasi (mis. app tes mandiri + app khusus biro),
+# BUKAN untuk starter kit yang berbeda produk (lihat ARCHITECTURE.md)
+melos run app:new
+# → Tanya org (menyarankan org yang sama dengan apps/main), nama aplikasi,
+#   nama folder/package (snake_case)
+# → Output: apps/<nama>/ — flutter create + skeleton starter kit
+#   (core/core_network/core_storage/core_ui/core_l10n sudah terhubung),
+#   otomatis terdaftar ke workspace + melos scripts run:<nama>:*/build:<nama>:*
 ```
 
 ---
@@ -177,9 +190,14 @@ flutter_starter_kit/
     ├── mason/
     │   └── bricks/
     │       ├── feature_brick/  # Generate struktur feature baru
-    │       └── test_brick/     # Generate unit test scaffold
+    │       ├── test_brick/     # Generate unit test scaffold
+    │       └── app_brick/      # Generate struktur app baru (satu monorepo)
     └── scripts/
-        └── generate_test.sh    # Wrapper untuk test_brick
+        ├── generate_test.sh    # Wrapper untuk test_brick
+        ├── generate_feature.sh # Wrapper untuk feature_brick
+        ├── rename_project.dart # Rename apps/main (dipanggil dari `melos run setup`)
+        ├── create_app.dart     # Orkestrasi `melos run app:new`
+        └── rename_helper.dart  # Logic bersama rename_project.dart + create_app.dart
 ```
 
 ---
