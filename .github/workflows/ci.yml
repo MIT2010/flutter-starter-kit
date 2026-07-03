@@ -6,6 +6,12 @@ on:
   pull_request:
     branches: [main, develop]
 
+# Push baru ke branch/PR yang sama membatalkan run sebelumnya yang masih
+# jalan — supersede oleh commit terbaru, bukan antre menghabiskan quota CI.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   analyze_and_test:
     name: Analyze & Test
@@ -45,3 +51,13 @@ jobs:
 
       - name: Run widget tests
         run: melos run test:widget
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-reports
+          path: |
+            packages/**/coverage/lcov.info
+            apps/**/coverage/lcov.info
+          retention-days: 7
+          if-no-files-found: ignore

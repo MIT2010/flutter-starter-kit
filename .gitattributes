@@ -1,0 +1,34 @@
+# Normalisasi line ending di repo ini sendiri, bukan tergantung config
+# git lokal tiap kontributor (core.autocrlf beda-beda default-nya di
+# Windows/Mac/Linux) — sumber "warning: LF will be replaced by CRLF"
+# yang berulang di sesi kerja repo ini. File yang sudah ter-commit TIDAK
+# langsung berubah (butuh `git add --renormalize .` manual sekali kalau
+# mau retroaktif); aturan ini berlaku untuk checkout/commit berikutnya.
+* text=auto eol=lf
+
+*.dart text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.sh text eol=lf
+*.gradle text eol=lf
+*.gradle.kts text eol=lf
+*.properties text eol=lf
+
+# Generated files — tidak perlu ditampilkan di diff/merge review
+*.g.dart -diff
+*.mocks.dart -diff
+*.freezed.dart -diff
+pubspec.lock -diff
+
+# Binary — jangan disentuh oleh normalisasi eol
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.jks binary
+*.keystore binary
+*.ttf binary
+*.otf binary

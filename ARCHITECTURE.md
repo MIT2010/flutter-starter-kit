@@ -522,6 +522,22 @@ Dua workflow terpisah, keduanya di `.github/workflows/`:
   yang sudah tersedia kalau kamu siap menambahkannya sendiri (command
   `build:*:prod` di melos, signing Android via `key.properties`).
 
+Keduanya pakai `concurrency` group (`cancel-in-progress: true`) — push baru
+ke branch/PR yang sama membatalkan run sebelumnya, bukan antre. `ci.yml`
+juga upload `coverage/lcov.info` tiap package sebagai artifact di akhir run
+(dari flag `--coverage` yang sudah dipakai `melos run test`) — belum
+di-gate ke angka minimum tertentu, sekadar tersedia untuk dicek manual atau
+disambungkan ke tool coverage pilihan kamu sendiri (Codecov, dll).
+
+`.github/dependabot.yml` — cek update dependency `pub` tiap package
+(terdaftar satu-satu, bukan cuma root, karena Dependabot tidak resolve
+field `workspace:` pubspec.yaml) plus GitHub Actions, mingguan.
+
+`.gitattributes` di root menormalkan line ending (`eol=lf` untuk source
+files) supaya konsisten lintas OS kontributor — sebelumnya bergantung ke
+`core.autocrlf` git lokal tiap orang, sumber warning "LF will be replaced
+by CRLF" yang sering muncul di Windows.
+
 ## Menambah Fitur Baru
 
 ```bash
