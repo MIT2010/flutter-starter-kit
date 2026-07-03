@@ -39,9 +39,7 @@ class LoginPage extends StatelessWidget {
             return switch (state) {
               AuthLoading() => const AppLoading(),
               AuthOtpSent(:final otp) => OtpForm(otp: otp),
-              _ => useOtpOnly
-                  ? _OtpOnlyForm()
-                  : const EmailPasswordForm(),
+              _ => useOtpOnly ? _OtpOnlyForm() : const EmailPasswordForm(),
             };
           },
         ),
@@ -69,10 +67,8 @@ class _OtpOnlyFormState extends State<_OtpOnlyForm> {
   void _onSubmit() {
     if (!_formKey.currentState!.validate()) return;
     context.read<AuthBloc>().add(
-          AuthRequestOtpEvent(
-            destination: _destinationController.text.trim(),
-          ),
-        );
+      AuthRequestOtpEvent(destination: _destinationController.text.trim()),
+    );
   }
 
   @override
@@ -106,10 +102,7 @@ class _OtpOnlyFormState extends State<_OtpOnlyForm> {
               },
             ),
             const SizedBox(height: AppSpacing.xl),
-            AppButton(
-              label: context.t.auth.otp.sendOtp,
-              onPressed: _onSubmit,
-            ),
+            AppButton(label: context.t.auth.otp.sendOtp, onPressed: _onSubmit),
           ],
         ),
       ),

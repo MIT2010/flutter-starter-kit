@@ -17,44 +17,40 @@ import 'widget_test.mocks.dart';
   SessionManagerImpl,
 ])
 void main() {
-  testWidgets(
-    'LoginPage menampilkan form email/password saat pertama dibuka',
-    (tester) async {
-      final authBloc = AuthBloc(
-        loginWithEmailPassword: MockLoginWithEmailPasswordUseCase(),
-        requestOtp: MockRequestOtpUseCase(),
-        verifyOtp: MockVerifyOtpUseCase(),
-        logout: MockLogoutUseCase(),
-        getCurrentUser: MockGetCurrentUserUseCase(),
-        sessionManager: MockSessionManagerImpl(),
-      );
-      addTearDown(authBloc.close);
+  testWidgets('LoginPage menampilkan form email/password saat pertama dibuka', (
+    tester,
+  ) async {
+    final authBloc = AuthBloc(
+      loginWithEmailPassword: MockLoginWithEmailPasswordUseCase(),
+      requestOtp: MockRequestOtpUseCase(),
+      verifyOtp: MockVerifyOtpUseCase(),
+      logout: MockLogoutUseCase(),
+      getCurrentUser: MockGetCurrentUserUseCase(),
+      sessionManager: MockSessionManagerImpl(),
+    );
+    addTearDown(authBloc.close);
 
-      await tester.pumpWidget(
-        TranslationProvider(
-          child: MaterialApp(
-            localizationsDelegates: const [
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: AppLocaleUtils.supportedLocales,
-            home: BlocProvider.value(
-              value: authBloc,
-              child: const LoginPage(),
-            ),
-          ),
+    await tester.pumpWidget(
+      TranslationProvider(
+        child: MaterialApp(
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: AppLocaleUtils.supportedLocales,
+          home: BlocProvider.value(value: authBloc, child: const LoginPage()),
         ),
-      );
+      ),
+    );
 
-      // State awal AuthBloc adalah AuthChecking, yang oleh LoginPage
-      // dirender sebagai EmailPasswordForm (Pola B) tanpa perlu
-      // menunggu event apa pun.
-      expect(find.text(t.auth.welcomeBack), findsOneWidget);
-      expect(find.text(t.auth.loginSubtitle), findsOneWidget);
-      expect(find.text(t.auth.email), findsOneWidget);
-      expect(find.text(t.auth.password), findsOneWidget);
-      expect(find.text(t.auth.login), findsOneWidget);
-    },
-  );
+    // State awal AuthBloc adalah AuthChecking, yang oleh LoginPage
+    // dirender sebagai EmailPasswordForm (Pola B) tanpa perlu
+    // menunggu event apa pun.
+    expect(find.text(t.auth.welcomeBack), findsOneWidget);
+    expect(find.text(t.auth.loginSubtitle), findsOneWidget);
+    expect(find.text(t.auth.email), findsOneWidget);
+    expect(find.text(t.auth.password), findsOneWidget);
+    expect(find.text(t.auth.login), findsOneWidget);
+  });
 }

@@ -8,9 +8,8 @@ sealed class RetryPolicy {
 
   /// Retry dengan batas maksimal — dipakai untuk operasi non-kritis
   /// Contoh: update profile, like, dll
-  const factory RetryPolicy.limited({
-    required int maxAttempts,
-  }) = LimitedRetryPolicy;
+  const factory RetryPolicy.limited({required int maxAttempts}) =
+      LimitedRetryPolicy;
 
   /// Cek apakah masih boleh retry berdasarkan jumlah percobaan saat ini
   bool shouldRetry(int currentAttempts);

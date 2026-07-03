@@ -2,10 +2,7 @@ import 'package:equatable/equatable.dart';
 
 /// Base sealed class untuk jawaban user
 sealed class UserAnswerEntity extends Equatable {
-  const UserAnswerEntity({
-    required this.questionId,
-    required this.answeredAt,
-  });
+  const UserAnswerEntity({required this.questionId, required this.answeredAt});
 
   final String questionId;
   final DateTime answeredAt;

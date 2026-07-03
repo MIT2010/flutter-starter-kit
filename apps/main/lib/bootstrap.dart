@@ -46,21 +46,14 @@ Future<void> bootstrap({AppFlavor flavor = AppFlavor.development}) async {
       Sentry.captureException(error, stackTrace: stackTrace);
     });
 
-    await SentryFlutter.init(
-      (options) {
-        options.dsn = AppEnv.sentryDsn;
-        options.environment = AppEnv.environment;
-        options.tracesSampleRate = flavor.isProduction ? 0.2 : 1.0;
-      },
-      appRunner: () => runApp(TranslationProvider(child: const App())),
-    );
+    await SentryFlutter.init((options) {
+      options.dsn = AppEnv.sentryDsn;
+      options.environment = AppEnv.environment;
+      options.tracesSampleRate = flavor.isProduction ? 0.2 : 1.0;
+    }, appRunner: () => runApp(TranslationProvider(child: const App())));
   } else {
     FlutterError.onError = (details) {
-      AppLogger.error(
-        'Flutter error',
-        details.exception,
-        details.stack,
-      );
+      AppLogger.error('Flutter error', details.exception, details.stack);
     };
     runApp(TranslationProvider(child: const App()));
   }

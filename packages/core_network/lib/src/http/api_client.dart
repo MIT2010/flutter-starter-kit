@@ -15,10 +15,10 @@ class ApiClient {
     Future<bool> Function()? refreshToken,
     bool enableSecurityCheck = true,
   }) : _dio = _createDio(
-          getAccessToken: getAccessToken,
-          refreshToken: refreshToken,
-          enableSecurityCheck: enableSecurityCheck,
-        );
+         getAccessToken: getAccessToken,
+         refreshToken: refreshToken,
+         enableSecurityCheck: enableSecurityCheck,
+       );
 
   final Dio _dio;
 
@@ -41,8 +41,7 @@ class ApiClient {
 
     dio.interceptors.addAll([
       // Security check — dijalankan pertama sebelum request apapun
-      if (enableSecurityCheck)
-        SecurityInterceptor(),
+      if (enableSecurityCheck) SecurityInterceptor(),
 
       // Auth — attach token, dan refresh otomatis sekali saat 401
       AuthInterceptor(

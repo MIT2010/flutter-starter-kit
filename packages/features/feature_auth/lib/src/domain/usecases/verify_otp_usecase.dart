@@ -11,17 +11,13 @@ class VerifyOtpUseCase {
   FutureEither<AuthTokenEntity> call(VerifyOtpParams params) {
     if (params.code.isEmpty) {
       return Future.value(
-        Either.left(
-          const ValidationFailure(message: 'Kode OTP wajib diisi'),
-        ),
+        Either.left(const ValidationFailure(message: 'Kode OTP wajib diisi')),
       );
     }
 
     if (params.code.length != 6) {
       return Future.value(
-        Either.left(
-          const ValidationFailure(message: 'Kode OTP harus 6 digit'),
-        ),
+        Either.left(const ValidationFailure(message: 'Kode OTP harus 6 digit')),
       );
     }
 
@@ -33,10 +29,7 @@ class VerifyOtpUseCase {
 }
 
 class VerifyOtpParams extends Equatable {
-  const VerifyOtpParams({
-    required this.destination,
-    required this.code,
-  });
+  const VerifyOtpParams({required this.destination, required this.code});
 
   final String destination;
   final String code;

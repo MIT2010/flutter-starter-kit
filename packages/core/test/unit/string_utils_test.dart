@@ -70,7 +70,10 @@ void main() {
 
   group('alphanumericOnly', () {
     test('menghapus semua karakter selain huruf dan angka', () {
-      expect(AppStringUtils.alphanumericOnly('Hello, World! 123'), 'HelloWorld123');
+      expect(
+        AppStringUtils.alphanumericOnly('Hello, World! 123'),
+        'HelloWorld123',
+      );
     });
   });
 }

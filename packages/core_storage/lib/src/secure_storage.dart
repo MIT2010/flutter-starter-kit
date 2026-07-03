@@ -7,11 +7,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 /// Di Web: menggunakan encrypted localStorage
 class SecureStorage {
   SecureStorage()
-      : _storage = const FlutterSecureStorage(
-          iOptions: IOSOptions(
-            accessibility: KeychainAccessibility.first_unlock,
-          ),
-        );
+    : _storage = const FlutterSecureStorage(
+        iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock),
+      );
 
   final FlutterSecureStorage _storage;
 

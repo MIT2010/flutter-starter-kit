@@ -2,10 +2,10 @@ import 'package:equatable/equatable.dart';
 
 /// Status item dalam antrian
 enum QueueItemStatus {
-  pending,    // menunggu dikirim
-  syncing,    // sedang dalam proses kirim
-  failed,     // gagal setelah max retry (hanya untuk limited queue)
-  completed,  // berhasil dikirim (akan dihapus dari queue)
+  pending, // menunggu dikirim
+  syncing, // sedang dalam proses kirim
+  failed, // gagal setelah max retry (hanya untuk limited queue)
+  completed, // berhasil dikirim (akan dihapus dari queue)
 }
 
 /// Item generik dalam offline queue.
@@ -57,15 +57,15 @@ class QueueItem extends Equatable {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'type': type,
-        'data': data,
-        'createdAt': createdAt.toIso8601String(),
-        'status': status.name,
-        'retryCount': retryCount,
-        'lastAttemptAt': lastAttemptAt?.toIso8601String(),
-        'lastError': lastError,
-      };
+    'id': id,
+    'type': type,
+    'data': data,
+    'createdAt': createdAt.toIso8601String(),
+    'status': status.name,
+    'retryCount': retryCount,
+    'lastAttemptAt': lastAttemptAt?.toIso8601String(),
+    'lastError': lastError,
+  };
 
   factory QueueItem.fromJson(Map<String, dynamic> json) {
     return QueueItem(
@@ -84,13 +84,13 @@ class QueueItem extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        type,
-        data,
-        createdAt,
-        status,
-        retryCount,
-        lastAttemptAt,
-        lastError,
-      ];
+    id,
+    type,
+    data,
+    createdAt,
+    status,
+    retryCount,
+    lastAttemptAt,
+    lastError,
+  ];
 }

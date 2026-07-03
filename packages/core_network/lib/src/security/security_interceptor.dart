@@ -18,7 +18,8 @@ class AppSecurityGuard {
   static final List<String> _detectedThreats = [];
 
   static bool get isSafe => _isSafe;
-  static List<String> get detectedThreats => List.unmodifiable(_detectedThreats);
+  static List<String> get detectedThreats =>
+      List.unmodifiable(_detectedThreats);
 
   /// Inisialisasi RASP engine — panggil sekali di bootstrap.
   /// Otomatis di-skip jika berjalan di Web.
@@ -62,10 +63,7 @@ class SecurityInterceptor extends Interceptor {
   final bool enableInDevelopment;
 
   @override
-  void onRequest(
-    RequestOptions options,
-    RequestInterceptorHandler handler,
-  ) {
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     // Skip pengecekan di development kecuali eksplisit diaktifkan
     if (AppEnv.isDevelopment && !enableInDevelopment) {
       return handler.next(options);

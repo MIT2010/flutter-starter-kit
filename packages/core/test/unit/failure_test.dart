@@ -48,10 +48,7 @@ void main() {
 
     test('ValidationFailure ikut membandingkan messages', () {
       expect(
-        const ValidationFailure(
-          message: 'gagal',
-          messages: ['a', 'b'],
-        ),
+        const ValidationFailure(message: 'gagal', messages: ['a', 'b']),
         const ValidationFailure(message: 'gagal', messages: ['a', 'b']),
       );
       expect(
@@ -62,11 +59,14 @@ void main() {
       );
     });
 
-    test('Failure dengan tipe berbeda tidak pernah sama meski message sama', () {
-      expect(
-        const NetworkFailure(message: 'x'),
-        isNot(equals(const UnknownFailure(message: 'x'))),
-      );
-    });
+    test(
+      'Failure dengan tipe berbeda tidak pernah sama meski message sama',
+      () {
+        expect(
+          const NetworkFailure(message: 'x'),
+          isNot(equals(const UnknownFailure(message: 'x'))),
+        );
+      },
+    );
   });
 }

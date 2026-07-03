@@ -31,10 +31,7 @@ abstract class AppEnv {
     defaultValue: 'wss://api-dev.example.com',
   );
 
-  static const int wsPort = int.fromEnvironment(
-    'WS_PORT',
-    defaultValue: 6001,
-  );
+  static const int wsPort = int.fromEnvironment('WS_PORT', defaultValue: 6001);
 
   static const String wsAppKey = String.fromEnvironment(
     'WS_APP_KEY',

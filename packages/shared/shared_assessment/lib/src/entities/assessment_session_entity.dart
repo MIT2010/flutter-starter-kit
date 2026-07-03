@@ -73,14 +73,14 @@ class AssessmentSessionEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        sessionId,
-        assessmentId,
-        startedAt,
-        completedAt,
-        status,
-        currentChapterId,
-        currentQuestionId,
-        answers,
-        chapterTimeRemaining,
-      ];
+    sessionId,
+    assessmentId,
+    startedAt,
+    completedAt,
+    status,
+    currentChapterId,
+    currentQuestionId,
+    answers,
+    chapterTimeRemaining,
+  ];
 }

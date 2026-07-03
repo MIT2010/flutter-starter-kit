@@ -38,10 +38,7 @@ final class AuthRequestOtpEvent extends AuthEvent {
 
 /// Verifikasi kode OTP
 final class AuthVerifyOtpEvent extends AuthEvent {
-  const AuthVerifyOtpEvent({
-    required this.destination,
-    required this.code,
-  });
+  const AuthVerifyOtpEvent({required this.destination, required this.code});
 
   final String destination;
   final String code;

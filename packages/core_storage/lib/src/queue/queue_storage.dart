@@ -27,9 +27,9 @@ class QueueStorage {
   Future<List<QueueItem>> getAll() async {
     final box = await _openBox;
     final items = box.values
-        .map((raw) => QueueItem.fromJson(
-              jsonDecode(raw) as Map<String, dynamic>,
-            ))
+        .map(
+          (raw) => QueueItem.fromJson(jsonDecode(raw) as Map<String, dynamic>),
+        )
         .toList();
     items.sort((a, b) => a.createdAt.compareTo(b.createdAt));
     return items;

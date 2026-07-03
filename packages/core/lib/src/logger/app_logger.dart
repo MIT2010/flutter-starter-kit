@@ -34,15 +34,22 @@ class AppLogger {
   static void info(dynamic message, [Object? error, StackTrace? stackTrace]) =>
       _talker.info(message, error, stackTrace);
 
-  static void warning(dynamic message, [Object? error, StackTrace? stackTrace]) =>
-      _talker.warning(message, error, stackTrace);
+  static void warning(
+    dynamic message, [
+    Object? error,
+    StackTrace? stackTrace,
+  ]) => _talker.warning(message, error, stackTrace);
 
   static void error(dynamic message, [Object? error, StackTrace? stackTrace]) {
     _talker.error(message, error, stackTrace);
     _errorReporter?.call(error ?? message, stackTrace);
   }
 
-  static void critical(dynamic message, [Object? error, StackTrace? stackTrace]) {
+  static void critical(
+    dynamic message, [
+    Object? error,
+    StackTrace? stackTrace,
+  ]) {
     _talker.critical(message, error, stackTrace);
     _errorReporter?.call(error ?? message, stackTrace);
   }

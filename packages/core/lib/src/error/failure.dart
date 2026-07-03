@@ -13,9 +13,7 @@ abstract class Failure extends Equatable {
 
 /// Tidak ada koneksi internet
 class NetworkFailure extends Failure {
-  const NetworkFailure({
-    super.message = 'Tidak ada koneksi internet',
-  });
+  const NetworkFailure({super.message = 'Tidak ada koneksi internet'});
 }
 
 /// Server mengembalikan error
@@ -37,9 +35,7 @@ class UnauthorizedFailure extends Failure {
 
 /// Data tidak ditemukan
 class NotFoundFailure extends Failure {
-  const NotFoundFailure({
-    super.message = 'Data tidak ditemukan',
-  });
+  const NotFoundFailure({super.message = 'Data tidak ditemukan'});
 }
 
 /// Masalah di local storage
@@ -49,10 +45,7 @@ class CacheFailure extends Failure {
 
 /// Validasi input gagal — bisa punya banyak pesan error
 class ValidationFailure extends Failure {
-  const ValidationFailure({
-    required super.message,
-    this.messages = const [],
-  });
+  const ValidationFailure({required super.message, this.messages = const []});
 
   /// Untuk kasus backend kirim "messages" berupa list
   final List<String> messages;

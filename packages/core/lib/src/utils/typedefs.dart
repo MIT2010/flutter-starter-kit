@@ -1,7 +1,8 @@
 import 'package:fpdart/fpdart.dart';
 import '../error/failure.dart';
 
-export 'package:fpdart/fpdart.dart' show Either, Left, Right, Unit, left, right, unit;
+export 'package:fpdart/fpdart.dart'
+    show Either, Left, Right, Unit, left, right, unit;
 
 /// Shorthand untuk return type yang bisa gagal atau berhasil.
 ///

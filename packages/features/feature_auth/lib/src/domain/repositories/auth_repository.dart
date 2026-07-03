@@ -8,18 +8,14 @@ abstract class AuthRepository {
     required String password,
   });
 
-  FutureEither<OtpEntity> requestOtp({
-    required String destination,
-  });
+  FutureEither<OtpEntity> requestOtp({required String destination});
 
   FutureEither<AuthTokenEntity> verifyOtp({
     required String destination,
     required String code,
   });
 
-  FutureEither<AuthTokenEntity> refreshToken({
-    required String refreshToken,
-  });
+  FutureEither<AuthTokenEntity> refreshToken({required String refreshToken});
 
   FutureEither<UserEntity> getCurrentUser();
 

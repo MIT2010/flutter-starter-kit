@@ -20,7 +20,8 @@ class DeviceSecurityResult {
   bool get isSafe => !isJailBroken && isRealDevice && !isMockLocation;
 
   @override
-  String toString() => 'DeviceSecurityResult('
+  String toString() =>
+      'DeviceSecurityResult('
       'isJailBroken: $isJailBroken, '
       'isRealDevice: $isRealDevice, '
       'isMockLocation: $isMockLocation)';

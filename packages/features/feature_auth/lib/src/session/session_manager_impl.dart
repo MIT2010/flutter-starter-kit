@@ -8,12 +8,11 @@ import '../data/datasources/auth_local_datasource.dart';
 /// status auth di seluruh aplikasi.
 class SessionManagerImpl implements SessionManager {
   SessionManagerImpl({required AuthLocalDataSource localDataSource})
-      : _local = localDataSource;
+    : _local = localDataSource;
 
   final AuthLocalDataSource _local;
 
-  final _statusController =
-      StreamController<AuthStatus>.broadcast();
+  final _statusController = StreamController<AuthStatus>.broadcast();
 
   AuthStatus _currentStatus = AuthStatus.checking;
   UserEntity? _currentUser;

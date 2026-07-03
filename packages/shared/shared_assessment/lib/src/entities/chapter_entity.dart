@@ -25,5 +25,12 @@ class ChapterEntity extends Equatable {
   bool get hasTimer => timeLimit != null;
 
   @override
-  List<Object?> get props => [id, title, questions, intro, instruksi, timeLimit];
+  List<Object?> get props => [
+    id,
+    title,
+    questions,
+    intro,
+    instruksi,
+    timeLimit,
+  ];
 }

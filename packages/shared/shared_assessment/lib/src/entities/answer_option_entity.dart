@@ -2,10 +2,7 @@ import 'package:equatable/equatable.dart';
 
 /// Satu pilihan jawaban
 class AnswerOptionEntity extends Equatable {
-  const AnswerOptionEntity({
-    required this.id,
-    required this.text,
-  });
+  const AnswerOptionEntity({required this.id, required this.text});
 
   final String id;
   final String text;

@@ -28,11 +28,11 @@ class _EmailPasswordFormState extends State<EmailPasswordForm> {
   void _onSubmit() {
     if (!_formKey.currentState!.validate()) return;
     context.read<AuthBloc>().add(
-          AuthLoginWithEmailPasswordEvent(
-            email: _emailController.text.trim(),
-            password: _passwordController.text,
-          ),
-        );
+      AuthLoginWithEmailPasswordEvent(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+      ),
+    );
   }
 
   @override
@@ -88,10 +88,7 @@ class _EmailPasswordFormState extends State<EmailPasswordForm> {
               },
             ),
             const SizedBox(height: AppSpacing.xl),
-            AppButton(
-              label: context.t.auth.login,
-              onPressed: _onSubmit,
-            ),
+            AppButton(label: context.t.auth.login, onPressed: _onSubmit),
           ],
         ),
       ),

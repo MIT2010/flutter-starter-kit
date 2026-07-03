@@ -51,17 +51,17 @@ class _OtpFormState extends State<OtpForm> {
   void _onSubmit() {
     if (!_formKey.currentState!.validate()) return;
     context.read<AuthBloc>().add(
-          AuthVerifyOtpEvent(
-            destination: widget.otp.destination,
-            code: _otpController.text.trim(),
-          ),
-        );
+      AuthVerifyOtpEvent(
+        destination: widget.otp.destination,
+        code: _otpController.text.trim(),
+      ),
+    );
   }
 
   void _onResend() {
     context.read<AuthBloc>().add(
-          AuthRequestOtpEvent(destination: widget.otp.destination),
-        );
+      AuthRequestOtpEvent(destination: widget.otp.destination),
+    );
   }
 
   String get _timerText {

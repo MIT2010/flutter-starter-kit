@@ -13,9 +13,7 @@ class AppException implements Exception {
 
 /// Masalah koneksi jaringan
 class NetworkException extends AppException {
-  const NetworkException({
-    super.message = 'Tidak dapat terhubung ke server',
-  });
+  const NetworkException({super.message = 'Tidak dapat terhubung ke server'});
 }
 
 /// Server mengembalikan response error
