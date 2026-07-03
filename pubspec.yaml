@@ -27,9 +27,10 @@ melos:
     setup:
       run: |
         dart pub get
+        dart run tools/scripts/rename_project.dart
         melos run gen:l10n
         melos run gen
-      description: "Setup awal — install deps, generate l10n dan mock files. Jalankan ini setelah clone repo."
+      description: "Setup awal — install deps, rename project (opsional), generate l10n dan mock files. Jalankan ini setelah clone repo."
 
     run:dev:
       run: >
