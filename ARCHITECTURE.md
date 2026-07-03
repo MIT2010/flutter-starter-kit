@@ -436,6 +436,18 @@ Tiga flavor (`development`, `staging`, `production`), masing-masing:
 keputusan runtime yang tidak datang dari file config, misalnya sample
 rate Sentry (`flavor.isProduction ? 0.2 : 1.0`).
 
+### Icon & Splash Screen
+
+`flutter_launcher_icons` (tool global, lihat catatan cli_util di
+`pubspec.yaml`) dan `flutter_native_splash` (project dependency, karena
+`bootstrap.dart` panggil `preserve()`/`remove()` saat runtime) sudah
+di-setup dengan placeholder generik (`assets/icon/icon.png` +
+`icon_foreground.png`, lingkaran putih di atas `#2563EB`). `app_brick`
+(template `melos run app:new`) menyertakan asset dan config yang sama,
+dan `create_app.dart` menjalankan kedua tool itu otomatis setelah app
+baru dibuat — lihat [README.md](README.md) bagian "Icon & Splash Screen"
+untuk cara mengganti dengan branding asli.
+
 ## Logging & Monitoring
 
 `AppLogger` (`core`, wrapper `talker`) dipakai di seluruh layer untuk

@@ -6,13 +6,21 @@ import 'package:core_network/core_network.dart';
 import 'package:core_storage/core_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'core/di/injection.dart';
 import 'core/observer/app_bloc_observer.dart';
 import 'app.dart';
 
 Future<void> bootstrap({AppFlavor flavor = AppFlavor.development}) async {
-  WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+
+  // Tahan splash screen native sampai bootstrap ini selesai (baru dilepas
+  // lewat FlutterNativeSplash.remove() di akhir fungsi) — tanpa ini, splash
+  // hilang begitu frame pertama digambar, padahal init di bawah (storage,
+  // DI, RASP, Sentry) bisa makan waktu, jadi user sempat lihat layar
+  // kosong/putih sebelum UI sungguhan siap.
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   // Orientasi hanya portrait
   await SystemChrome.setPreferredOrientations([
@@ -57,4 +65,6 @@ Future<void> bootstrap({AppFlavor flavor = AppFlavor.development}) async {
     };
     runApp(TranslationProvider(child: const App()));
   }
+
+  FlutterNativeSplash.remove();
 }

@@ -56,6 +56,12 @@ dependencies:
   connectivity_plus: ^7.1.1
   sentry_flutter: ^8.14.2
 
+  # Splash screen — dependency (bukan dev_dependency) karena preserve()/
+  # remove() dipanggil dari bootstrap.dart saat runtime, bukan cuma
+  # dipakai sebagai code generator sekali jalan (lihat komentar di
+  # bootstrap.dart untuk alasan preserve/remove-nya).
+  flutter_native_splash: ^2.4.8
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -65,3 +71,33 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+# flutter_launcher_icons TIDAK didaftarkan sebagai dependency di sini —
+# versi terbaru (^0.14.x) butuh cli_util ^0.4.1, bentrok dengan cli_util
+# ^0.5.0 yang diminta melos ^8.0.0 di root pubspec.yaml (satu workspace
+# native cuma bisa resolve satu versi cli_util untuk semua package).
+# Dipakai sebagai tool global saja (dart pub global activate
+# flutter_launcher_icons), sama seperti mason_cli/rename — lihat README
+# bagian Prasyarat. Config di bawah tetap dibaca tool itu dari pubspec.yaml
+# project ini kalau dijalankan dari folder apps/main.
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon/icon.png"
+  min_sdk_android: 21
+  remove_alpha_ios: true
+  adaptive_icon_background: "#2563EB"
+  adaptive_icon_foreground: "assets/icon/icon_foreground.png"
+  web:
+    generate: true
+    image_path: "assets/icon/icon.png"
+    background_color: "#2563EB"
+    theme_color: "#2563EB"
+
+flutter_native_splash:
+  color: "#2563EB"
+  image: assets/icon/icon_foreground.png
+  android_12:
+    color: "#2563EB"
+    image: assets/icon/icon_foreground.png
+  web: true

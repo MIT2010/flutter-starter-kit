@@ -13,10 +13,11 @@ Monorepo Flutter dengan Clean Architecture, BLoC, dan code generation otomatis.
 git clone <repo-url>
 cd flutter_starter_kit
 
-# 2. Install Melos, Mason, dan rename (sekali saja)
+# 2. Install Melos, Mason, rename, dan flutter_launcher_icons (sekali saja)
 dart pub global activate melos
 dart pub global activate mason_cli
 dart pub global activate rename
+dart pub global activate flutter_launcher_icons
 
 # 3. Setup — install deps, rename project (opsional), generate semua file
 melos run setup
@@ -145,6 +146,39 @@ Edit setiap file dengan nilai yang sesuai:
 ```
 
 `SENTRY_DSN` mengaktifkan crash reporting (Sentry) kalau diisi — kosongkan untuk development, error tetap tercatat lokal lewat `AppLogger`.
+
+---
+
+## Icon & Splash Screen
+
+`apps/main` (dan app baru dari `melos run app:new`) sudah ship dengan
+launcher icon + splash screen generik (lingkaran putih di atas biru
+`#2563EB`) supaya tidak dibiarkan default logo Flutter. Ganti dengan
+branding asli kamu:
+
+1. Timpa `assets/icon/icon.png` (1024×1024, dipakai untuk icon utama
+   iOS/Android/Web) dan `assets/icon/icon_foreground.png` (1024×1024,
+   **transparan**, dipakai untuk layer foreground adaptive icon Android
+   dan logo splash screen).
+2. Jalankan (dari folder app, mis. `apps/main`):
+   ```bash
+   dart pub global run flutter_launcher_icons
+   dart run flutter_native_splash:create
+   ```
+3. Warna background icon/splash diatur lewat `adaptive_icon_background`
+   (flutter_launcher_icons) dan `color`/`android_12.color`
+   (flutter_native_splash) di `pubspec.yaml` — ganti `"#2563EB"` sesuai
+   warna brand kamu.
+
+Config lengkap ada di `pubspec.yaml` app masing-masing, key
+`flutter_launcher_icons:`/`flutter_native_splash:`. `flutter_launcher_icons`
+sengaja dipakai sebagai tool global (bukan dependency project) — versi
+terbaru butuh `cli_util` yang bentrok dengan versi yang diminta `melos`
+dalam satu workspace. `flutter_native_splash` sebaliknya harus jadi
+dependency project (bukan dev_dependency) karena `bootstrap.dart`
+memanggil `FlutterNativeSplash.preserve()`/`remove()` saat runtime supaya
+splash tetap tampil selama proses init (storage, DI, RASP, Sentry)
+berjalan, bukan hilang begitu frame pertama digambar.
 
 ---
 
