@@ -4,37 +4,56 @@ import 'package:flutter_test/flutter_test.dart';
 import 'test_helpers.dart';
 
 void main() {
-  testWidgets('title default "Terjadi Kesalahan" kalau tidak diisi', (
-    tester,
-  ) async {
+  testWidgets('menampilkan title dan message', (tester) async {
     await tester.pumpWidget(
-      wrapWithApp(const AppErrorView(message: 'Gagal memuat data')),
+      wrapWithApp(
+        const AppErrorView(
+          title: 'Terjadi Kesalahan',
+          message: 'Gagal memuat data',
+        ),
+      ),
     );
 
     expect(find.text('Terjadi Kesalahan'), findsOneWidget);
     expect(find.text('Gagal memuat data'), findsOneWidget);
   });
 
-  testWidgets('title custom menimpa default', (tester) async {
+  testWidgets('tanpa onRetry/retryLabel tidak ada tombol', (tester) async {
     await tester.pumpWidget(
       wrapWithApp(
-        const AppErrorView(title: 'Koneksi Terputus', message: 'Cek internet'),
+        const AppErrorView(title: 'Terjadi Kesalahan', message: 'Gagal'),
       ),
     );
-    expect(find.text('Koneksi Terputus'), findsOneWidget);
-    expect(find.text('Terjadi Kesalahan'), findsNothing);
+    expect(find.byType(AppButton), findsNothing);
   });
 
-  testWidgets('tanpa onRetry tidak ada tombol', (tester) async {
-    await tester.pumpWidget(wrapWithApp(const AppErrorView(message: 'Gagal')));
-    expect(find.text('Coba Lagi'), findsNothing);
+  testWidgets('onRetry tanpa retryLabel tidak menampilkan tombol', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      wrapWithApp(
+        AppErrorView(
+          title: 'Terjadi Kesalahan',
+          message: 'Gagal',
+          onRetry: () {},
+        ),
+      ),
+    );
+    expect(find.byType(AppButton), findsNothing);
   });
 
-  testWidgets('onRetry memanggil callback saat tombol di-tap', (tester) async {
+  testWidgets('onRetry+retryLabel memanggil callback saat tombol di-tap', (
+    tester,
+  ) async {
     var retried = false;
     await tester.pumpWidget(
       wrapWithApp(
-        AppErrorView(message: 'Gagal', onRetry: () => retried = true),
+        AppErrorView(
+          title: 'Terjadi Kesalahan',
+          message: 'Gagal',
+          retryLabel: 'Coba Lagi',
+          onRetry: () => retried = true,
+        ),
       ),
     );
 

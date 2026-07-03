@@ -5,17 +5,25 @@ import '../tokens/app_typography.dart';
 import 'app_button.dart';
 
 /// Error view yang konsisten di seluruh aplikasi.
+///
+/// `title` wajib diisi (bukan default hardcoded) supaya teks selalu lewat
+/// `core_l10n` di pemanggil — `core_ui` sendiri tidak bergantung ke paket
+/// l10n manapun, jadi tidak boleh ada teks berbahasa tertentu yang
+/// ke-hardcode di sini (sebelumnya default 'Terjadi Kesalahan'/'Coba Lagi'
+/// selalu muncul dalam Bahasa Indonesia meski locale aktif English).
 class AppErrorView extends StatelessWidget {
   const AppErrorView({
     super.key,
+    required this.title,
     required this.message,
     this.onRetry,
-    this.title,
+    this.retryLabel,
   });
 
+  final String title;
   final String message;
   final VoidCallback? onRetry;
-  final String? title;
+  final String? retryLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +47,7 @@ class AppErrorView extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.lg),
             Text(
-              title ?? 'Terjadi Kesalahan',
+              title,
               style: AppTypography.headingSm.copyWith(
                 color: AppColors.textPrimary,
               ),
@@ -53,10 +61,10 @@ class AppErrorView extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            if (onRetry != null) ...[
+            if (onRetry != null && retryLabel != null) ...[
               const SizedBox(height: AppSpacing.xl),
               AppButton(
-                label: 'Coba Lagi',
+                label: retryLabel!,
                 onPressed: onRetry,
                 variant: AppButtonVariant.outline,
                 width: 160,

@@ -68,8 +68,16 @@ AppButton(label: 'Simpan', onPressed: _onSave, variant: AppButtonVariant.primary
 AppTextField(label: 'Email', controller: _emailController, validator: ...);
 
 AppLoading.fullScreen(message: 'Memuat...');
-AppErrorView(message: failure.message, onRetry: _onRetry);
-AppEmptyView(message: 'Belum ada data');
+// title dan retryLabel wajib diisi eksplisit (mis. context.t.error.generic,
+// context.t.common.retry) — core_ui tidak bergantung ke core_l10n, jadi
+// tidak ada default teks berbahasa tertentu yang ke-hardcode di sini.
+AppErrorView(
+  title: context.t.error.generic,
+  message: failure.message,
+  retryLabel: context.t.common.retry,
+  onRetry: _onRetry,
+);
+AppEmptyView(title: 'Belum ada data');
 
 AppCard(child: ...); // otomatis sesuaikan warna dark/light mode
 AppBadge.success('Aktif');

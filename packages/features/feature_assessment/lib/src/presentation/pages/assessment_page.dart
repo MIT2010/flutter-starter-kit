@@ -1,3 +1,4 @@
+import 'package:core_l10n/core_l10n.dart';
 import 'package:core_ui/core_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,7 +43,9 @@ class AssessmentPage extends StatelessWidget {
               AssessmentInProgress() => AssessmentQuestionPage(state: state),
               AssessmentCompleted() => const AssessmentCompletePage(),
               AssessmentError(:final message) => AppErrorView(
+                title: context.t.error.generic,
                 message: message,
+                retryLabel: context.t.common.retry,
                 onRetry: () => context.read<AssessmentBloc>().add(
                   AssessmentLoadRequested(assessmentId: assessmentId),
                 ),

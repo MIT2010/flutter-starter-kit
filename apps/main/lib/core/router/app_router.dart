@@ -1,5 +1,6 @@
 import 'package:core/core.dart';
 import 'package:core_l10n/core_l10n.dart';
+import 'package:core_ui/core_ui.dart';
 import 'package:feature_assessment/feature_assessment.dart';
 import 'package:feature_auth/feature_auth.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,14 @@ class AppRouter {
     initialLocation: LoginPage.routePath,
     debugLogDiagnostics: true,
     redirect: _authGuard,
+    errorBuilder: (context, state) => Scaffold(
+      body: AppErrorView(
+        title: context.t.error.notFound,
+        message: state.error?.toString() ?? context.t.error.generic,
+        retryLabel: context.t.common.back,
+        onRetry: () => context.go('/home'),
+      ),
+    ),
     routes: [
       GoRoute(
         path: LoginPage.routePath,
@@ -80,7 +89,8 @@ class _PlaceholderHome extends StatelessWidget {
             ElevatedButton(
               // Belum ada feature_dashboard untuk daftar assessment,
               // jadi entry point sementara ke satu assessment demo.
-              onPressed: () => context.go(AssessmentPage.path('demo-assessment')),
+              onPressed: () =>
+                  context.go(AssessmentPage.path('demo-assessment')),
               child: Text(context.t.assessment.startTest),
             ),
             const SizedBox(height: 16),
