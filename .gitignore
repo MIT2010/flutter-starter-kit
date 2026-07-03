@@ -34,6 +34,9 @@ lcov.info
 **/android/.gradle/
 **/android/local.properties
 **/android/captures/
+**/android/key.properties
+*.jks
+*.keystore
 
 # iOS
 **/ios/Pods/
