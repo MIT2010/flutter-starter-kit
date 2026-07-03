@@ -4,6 +4,7 @@ import '../tokens/app_spacing.dart';
 import '../tokens/app_typography.dart';
 
 enum AppButtonVariant { primary, secondary, outline, text, danger }
+
 enum AppButtonSize { sm, md, lg }
 
 /// Button component dengan loading state dan berbagai variant.
@@ -32,16 +33,16 @@ class AppButton extends StatelessWidget {
   final double? width;
 
   double get _height => switch (size) {
-        AppButtonSize.sm => AppSpacing.buttonHeightSm,
-        AppButtonSize.md => AppSpacing.buttonHeightMd,
-        AppButtonSize.lg => AppSpacing.buttonHeightLg,
-      };
+    AppButtonSize.sm => AppSpacing.buttonHeightSm,
+    AppButtonSize.md => AppSpacing.buttonHeightMd,
+    AppButtonSize.lg => AppSpacing.buttonHeightLg,
+  };
 
   TextStyle get _textStyle => switch (size) {
-        AppButtonSize.sm => AppTypography.buttonMd,
-        AppButtonSize.md => AppTypography.buttonMd,
-        AppButtonSize.lg => AppTypography.buttonLg,
-      };
+    AppButtonSize.sm => AppTypography.buttonMd,
+    AppButtonSize.md => AppTypography.buttonMd,
+    AppButtonSize.lg => AppTypography.buttonLg,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +81,13 @@ class AppButton extends StatelessWidget {
           Icon(prefixIcon, size: AppSpacing.iconSm),
           const SizedBox(width: AppSpacing.xs),
         ],
-        Text(label, style: _textStyle),
+        Flexible(
+          child: Text(
+            label,
+            style: _textStyle,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
         if (suffixIcon != null) ...[
           const SizedBox(width: AppSpacing.xs),
           Icon(suffixIcon, size: AppSpacing.iconSm),
@@ -140,9 +147,7 @@ class AppButton extends StatelessWidget {
   Widget _buildText(BuildContext context, bool isActive) {
     return TextButton(
       onPressed: isActive ? onPressed : null,
-      style: TextButton.styleFrom(
-        foregroundColor: AppColors.primary,
-      ),
+      style: TextButton.styleFrom(foregroundColor: AppColors.primary),
       child: _buildChild(),
     );
   }

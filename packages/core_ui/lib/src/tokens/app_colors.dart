@@ -8,25 +8,25 @@ abstract class AppColors {
 
   // ── Brand ────────────────────────────────────────────────
   // Warna utama aplikasi — ganti di sini untuk rebranding
-  static const Color primary = Color(0xFF2563EB);        // Biru utama
-  static const Color primaryLight = Color(0xFF60A5FA);   // Biru muda
-  static const Color primaryDark = Color(0xFF1D4ED8);    // Biru tua
-  static const Color onPrimary = Color(0xFFFFFFFF);      // Teks di atas primary
+  static const Color primary = Color(0xFF2563EB); // Biru utama
+  static const Color primaryLight = Color(0xFF60A5FA); // Biru muda
+  static const Color primaryDark = Color(0xFF1D4ED8); // Biru tua
+  static const Color onPrimary = Color(0xFFFFFFFF); // Teks di atas primary
 
-  static const Color secondary = Color(0xFF7C3AED);      // Ungu
+  static const Color secondary = Color(0xFF7C3AED); // Ungu
   static const Color secondaryLight = Color(0xFFA78BFA); // Ungu muda
-  static const Color secondaryDark = Color(0xFF5B21B6);  // Ungu tua
-  static const Color onSecondary = Color(0xFFFFFFFF);    // Teks di atas secondary
+  static const Color secondaryDark = Color(0xFF5B21B6); // Ungu tua
+  static const Color onSecondary = Color(0xFFFFFFFF); // Teks di atas secondary
 
   // ── Semantic ─────────────────────────────────────────────
-  static const Color success = Color(0xFF16A34A);        // Hijau
-  static const Color successLight = Color(0xFFBBF7D0);   // Hijau muda
-  static const Color warning = Color(0xFFD97706);        // Kuning
-  static const Color warningLight = Color(0xFFFDE68A);   // Kuning muda
-  static const Color error = Color(0xFFDC2626);          // Merah
-  static const Color errorLight = Color(0xFFFECACA);     // Merah muda
-  static const Color info = Color(0xFF0284C7);           // Biru info
-  static const Color infoLight = Color(0xFFBAE6FD);      // Biru info muda
+  static const Color success = Color(0xFF16A34A); // Hijau
+  static const Color successLight = Color(0xFFBBF7D0); // Hijau muda
+  static const Color warning = Color(0xFFD97706); // Kuning
+  static const Color warningLight = Color(0xFFFDE68A); // Kuning muda
+  static const Color error = Color(0xFFDC2626); // Merah
+  static const Color errorLight = Color(0xFFFECACA); // Merah muda
+  static const Color info = Color(0xFF0284C7); // Biru info
+  static const Color infoLight = Color(0xFFBAE6FD); // Biru info muda
 
   // ── Neutral (Light Mode) ─────────────────────────────────
   static const Color white = Color(0xFFFFFFFF);

@@ -13,20 +13,20 @@ class AppBadge extends StatelessWidget {
   });
 
   const AppBadge.success({super.key, required this.label})
-      : color = AppColors.success,
-        backgroundColor = AppColors.successLight;
+    : color = AppColors.success,
+      backgroundColor = AppColors.successLight;
 
   const AppBadge.warning({super.key, required this.label})
-      : color = AppColors.warning,
-        backgroundColor = AppColors.warningLight;
+    : color = AppColors.warning,
+      backgroundColor = AppColors.warningLight;
 
   const AppBadge.error({super.key, required this.label})
-      : color = AppColors.error,
-        backgroundColor = AppColors.errorLight;
+    : color = AppColors.error,
+      backgroundColor = AppColors.errorLight;
 
   const AppBadge.info({super.key, required this.label})
-      : color = AppColors.info,
-        backgroundColor = AppColors.infoLight;
+    : color = AppColors.info,
+      backgroundColor = AppColors.infoLight;
 
   final String label;
   final Color? color;

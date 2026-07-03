@@ -4,12 +4,7 @@ import '../tokens/app_spacing.dart';
 
 /// Divider dengan style yang konsisten.
 class AppDivider extends StatelessWidget {
-  const AppDivider({
-    super.key,
-    this.height,
-    this.indent,
-    this.endIndent,
-  });
+  const AppDivider({super.key, this.height, this.indent, this.endIndent});
 
   final double? height;
   final double? indent;

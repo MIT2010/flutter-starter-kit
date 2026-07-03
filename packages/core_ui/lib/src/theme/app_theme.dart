@@ -8,36 +8,36 @@ abstract class AppTheme {
   AppTheme._();
 
   static ThemeData get light => ThemeData(
-        useMaterial3: true,
-        colorScheme: _lightColorScheme,
-        textTheme: AppTypography.textTheme,
-        scaffoldBackgroundColor: AppColors.neutral50,
-        appBarTheme: _appBarTheme(isDark: false),
-        elevatedButtonTheme: _elevatedButtonTheme,
-        outlinedButtonTheme: _outlinedButtonTheme,
-        textButtonTheme: _textButtonTheme,
-        inputDecorationTheme: _inputDecorationTheme(isDark: false),
-        cardTheme: _cardTheme(isDark: false),
-        dividerTheme: _dividerTheme(isDark: false),
-        bottomNavigationBarTheme: _bottomNavTheme(isDark: false),
-        chipTheme: _chipTheme(isDark: false),
-      );
+    useMaterial3: true,
+    colorScheme: _lightColorScheme,
+    textTheme: AppTypography.textTheme,
+    scaffoldBackgroundColor: AppColors.neutral50,
+    appBarTheme: _appBarTheme(isDark: false),
+    elevatedButtonTheme: _elevatedButtonTheme,
+    outlinedButtonTheme: _outlinedButtonTheme,
+    textButtonTheme: _textButtonTheme,
+    inputDecorationTheme: _inputDecorationTheme(isDark: false),
+    cardTheme: _cardTheme(isDark: false),
+    dividerTheme: _dividerTheme(isDark: false),
+    bottomNavigationBarTheme: _bottomNavTheme(isDark: false),
+    chipTheme: _chipTheme(isDark: false),
+  );
 
   static ThemeData get dark => ThemeData(
-        useMaterial3: true,
-        colorScheme: _darkColorScheme,
-        textTheme: AppTypography.textTheme,
-        scaffoldBackgroundColor: AppColors.neutral900,
-        appBarTheme: _appBarTheme(isDark: true),
-        elevatedButtonTheme: _elevatedButtonTheme,
-        outlinedButtonTheme: _outlinedButtonTheme,
-        textButtonTheme: _textButtonTheme,
-        inputDecorationTheme: _inputDecorationTheme(isDark: true),
-        cardTheme: _cardTheme(isDark: true),
-        dividerTheme: _dividerTheme(isDark: true),
-        bottomNavigationBarTheme: _bottomNavTheme(isDark: true),
-        chipTheme: _chipTheme(isDark: true),
-      );
+    useMaterial3: true,
+    colorScheme: _darkColorScheme,
+    textTheme: AppTypography.textTheme,
+    scaffoldBackgroundColor: AppColors.neutral900,
+    appBarTheme: _appBarTheme(isDark: true),
+    elevatedButtonTheme: _elevatedButtonTheme,
+    outlinedButtonTheme: _outlinedButtonTheme,
+    textButtonTheme: _textButtonTheme,
+    inputDecorationTheme: _inputDecorationTheme(isDark: true),
+    cardTheme: _cardTheme(isDark: true),
+    dividerTheme: _dividerTheme(isDark: true),
+    bottomNavigationBarTheme: _bottomNavTheme(isDark: true),
+    chipTheme: _chipTheme(isDark: true),
+  );
 
   // ── Color Schemes ─────────────────────────────────────────
 
@@ -68,47 +68,45 @@ abstract class AppTheme {
   // ── Component Themes ──────────────────────────────────────
 
   static AppBarTheme _appBarTheme({required bool isDark}) => AppBarTheme(
-        elevation: 0,
-        centerTitle: false,
-        backgroundColor:
-            isDark ? AppColors.surfaceDark : AppColors.surface,
-        foregroundColor:
-            isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-        titleTextStyle: AppTypography.headingSm.copyWith(
-          color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-        ),
-      );
+    elevation: 0,
+    centerTitle: false,
+    backgroundColor: isDark ? AppColors.surfaceDark : AppColors.surface,
+    foregroundColor: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+    titleTextStyle: AppTypography.headingSm.copyWith(
+      color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+    ),
+  );
 
   static final ElevatedButtonThemeData _elevatedButtonTheme =
       ElevatedButtonThemeData(
-    style: ElevatedButton.styleFrom(
-      backgroundColor: AppColors.primary,
-      foregroundColor: AppColors.onPrimary,
-      minimumSize: const Size(double.infinity, AppSpacing.buttonHeightMd),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(AppSpacing.radiusMd),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.primary,
+          foregroundColor: AppColors.onPrimary,
+          minimumSize: const Size(double.infinity, AppSpacing.buttonHeightMd),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(AppSpacing.radiusMd),
+            ),
+          ),
+          textStyle: AppTypography.buttonMd,
+          elevation: 0,
         ),
-      ),
-      textStyle: AppTypography.buttonMd,
-      elevation: 0,
-    ),
-  );
+      );
 
   static final OutlinedButtonThemeData _outlinedButtonTheme =
       OutlinedButtonThemeData(
-    style: OutlinedButton.styleFrom(
-      foregroundColor: AppColors.primary,
-      minimumSize: const Size(double.infinity, AppSpacing.buttonHeightMd),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(AppSpacing.radiusMd),
+        style: OutlinedButton.styleFrom(
+          foregroundColor: AppColors.primary,
+          minimumSize: const Size(double.infinity, AppSpacing.buttonHeightMd),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(AppSpacing.radiusMd),
+            ),
+          ),
+          side: const BorderSide(color: AppColors.primary),
+          textStyle: AppTypography.buttonMd,
         ),
-      ),
-      side: const BorderSide(color: AppColors.primary),
-      textStyle: AppTypography.buttonMd,
-    ),
-  );
+      );
 
   static final TextButtonThemeData _textButtonTheme = TextButtonThemeData(
     style: TextButton.styleFrom(
@@ -158,16 +156,14 @@ abstract class AppTheme {
       );
 
   static CardThemeData _cardTheme({required bool isDark}) => CardThemeData(
-        elevation: 0,
-        color: isDark ? AppColors.neutral800 : AppColors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
-          side: BorderSide(
-            color: isDark ? AppColors.borderDark : AppColors.border,
-          ),
-        ),
-        margin: EdgeInsets.zero,
-      );
+    elevation: 0,
+    color: isDark ? AppColors.neutral800 : AppColors.white,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(AppSpacing.cardRadius),
+      side: BorderSide(color: isDark ? AppColors.borderDark : AppColors.border),
+    ),
+    margin: EdgeInsets.zero,
+  );
 
   static DividerThemeData _dividerTheme({required bool isDark}) =>
       DividerThemeData(
@@ -176,30 +172,25 @@ abstract class AppTheme {
         space: 0,
       );
 
-  static BottomNavigationBarThemeData _bottomNavTheme(
-          {required bool isDark}) =>
+  static BottomNavigationBarThemeData _bottomNavTheme({required bool isDark}) =>
       BottomNavigationBarThemeData(
-        backgroundColor:
-            isDark ? AppColors.surfaceDark : AppColors.surface,
+        backgroundColor: isDark ? AppColors.surfaceDark : AppColors.surface,
         selectedItemColor: AppColors.primary,
-        unselectedItemColor:
-            isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+        unselectedItemColor: isDark
+            ? AppColors.textSecondaryDark
+            : AppColors.textSecondary,
         elevation: 0,
         type: BottomNavigationBarType.fixed,
       );
 
   static ChipThemeData _chipTheme({required bool isDark}) => ChipThemeData(
-        backgroundColor:
-            isDark ? AppColors.neutral800 : AppColors.neutral100,
-        labelStyle: AppTypography.labelSm.copyWith(
-          color:
-              isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-        ),
-        side: BorderSide(
-          color: isDark ? AppColors.borderDark : AppColors.border,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
-        ),
-      );
+    backgroundColor: isDark ? AppColors.neutral800 : AppColors.neutral100,
+    labelStyle: AppTypography.labelSm.copyWith(
+      color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+    ),
+    side: BorderSide(color: isDark ? AppColors.borderDark : AppColors.border),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
+    ),
+  );
 }

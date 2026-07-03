@@ -61,11 +61,7 @@ class AppEmptyView extends StatelessWidget {
             ],
             if (actionLabel != null && onAction != null) ...[
               const SizedBox(height: AppSpacing.xl),
-              AppButton(
-                label: actionLabel!,
-                onPressed: onAction,
-                width: 160,
-              ),
+              AppButton(label: actionLabel!, onPressed: onAction, width: 160),
             ],
           ],
         ),

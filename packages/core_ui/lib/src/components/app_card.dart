@@ -28,24 +28,22 @@ class AppCard extends StatelessWidget {
     final container = Container(
       padding: padding ?? const EdgeInsets.all(AppSpacing.cardPadding),
       decoration: BoxDecoration(
-        color: backgroundColor ??
+        color:
+            backgroundColor ??
             (isDark ? AppColors.neutral800 : AppColors.white),
         borderRadius: BorderRadius.circular(
           borderRadius ?? AppSpacing.cardRadius,
         ),
         border: Border.all(
-          color: borderColor ??
-              (isDark ? AppColors.borderDark : AppColors.border),
+          color:
+              borderColor ?? (isDark ? AppColors.borderDark : AppColors.border),
         ),
       ),
       child: child,
     );
 
     if (onTap != null) {
-      return GestureDetector(
-        onTap: onTap,
-        child: container,
-      );
+      return GestureDetector(onTap: onTap, child: container);
     }
 
     return container;

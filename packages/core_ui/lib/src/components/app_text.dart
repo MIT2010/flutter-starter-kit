@@ -136,9 +136,7 @@ class AppText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: _resolveStyle().copyWith(
-        color: color ?? AppColors.textPrimary,
-      ),
+      style: _resolveStyle().copyWith(color: color ?? AppColors.textPrimary),
       textAlign: textAlign,
       maxLines: maxLines,
       overflow: maxLines != null ? TextOverflow.ellipsis : null,

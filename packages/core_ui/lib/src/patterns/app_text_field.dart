@@ -68,9 +68,7 @@ class AppTextField extends StatelessWidget {
       maxLength: maxLength,
       focusNode: focusNode,
       autofocus: autofocus,
-      style: AppTypography.bodyMd.copyWith(
-        color: AppColors.textPrimary,
-      ),
+      style: AppTypography.bodyMd.copyWith(color: AppColors.textPrimary),
       decoration: InputDecoration(
         labelText: label,
         hintText: hint,

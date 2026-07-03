@@ -81,6 +81,17 @@ Lihat pemakaian nyata di `feature_auth` (`login_page.dart`,
 
 ## Testing
 
-Belum ada widget test khusus untuk `core_ui` — kalau menambah komponen
-baru dengan logic non-trivial (bukan sekadar styling), tambahkan test
-di `test/` mengikuti pola paket lain di workspace ini.
+Widget test ada di `test/widget/`, satu file per komponen/pattern
+(`AppButton`, `AppTextField`, `AppTheme`, dst). `test/widget/test_helpers.dart`
+menyediakan `wrapWithApp()` untuk bungkus widget dengan `MaterialApp`+`Scaffold`
+minimal saat testing.
+
+`test/flutter_test_config.dart` mematikan `GoogleFonts.config.allowRuntimeFetching`
+supaya test tidak mencoba fetch font Inter lewat jaringan (lambat/flaky, gagal
+total tanpa akses internet) — kalau menambah test baru yang menyentuh
+`AppTheme`/`AppTypography`, pakai `testWidgets` (bukan `test` polos) supaya
+Future font-loading yang pending ikut ter-drain oleh pump, bukan nyasar
+dilaporkan sebagai gagal di test lain.
+
+Kalau menambah komponen baru dengan logic non-trivial (bukan sekadar
+styling), tambahkan test mengikuti pola yang sama.
