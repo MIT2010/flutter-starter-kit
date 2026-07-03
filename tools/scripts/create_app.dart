@@ -132,15 +132,57 @@ Future<void> main() async {
   _registerWorkspace(snakeName);
   _insertMelosScripts(snakeName);
 
+  final dartBin = await resolveExecutable('dart') ?? 'dart';
+
+  // pub get di root (workspace) — WAJIB sebelum flutter_native_splash:create
+  // di bawah, karena appDir baru saja didaftarkan ke workspace: dan
+  // dependency-nya (termasuk flutter_native_splash) belum ter-resolve
+  // sama sekali sebelum ini.
+  print('▶ dart pub get...');
+  await runProcess(dartBin, ['pub', 'get'], workingDirectory: '.');
+
+  // Icon + splash placeholder — app_brick sudah menyertakan
+  // assets/icon/{icon,icon_foreground}.png generik (bukan branding asli),
+  // supaya app baru langsung punya launcher icon & splash yang konsisten
+  // alih-alih dibiarkan default Flutter. Ganti asset itu dengan punya
+  // sendiri kapan saja, lalu jalankan ulang kedua command ini.
+  print('▶ Generate launcher icon...');
+  final iconsOk = await runProcess(dartBin, [
+    'pub',
+    'global',
+    'run',
+    'flutter_launcher_icons',
+  ], workingDirectory: appDir);
+  if (!iconsOk) {
+    print(
+      '⚠️  flutter_launcher_icons gagal (mungkin belum di-aktivasi: dart pub global activate flutter_launcher_icons) — lewati, bisa dijalankan manual nanti.',
+    );
+  }
+
+  print('▶ Generate splash screen...');
+  final splashOk = await runProcess(dartBin, [
+    'run',
+    'flutter_native_splash:create',
+  ], workingDirectory: appDir);
+  if (!splashOk) {
+    print(
+      '⚠️  flutter_native_splash gagal — lewati, bisa dijalankan manual nanti.',
+    );
+  }
+
   print('');
   print('✅ App baru dibuat di $appDir.');
   print('');
   print('📋 Langkah selanjutnya:');
-  print('  1. dart pub get');
-  print('  2. melos run gen:l10n && melos run gen');
-  print('  3. Copy config/*.example.json -> config/*.json kalau belum ada');
-  print('  4. melos run run:$snakeName:dev:web (atau :android / :ios)');
-  print('  5. Tambah fitur lewat melos run feature:new');
+  print('  1. melos run gen:l10n && melos run gen');
+  print('  2. Copy config/*.example.json -> config/*.json kalau belum ada');
+  print('  3. melos run run:$snakeName:dev:web (atau :android / :ios)');
+  print('  4. Tambah fitur lewat melos run feature:new');
+  print(
+    '  5. Ganti assets/icon/*.png di $appDir dengan branding asli, lalu jalankan ulang:',
+  );
+  print('     dart pub global run flutter_launcher_icons (dari $appDir)');
+  print('     dart run flutter_native_splash:create (dari $appDir)');
 }
 
 /// Kalau `apps/main` masih ada, saran org default diambil dari

@@ -5,13 +5,19 @@ import 'package:core_network/core_network.dart';
 import 'package:core_storage/core_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'core/di/injection.dart';
 import 'core/observer/app_bloc_observer.dart';
 import 'app.dart';
 
 Future<void> bootstrap({AppFlavor flavor = AppFlavor.development}) async {
-  WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+
+  // Tahan splash screen native sampai bootstrap ini selesai — tanpa ini,
+  // splash hilang begitu frame pertama digambar, padahal init di bawah
+  // (storage, DI, RASP, Sentry) bisa makan waktu.
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   // Orientasi hanya portrait
   await SystemChrome.setPreferredOrientations([
@@ -44,22 +50,17 @@ Future<void> bootstrap({AppFlavor flavor = AppFlavor.development}) async {
       Sentry.captureException(error, stackTrace: stackTrace);
     });
 
-    await SentryFlutter.init(
-      (options) {
-        options.dsn = AppEnv.sentryDsn;
-        options.environment = AppEnv.environment;
-        options.tracesSampleRate = flavor.isProduction ? 0.2 : 1.0;
-      },
-      appRunner: () => runApp(TranslationProvider(child: const App())),
-    );
+    await SentryFlutter.init((options) {
+      options.dsn = AppEnv.sentryDsn;
+      options.environment = AppEnv.environment;
+      options.tracesSampleRate = flavor.isProduction ? 0.2 : 1.0;
+    }, appRunner: () => runApp(TranslationProvider(child: const App())));
   } else {
     FlutterError.onError = (details) {
-      AppLogger.error(
-        'Flutter error',
-        details.exception,
-        details.stack,
-      );
+      AppLogger.error('Flutter error', details.exception, details.stack);
     };
     runApp(TranslationProvider(child: const App()));
   }
+
+  FlutterNativeSplash.remove();
 }
