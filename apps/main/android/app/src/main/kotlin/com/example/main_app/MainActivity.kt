@@ -1,4 +1,4 @@
-package id.caina.main_app
+package com.example.main_app
 
 import io.flutter.embedding.android.FlutterActivity
 
