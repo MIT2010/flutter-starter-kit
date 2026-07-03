@@ -20,16 +20,17 @@ dart pub global activate rename
 
 # 3. Setup — install deps, rename project (opsional), generate semua file
 melos run setup
+# → config/{development,staging,production}.json otomatis dibuat dari
+#   config/*.example.json kalau belum ada (edit isinya sesuai environment
+#   kamu sendiri — file ini gitignored, aman diisi data asli).
 # → Akan tanya: mau rename starter kit ini untuk project kamu sekarang?
 #   Jawab "y" lalu isi org (com.tokokita) dan nama aplikasi (Toko Kita) —
 #   apps/main langsung berganti identitas (Android/iOS/Web). Jawab "n"
 #   atau Enter untuk skip, bisa dijalankan lagi kapan saja.
+# → Folder android/ios/web yang hilang (mis. terhapus manual) otomatis
+#   dipulihkan juga.
 
-# 4. Buat config development (copy dari example)
-cp config/development.example.json config/development.json
-# Edit config/development.json sesuai environment kamu
-
-# 5. Jalankan aplikasi
+# 4. Jalankan aplikasi
 melos run run:dev:web
 ```
 
@@ -115,7 +116,10 @@ melos run app:new
 
 ## Environment
 
-Buat file config dari example (JANGAN commit file non-example):
+`melos run setup` otomatis membuat `config/{development,staging,production}.json`
+dari `config/*.example.json` kalau belum ada. Ketiganya gitignored — JANGAN
+pernah commit versi non-example (bisa berisi data sensitif). Kalau perlu
+bikin ulang manual:
 
 ```bash
 cp config/development.example.json config/development.json

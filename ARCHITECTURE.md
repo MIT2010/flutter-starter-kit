@@ -424,8 +424,9 @@ Tiga flavor (`development`, `staging`, `production`), masing-masing:
   `bootstrap(flavor: AppFlavor.xxx)`.
 - File config sendiri: `config/{development,staging,production}.json`,
   dibaca lewat `--dart-define-from-file` saat `flutter run`/`build`.
-  File asli **tidak di-commit** (lihat `.gitignore`) — copy dari
-  `config/*.example.json` saat setup pertama kali.
+  File asli **tidak di-commit** (lihat `.gitignore`) — `melos run setup`
+  otomatis copy dari `config/*.example.json` kalau belum ada
+  (`ensureConfigFiles()` di `tools/scripts/rename_project.dart`).
 - Dibaca lewat `AppEnv` (`packages/core/lib/src/env/app_env.dart`),
   semua `static const` dari `String.fromEnvironment`/`bool.fromEnvironment`
   dengan default value yang aman — app tidak crash meski lupa mengisi
@@ -508,12 +509,18 @@ Dua workflow terpisah, keduanya di `.github/workflows/`:
   fresh tidak akan punya file-file itu sama sekali sampai step generate
   jalan.
 - **`build.yml`** — sengaja **hanya** build flavor staging (Android APK
-  + Web), upload sebagai artifact. Ada catatan eksplisit di file itu
-  kenapa production build tidak diasumsikan di sini (strategi rilis
-  beda-beda per project — Play Store vs internal distribution vs
-  Fastlane, dll) dan groundwork apa yang sudah tersedia kalau kamu siap
-  menambahkannya sendiri (command `build:*:prod` di melos, signing
-  Android via `key.properties`).
+  + Web), upload sebagai artifact. `config/staging.json` gitignored jadi
+  tidak ada di checkout CI — direkonstruksi dari secret
+  `STAGING_CONFIG_JSON` (isi = seluruh isi file `config/staging.json`
+  kamu) sebelum build, lalu dipakai lewat `--dart-define-from-file`
+  supaya hasil build CI **sama persis** dengan `melos run build:*:staging`
+  di lokal (sebelumnya cuma 3 dari 10 key yang di-pass satu-satu lewat
+  `--dart-define`, jadi `WS_APP_KEY`/`SENTRY_DSN`/dkk kosong tanpa
+  disadari). Ada catatan eksplisit di file itu kenapa production build
+  tidak diasumsikan di sini (strategi rilis beda-beda per project — Play
+  Store vs internal distribution vs Fastlane, dll) dan groundwork apa
+  yang sudah tersedia kalau kamu siap menambahkannya sendiri (command
+  `build:*:prod` di melos, signing Android via `key.properties`).
 
 ## Menambah Fitur Baru
 
