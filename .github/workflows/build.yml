@@ -2,14 +2,26 @@
 # strategi rilis production project kamu (Play Store vs internal distribution,
 # App Center, Fastlane, dll), jadi tidak diasumsikan di sini.
 #
+# config/staging.json di-gitignore (lihat root .gitignore) jadi tidak ada di
+# checkout CI — direkonstruksi dari secret STAGING_CONFIG_JSON (isi persis
+# sama seperti config/staging.example.json, tapi dengan nilai staging asli)
+# sebelum build, lalu dipakai lewat --dart-define-from-file supaya HASILNYA
+# SAMA PERSIS dengan `melos run build:*:staging` di lokal — sebelumnya di
+# sini cuma di-pass 3 dari 10 key satu-satu (ENV/BASE_URL/WS_URL), jadi
+# WS_APP_KEY/WS_AUTH_ENDPOINT/SENTRY_DSN dkk kosong dan build CI diam-diam
+# beda dari build lokal.
+#
+# Setup: Settings -> Secrets and variables -> Actions -> tambahkan secret
+# STAGING_CONFIG_JSON, isi = seluruh isi file config/staging.json kamu.
+#
 # Kalau nanti sudah siap nambah production build, groundwork-nya sudah ada:
 # - Signing Android: isi apps/main/android/key.properties dari
 #   apps/main/android/key.properties.example (lihat README di situ).
 # - Command build production sudah ada di melos: `melos run build:android:prod`,
 #   `melos run build:ios:prod`, `melos run build:web:prod` (pakai --obfuscate).
 # Tinggal duplikasi job di bawah ini per flavor, target ke main_production.dart,
-# dan suntik key.properties dari GitHub Secrets (base64 keystore + password)
-# sebelum step build.
+# secret PRODUCTION_CONFIG_JSON sendiri, dan suntik key.properties dari GitHub
+# Secrets (base64 keystore + password) sebelum step build.
 name: Build
 
 on:
@@ -48,14 +60,17 @@ jobs:
       - name: Generate l10n
         run: melos run gen:l10n
 
+      - name: Write staging config
+        env:
+          STAGING_CONFIG_JSON: ${{ secrets.STAGING_CONFIG_JSON }}
+        run: echo "$STAGING_CONFIG_JSON" > config/staging.json
+
       - name: Build APK (staging)
         run: |
           cd apps/main
           flutter build apk \
             --target lib/main_staging.dart \
-            --dart-define=ENV=staging \
-            --dart-define=BASE_URL=${{ secrets.STAGING_BASE_URL }} \
-            --dart-define=WS_URL=${{ secrets.STAGING_WS_URL }}
+            --dart-define-from-file=../../config/staging.json
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
@@ -88,14 +103,17 @@ jobs:
       - name: Generate l10n
         run: melos run gen:l10n
 
+      - name: Write staging config
+        env:
+          STAGING_CONFIG_JSON: ${{ secrets.STAGING_CONFIG_JSON }}
+        run: echo "$STAGING_CONFIG_JSON" > config/staging.json
+
       - name: Build Web
         run: |
           cd apps/main
           flutter build web \
             --target lib/main_staging.dart \
-            --dart-define=ENV=staging \
-            --dart-define=BASE_URL=${{ secrets.STAGING_BASE_URL }} \
-            --dart-define=WS_URL=${{ secrets.STAGING_WS_URL }}
+            --dart-define-from-file=../../config/staging.json
 
       - name: Upload Web build
         uses: actions/upload-artifact@v4
