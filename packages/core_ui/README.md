@@ -13,7 +13,7 @@ lib/
     ├── tokens/
     │   ├── app_colors.dart       # semua warna — jangan pakai Color(0x...) langsung di widget
     │   ├── app_spacing.dart      # skala spacing, radius, tinggi komponen
-    │   └── app_typography.dart   # skala teks (Google Fonts: Inter)
+    │   └── app_typography.dart   # skala teks (font Inter, di-bundle lokal — lihat assets/fonts/)
     ├── theme/
     │   └── app_theme.dart        # AppTheme.light / AppTheme.dark (Material 3)
     ├── components/                # murni visual, tanpa behavior
@@ -46,7 +46,14 @@ state, form input).
   (`radiusXs`–`radiusFull`), ukuran icon, tinggi button/input/app
   bar/bottom nav, `screenPadding`.
 - **`AppTypography`** — skala teks (Display, Heading, Body, Label,
-  Caption, Button) berbasis font Inter (Google Fonts).
+  Caption, Button) berbasis font Inter, di-bundle sebagai asset lokal
+  (`assets/fonts/Inter.ttf` + `Inter-Italic.ttf`, lisensi OFL — lihat
+  `assets/fonts/OFL.txt`) supaya rendering teks tidak pernah bergantung
+  koneksi internet, konsisten dengan filosofi offline-first starter kit
+  ini. **Bukan** lewat package `google_fonts` lagi (sebelumnya begitu,
+  tapi itu berarti font di-fetch lewat HTTP saat runtime kalau tidak
+  ketemu di cache — kontradiktif dengan starter kit yang punya sistem
+  offline-queue serius untuk data).
 
 ## Tema
 
@@ -94,12 +101,11 @@ Widget test ada di `test/widget/`, satu file per komponen/pattern
 menyediakan `wrapWithApp()` untuk bungkus widget dengan `MaterialApp`+`Scaffold`
 minimal saat testing.
 
-`test/flutter_test_config.dart` mematikan `GoogleFonts.config.allowRuntimeFetching`
-supaya test tidak mencoba fetch font Inter lewat jaringan (lambat/flaky, gagal
-total tanpa akses internet) — kalau menambah test baru yang menyentuh
-`AppTheme`/`AppTypography`, pakai `testWidgets` (bukan `test` polos) supaya
-Future font-loading yang pending ikut ter-drain oleh pump, bukan nyasar
-dilaporkan sebagai gagal di test lain.
+Font Inter di-bundle sebagai asset lokal (bukan lewat `google_fonts` lagi —
+lihat catatan di bagian Token di atas), jadi test tidak butuh
+`flutter_test_config.dart` untuk menghindari network call font sama sekali.
+File itu tetap ada sebagai override kosong untuk jaga-jaga kalau nanti ada
+dependency font berbasis network ditambahkan lagi.
 
 Kalau menambah komponen baru dengan logic non-trivial (bukan sekadar
 styling), tambahkan test mengikuti pola yang sama.

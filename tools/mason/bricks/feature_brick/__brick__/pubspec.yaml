@@ -19,6 +19,8 @@ dependencies:
     path: ../../core_ui
   core_storage:
     path: ../../core_storage
+  core_l10n:
+    path: ../../core_l10n
   shared_auth:
     path: ../../shared/shared_auth
   flutter_bloc: ^9.1.1

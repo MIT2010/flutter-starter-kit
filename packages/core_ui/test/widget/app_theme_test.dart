@@ -3,28 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  // testWidgets (bukan test polos) sengaja dipakai di sini — AppTheme
-  // membangun TextTheme lewat GoogleFonts, yang men-trigger Future
-  // asinkron di belakang layar (fetch/load font). Dengan test() polos,
-  // Future itu baru reject SETELAH body sinkron selesai, muncul sebagai
-  // "test failed after it had already completed" dan salah dilaporkan
-  // ke test lain. testWidgets + pump mengalirkan microtask yang pending
-  // itu ke test yang sama sebelum dianggap selesai.
-  testWidgets('AppTheme.light pakai Material3 dan brightness light', (
-    tester,
-  ) async {
+  // Sebelumnya file ini WAJIB pakai testWidgets+pump() karena AppTheme
+  // membangun TextTheme lewat GoogleFonts, yang men-trigger Future asinkron
+  // di belakang layar (fetch/load font) — dengan test() polos, Future itu
+  // baru reject SETELAH body sinkron selesai dan salah dilaporkan ke test
+  // lain. Sejak AppTypography pindah ke font Inter yang di-bundle sebagai
+  // asset lokal (lihat lib/src/tokens/app_typography.dart), semuanya
+  // sinkron lagi — test() polos sudah cukup, tidak perlu widget pump.
+  test('AppTheme.light pakai Material3 dan brightness light', () {
     final theme = AppTheme.light;
-    await tester.pump();
     expect(theme.useMaterial3, isTrue);
     expect(theme.colorScheme.brightness, Brightness.light);
     expect(theme.colorScheme.primary, AppColors.primary);
   });
 
-  testWidgets('AppTheme.dark pakai Material3 dan brightness dark', (
-    tester,
-  ) async {
+  test('AppTheme.dark pakai Material3 dan brightness dark', () {
     final theme = AppTheme.dark;
-    await tester.pump();
     expect(theme.useMaterial3, isTrue);
     expect(theme.colorScheme.brightness, Brightness.dark);
     expect(theme.colorScheme.primary, AppColors.primaryLight);

@@ -64,7 +64,9 @@
     "noAnswer": "Belum dijawab",
     "answerSaved": "Jawaban tersimpan",
     "syncing": "Menyinkronkan jawaban...",
-    "pendingAnswers": "$count jawaban menunggu sinkronisasi"
+    "pendingAnswers": "$count jawaban menunggu sinkronisasi",
+    "instructions": "Instruksi",
+    "openEndedAnswerLabel": "Jawaban"
   },
   "profile": {
     "title": "Profil",
@@ -80,6 +82,7 @@
   },
   "dashboard": {
     "title": "Dashboard",
-    "welcome": "Selamat datang, $name!"
+    "welcome": "Selamat datang, $name!",
+    "loginSuccess": "Berhasil login!"
   }
 }

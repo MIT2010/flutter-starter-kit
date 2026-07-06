@@ -1,6 +1,7 @@
 import 'package:core/core.dart';
 import 'package:core_network/core_network.dart';
 import 'package:core_storage/core_storage.dart';
+import '../data/assessment_endpoints.dart';
 
 /// Handler untuk mengirim jawaban tes ke server.
 ///
@@ -31,7 +32,7 @@ class AnswerQueueHandler implements QueueHandler {
 
     try {
       final response = await _apiClient.post<void>(
-        '/assessment/sessions/$sessionId/answers',
+        AssessmentEndpoints.submitAnswer(sessionId),
         data: {
           'question_id': questionId,
           'answer_type': answerType,

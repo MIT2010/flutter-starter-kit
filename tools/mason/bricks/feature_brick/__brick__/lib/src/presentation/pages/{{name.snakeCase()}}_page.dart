@@ -1,3 +1,4 @@
+import 'package:core_l10n/core_l10n.dart';
 import 'package:core_ui/core_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,6 +30,12 @@ class _{{name.pascalCase()}}View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // TODO: judul di bawah ini masih hardcode ("{{name.titleCase()}}")
+      // karena Mason tidak bisa menebak terjemahan yang tepat untuk fitur
+      // baru ini. Tambahkan key sendiri ke
+      // core_l10n/lib/i18n/{id,en}.i18n.json, contoh:
+      //   "{{name.camelCase()}}": { "title": "..." }
+      // lalu ganti baris di bawah jadi context.t.{{name.camelCase()}}.title.
       appBar: AppBar(
         title: const Text('{{name.titleCase()}}'),
       ),
@@ -40,8 +47,15 @@ class _{{name.pascalCase()}}View extends StatelessWidget {
             {{name.pascalCase()}}Loaded(:final data) => Center(
                 child: Text(data.id),
               ),
+            // title & retryLabel WAJIB diisi — AppErrorView tidak punya
+            // default hardcoded (lihat komentar di app_error_view.dart),
+            // dan tombol retry hanya muncul kalau onRetry DAN retryLabel
+            // sama-sama tidak null. Pakai key generik yang sudah ada
+            // (bukan bikin key baru) — sudah cukup untuk error state umum.
             {{name.pascalCase()}}Error(:final message) => AppErrorView(
+                title: context.t.error.generic,
                 message: message,
+                retryLabel: context.t.common.retry,
                 onRetry: () => context
                     .read<{{name.pascalCase()}}Bloc>()
                     .add(Refresh{{name.pascalCase()}}Event(id: id)),

@@ -1,3 +1,4 @@
+import 'package:core_l10n/core_l10n.dart';
 import 'package:core_ui/core_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_assessment/shared_assessment.dart';
@@ -32,7 +33,7 @@ class _OpenEndedAnswerWidgetState extends State<OpenEndedAnswerWidget> {
   @override
   Widget build(BuildContext context) {
     return AppTextField(
-      label: 'Jawaban',
+      label: context.t.assessment.openEndedAnswerLabel,
       controller: _controller,
       maxLines: 6,
       minLines: 3,

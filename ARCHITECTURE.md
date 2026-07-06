@@ -92,7 +92,8 @@ Prinsip yang dipegang:
 | Routing | `go_router` | Deklaratif, redirect guard bawaan |
 | Mocking | `mockito` + `build_runner` | Mock digenerate dari abstract class, bukan ditulis manual |
 | Crash reporting | `sentry_flutter` (opsional) | Aktif hanya kalau `SENTRY_DSN` diisi |
-| Realtime | `flutter_secure_app` (Reverb/Pusher client custom, lihat `ReverbManager`) | WebSocket untuk broadcast event dari Laravel Reverb |
+| Realtime | `dart_pusher_channels` (lihat `ReverbManager`) | WebSocket untuk broadcast event dari Laravel Reverb (protokol Pusher) |
+| Security (RASP/SSL pinning) | `flutter_secure_app` + `safe_device` (lihat `AppSecurityGuard`, `DeviceSecurityService`) | Deteksi root/jailbreak/emulator, SSL/SPKI pinning, anti-proxy |
 | Scaffolding | Mason (`feature_brick`, `test_brick`) | Generate fitur baru dengan struktur yang konsisten |
 
 ## Struktur Monorepo & Dependency Graph

@@ -12,8 +12,10 @@ abstract class AssessmentEndpoints {
   static String completeSession(String sessionId) =>
       '/assessment/sessions/$sessionId/complete';
 
-  /// Dipakai oleh AnswerQueueHandler — jangan diubah tanpa menyesuaikan
-  /// packages/features/feature_assessment/lib/src/queue/answer_queue_handler.dart
+  /// Dipakai langsung oleh AnswerQueueHandler (queue/answer_queue_handler.dart)
+  /// — sebelumnya sempat di-hardcode ulang di sana sebagai string literal
+  /// terpisah, sekarang sudah direfaktor supaya cuma ada satu sumber
+  /// kebenaran untuk path ini.
   static String submitAnswer(String sessionId) =>
       '/assessment/sessions/$sessionId/answers';
 }

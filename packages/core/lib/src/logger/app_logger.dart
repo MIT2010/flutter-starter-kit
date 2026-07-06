@@ -14,6 +14,12 @@ class AppLogger {
         enabled: true,
         useHistory: true,
         maxHistoryItems: 100,
+        // Sebelumnya parameter [verbose] diterima tapi tidak pernah dipakai
+        // di sini (dead parameter) — history tetap tercatat untuk semua
+        // flavor (dibutuhkan Sentry via registerErrorReporter), tapi hanya
+        // dev/staging yang mencetak log ke console; production tetap diam
+        // di console meski tetap merekam ke history.
+        useConsoleLogs: verbose,
       ),
     );
   }

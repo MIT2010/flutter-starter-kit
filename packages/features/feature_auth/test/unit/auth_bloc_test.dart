@@ -107,9 +107,12 @@ void main() {
 
   group('AuthLoginWithEmailPasswordEvent', () {
     blocTest<AuthBloc, AuthState>(
-      'emit [AuthLoading, AuthUnauthenticated] saat login berhasil (Pola B)',
+      'emit [AuthLoading, AuthAuthenticated] saat login berhasil (Pola B) — '
+      'sebelumnya bug: berhenti di AuthUnauthenticated meski token valid, '
+      'lihat komentar perbaikan di auth_bloc.dart',
       build: () {
         when(mockLogin(any)).thenAnswer((_) async => Either.right(tToken));
+        when(mockGetCurrentUser()).thenAnswer((_) async => Either.right(tUser));
         return authBloc;
       },
       act: (bloc) => bloc.add(
@@ -118,7 +121,15 @@ void main() {
           password: 'password123',
         ),
       ),
-      expect: () => [AuthLoading(), AuthUnauthenticated()],
+      expect: () => [AuthLoading(), const AuthAuthenticated(tUser)],
+      verify: (_) {
+        verify(
+          mockSessionManager.saveSession(
+            token: anyNamed('token'),
+            user: anyNamed('user'),
+          ),
+        );
+      },
     );
 
     blocTest<AuthBloc, AuthState>(
@@ -139,6 +150,25 @@ void main() {
         AuthLoading(),
         const AuthError('Sesi kamu telah berakhir, silakan login kembali'),
       ],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'emit [AuthLoading, AuthError] kalau token didapat tapi gagal '
+      'mengambil data user setelahnya',
+      build: () {
+        when(mockLogin(any)).thenAnswer((_) async => Either.right(tToken));
+        when(mockGetCurrentUser()).thenAnswer(
+          (_) async => Either.left(const ServerFailure(message: 'gagal ambil user')),
+        );
+        return authBloc;
+      },
+      act: (bloc) => bloc.add(
+        const AuthLoginWithEmailPasswordEvent(
+          email: 'test@email.com',
+          password: 'password123',
+        ),
+      ),
+      expect: () => [AuthLoading(), const AuthError('gagal ambil user')],
     );
   });
 

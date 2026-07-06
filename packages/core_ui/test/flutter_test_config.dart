@@ -1,13 +1,15 @@
 import 'dart:async';
 
-import 'package:google_fonts/google_fonts.dart';
-
-/// google_fonts coba fetch font dari jaringan kalau tidak ketemu di asset
-/// bundle lokal — bikin test lambat/flaky (bahkan gagal total tanpa akses
-/// jaringan). Matikan runtime fetching supaya AppTheme.light/dark fallback
-/// ke font sistem saat testing, diverifikasi langsung: tanpa ini
-/// AppTheme.dark/light melempar "Failed to load font ... Inter-SemiBold".
+/// Sebelumnya file ini mematikan GoogleFonts.config.allowRuntimeFetching
+/// supaya test tidak diam-diam melakukan network call ke Google Fonts CDN.
+///
+/// Sejak AppTypography berpindah dari package google_fonts ke font Inter
+/// yang di-bundle sebagai asset lokal (lihat pubspec.yaml package ini dan
+/// lib/src/tokens/app_typography.dart), tidak ada lagi kode yang melakukan
+/// fetch jaringan untuk font — baik saat test maupun saat aplikasi jalan
+/// sungguhan. File ini sengaja dibiarkan sebagai override kosong (bukan
+/// dihapus) supaya kalau nanti ada yang menambahkan dependency font
+/// berbasis network lagi, tempat yang tepat untuk menjaganya tetap di sini.
 Future<void> testExecutable(FutureOr<void> Function() testMain) async {
-  GoogleFonts.config.allowRuntimeFetching = false;
   await testMain();
 }

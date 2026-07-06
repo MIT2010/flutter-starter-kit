@@ -11,9 +11,28 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  google_fonts: ^8.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+
+# Font Inter di-bundle langsung sebagai asset (bukan lewat google_fonts)
+# supaya UI tidak pernah bergantung pada koneksi internet untuk render teks —
+# starter kit ini punya sistem offline-queue yang serius (lihat core_network),
+# jadi typography-nya juga harus offline-first, bukan cuma data-nya.
+#
+# File di assets/fonts/ adalah variable font asli dari repo resmi
+# github.com/google/fonts (lisensi OFL, lihat assets/fonts/OFL.txt), punya
+# axis "wght" 100-900 — satu file per style (upright/italic) sudah cukup
+# untuk semua FontWeight yang dipakai AppTypography; Flutter/Skia otomatis
+# meng-interpolasi berat sesuai axis-nya.
+flutter:
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter.ttf
+        - asset: assets/fonts/Inter-Italic.ttf
+          style: italic
+  assets:
+    - assets/fonts/OFL.txt

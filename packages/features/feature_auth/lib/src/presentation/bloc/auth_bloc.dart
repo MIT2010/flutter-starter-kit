@@ -53,7 +53,24 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  /// Login dengan email dan password (Pola B — lanjut ke OTP)
+  /// Login dengan email dan password (Pola B)
+  ///
+  /// CATATAN PERBAIKAN: versi sebelumnya emit AuthUnauthenticated() di sini
+  /// dengan komentar "backend trigger OTP, UI akan navigasi ke OTP screen"
+  /// — tapi tidak ada state atau mekanisme apapun yang benar-benar
+  /// memindahkan ke OtpForm, jadi user yang berhasil login malah dilempar
+  /// balik ke form login tanpa penjelasan (padahal token-nya sudah valid
+  /// dan tersimpan). Endpoint /auth/login pada starter kit ini memang
+  /// mengembalikan AuthTokenEntity langsung (lihat AuthRepositoryImpl),
+  /// jadi login SELESAI di titik itu — perbaikannya adalah menyelesaikan
+  /// alurnya sampai AuthAuthenticated, persis seperti _onVerifyOtp di bawah.
+  ///
+  /// KALAU KAMU MEMANG BUTUH 2FA SUNGGUHAN (password benar → baru kirim
+  /// OTP → verifikasi OTP baru authenticated): backend /auth/login kamu
+  /// harus mengembalikan payload "OTP terkirim" (destination + expires_in),
+  /// BUKAN access_token. Ubah AuthRepository.loginWithEmailPassword supaya
+  /// return type-nya `FutureEither<OtpEntity>` (sama seperti requestOtp),
+  /// lalu di sini tinggal emit AuthOtpSent(otp) alih-alih fetch user.
   Future<void> _onLoginWithEmailPassword(
     AuthLoginWithEmailPasswordEvent event,
     Emitter<AuthState> emit,
@@ -65,12 +82,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         password: event.password,
       ),
     );
-    result.fold(
-      (failure) => emit(AuthError(failure.message)),
-      // Pola B: setelah login berhasil, backend trigger OTP
-      // UI akan navigasi ke OTP screen setelah state ini
-      (token) => emit(AuthUnauthenticated()),
-    );
+
+    await result.fold((failure) async => emit(AuthError(failure.message)), (
+      token,
+    ) async {
+      final userResult = await _getCurrentUser();
+      await userResult.fold(
+        (failure) async => emit(AuthError(failure.message)),
+        (user) async {
+          await _sessionManager.saveSession(token: token, user: user);
+          emit(AuthAuthenticated(user));
+        },
+      );
+    });
   }
 
   /// Request OTP (Pola A — OTP sebagai login utama)

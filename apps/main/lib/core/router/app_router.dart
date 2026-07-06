@@ -84,7 +84,7 @@ class _PlaceholderHome extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Berhasil login!'),
+            Text(context.t.dashboard.loginSuccess),
             const SizedBox(height: 16),
             ElevatedButton(
               // Belum ada feature_dashboard untuk daftar assessment,

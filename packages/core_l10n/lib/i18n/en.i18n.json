@@ -64,7 +64,9 @@
     "noAnswer": "Not answered",
     "answerSaved": "Answer saved",
     "syncing": "Syncing answers...",
-    "pendingAnswers": "$count answers waiting to sync"
+    "pendingAnswers": "$count answers waiting to sync",
+    "instructions": "Instructions",
+    "openEndedAnswerLabel": "Answer"
   },
   "profile": {
     "title": "Profile",
@@ -80,6 +82,7 @@
   },
   "dashboard": {
     "title": "Dashboard",
-    "welcome": "Welcome, $name!"
+    "welcome": "Welcome, $name!",
+    "loginSuccess": "Logged in successfully!"
   }
 }

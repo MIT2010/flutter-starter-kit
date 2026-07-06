@@ -9,10 +9,9 @@ class {{name.pascalCase()}}RepositoryImpl implements {{name.pascalCase()}}Reposi
   const {{name.pascalCase()}}RepositoryImpl({
     required {{name.pascalCase()}}RemoteDataSource remoteDataSource,
     required {{name.pascalCase()}}LocalDataSource localDataSource,
-    required NetworkInfo networkInfo,
+    required this._networkInfo,
   })  : _remote = remoteDataSource,
-        _local = localDataSource,
-        _networkInfo = networkInfo;
+        _local = localDataSource;
 
   final {{name.pascalCase()}}RemoteDataSource _remote;
   final {{name.pascalCase()}}LocalDataSource _local;

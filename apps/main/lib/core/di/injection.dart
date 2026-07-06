@@ -49,6 +49,38 @@ Future<void> configureDependencies() async {
     ),
   );
 
+  // ReverbManager — sebelumnya diekspor lengkap dari core_network (connect,
+  // subscribe public/private channel, auto-resubscribe saat reconnect) tapi
+  // tidak pernah didaftarkan ke DI sama sekali, jadi tidak ada cara
+  // mengaksesnya lewat getIt. Didaftarkan di sini sebagai singleton supaya
+  // tersedia untuk fitur manapun yang butuh realtime (mis. feature_notification
+  // saat diimplementasikan nanti).
+  //
+  // Sengaja TIDAK memanggil .connect() di sini: sebelum ada consumer yang
+  // benar-benar subscribe ke sebuah channel, membuka koneksi WebSocket cuma
+  // buang-buang resource (dan bisa gagal diam-diam kalau WS_APP_KEY belum
+  // diisi di config/*.json). Panggil connect() dari fitur yang memakainya,
+  // saat fitur itu benar-benar butuh koneksi realtime.
+  // AppEnv.wsUrl adalah URL lengkap (mis. "wss://api-dev.example.com"),
+  // tapi ReverbManager/PusherChannelsOptions.fromHost butuh hostname polos
+  // tanpa skema (skema "ws"/"wss" ditentukan terpisah di dalam ReverbManager
+  // sendiri) — ketahuan sekarang karena baru kali ini benar-benar dipakai.
+  // Uri.parse(...).host aman dipakai untuk kedua kasus (dengan atau tanpa
+  // skema di depannya).
+  final wsHost = Uri.parse(AppEnv.wsUrl).host.isNotEmpty
+      ? Uri.parse(AppEnv.wsUrl).host
+      : AppEnv.wsUrl;
+
+  getIt.registerSingleton<ReverbManager>(
+    ReverbManager(
+      host: wsHost,
+      port: AppEnv.wsPort,
+      appKey: AppEnv.wsAppKey,
+      getAccessToken: () => sessionManager.getAccessToken(),
+      authEndpoint: AppEnv.wsAuthEndpoint,
+    ),
+  );
+
   // ── Offline Queue ─────────────────────────────────────────
 
   // Assessment queue — retry SELAMANYA, data tidak boleh hilang

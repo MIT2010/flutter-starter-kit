@@ -29,7 +29,7 @@ class AssessmentIntroPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AppText.labelLg('Instruksi'),
+                  AppText.labelLg(context.t.assessment.instructions),
                   const SizedBox(height: AppSpacing.sm),
                   AppText.bodyMd(assessment.instruksi!.text),
                 ],
