@@ -20,7 +20,7 @@ workspace:
   - packages/features/feature_notification
 
 dev_dependencies:
-  melos: ^8.0.0
+  melos: ^8.2.0
 
 melos:
   scripts:
