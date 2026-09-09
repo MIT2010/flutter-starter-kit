@@ -1,0 +1,25 @@
+name: core_init
+description: >-
+  Scaffolds a complete Layer 0-3 Flutter starter kit project: data/domain/presentation
+  architecture, Result<F,S> error handling, get_it + injectable DI, go_router with a
+  cold-start-safe auth guard, a shared Dio client with attached auth/logging/session-expiry
+  interceptors (refresh-token interceptor included as an opt-in swap), hive_ce local storage, a generic theme scaffold, one complete working
+  reference feature, unit/widget/golden tests, CI, and ADR docs.
+version: 0.1.0
+
+environment:
+  mason: ">=0.1.0 <0.2.0"
+
+vars:
+  project_name:
+    type: string
+    description: >-
+      The Dart package name for the generated project. Must be a valid Dart
+      package identifier (lowercase snake_case).
+    default: my_app
+    prompt: What is your project name? (snake_case)
+  description:
+    type: string
+    description: A short description of the app, used in pubspec.yaml and platform metadata.
+    default: A new Flutter project built with the starter kit.
+    prompt: Describe your app

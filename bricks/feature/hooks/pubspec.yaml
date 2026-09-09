@@ -1,0 +1,9 @@
+name: feature_hooks
+description: Post-generation hook for the `feature` brick — wires the new screen into app/router.dart.
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+dependencies:
+  mason: ^0.1.2

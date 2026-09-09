@@ -1,0 +1,13 @@
+# Registers the `feature` brick for use from within THIS generated project
+# (`mason make feature --feature_name my_feature --project_name {{project_name}}`).
+#
+# The `feature` brick's source lives in the starter kit repo you generated
+# this project from, not inside this project — update the URL below to that
+# repo's real remote once you've pushed it (or push this starter kit's repo
+# yourself if you're the one maintaining it). See docs/decisions for why
+# this isn't a local path or a bundled copy.
+bricks:
+  feature:
+    git:
+      url: https://github.com/MIT2010/flutter-starter-kit.git
+      path: bricks/feature

@@ -1,0 +1,14 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+import '../../../../core/failure.dart';
+import '../../data/models/{{feature_name.snakeCase()}}_model.dart';
+
+part '{{feature_name.snakeCase()}}_state.freezed.dart';
+
+@freezed
+sealed class {{feature_name.pascalCase()}}State with _${{feature_name.pascalCase()}}State {
+  const factory {{feature_name.pascalCase()}}State.initial() = {{feature_name.pascalCase()}}Initial;
+  const factory {{feature_name.pascalCase()}}State.loading() = {{feature_name.pascalCase()}}Loading;
+  const factory {{feature_name.pascalCase()}}State.loaded({{feature_name.pascalCase()}}Item item) = {{feature_name.pascalCase()}}Loaded;
+  const factory {{feature_name.pascalCase()}}State.error(Failure failure) = {{feature_name.pascalCase()}}Error;
+}

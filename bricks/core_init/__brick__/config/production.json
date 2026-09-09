@@ -1,0 +1,6 @@
+{
+  "FLAVOR": "production",
+  "API_BASE_URL": "https://jsonplaceholder.typicode.com",
+  "ENABLE_NETWORK_LOGGING": false,
+  "ENABLE_APP_FLOW_LOGGING": false
+}
