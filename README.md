@@ -44,9 +44,17 @@ To scaffold a feature into an existing generated project:
 mason make feature -o ../my_new_app --feature_name payments --project_name my_new_app
 ```
 
-(See `bricks/core_init/__brick__/docs/decisions/ADR-0006-*.md` for how a
-*generated* project's own `mason make feature` is wired once this repo has
-a real git remote.)
+(A *generated* project's own `mason make feature` resolves the `feature`
+brick from this repo over git — see
+`bricks/core_init/__brick__/docs/decisions/ADR-0006-*.md`.)
+
+## Understanding the generated project
+
+`bricks/core_init/__brick__/docs/ARCHITECTURE.md` is the full walkthrough
+of what `core_init` produces: the philosophy, the `app/` / `core/` /
+`features/` split, how the layers communicate, the rules, and how to
+decide where new code belongs. It ships into every generated project's
+`docs/` too.
 
 ## Layer 4 (multi-package monorepo) — not yet built
 
@@ -68,5 +76,8 @@ flutter-starter-kit/
 │       ├── __brick__/      # per-feature file templates
 │       └── hooks/
 │           └── post_gen.dart   # wires the new route into app/router.dart
-└── CLAUDE.md                # the spec this repo was built against
+└── docs/proposals/         # cross-project findings staged for the kit
 ```
+
+`CLAUDE.md` (the spec this repo was built against, plus agent notes) is
+kept locally but git-ignored — it isn't part of the distributed kit.

@@ -111,9 +111,12 @@ per feature.
 
 ## Further reading
 
-Only if you need the *why*, not the *how* — see `docs/decisions/` for every
-deliberate architectural choice made in this codebase (ADRs).
-
+- `docs/ARCHITECTURE.md` — the full picture: the philosophy, what `app/` /
+  `core/` / `features/` are each for, how they communicate, the rules,
+  and how to decide where a new piece of code belongs. Read this once
+  before you add your second feature.
+- `docs/decisions/` — one ADR per deliberate architectural choice. Read
+  one only when you need the *why*, not the *how*.
 - `docs/PWA-CHECKLIST.md` — if you ship a web target. What a
   mobile-first Flutter app gets wrong in a browser tab (viewport meta,
   text-scale clamp, `GoRouterState.extra` on reload, device id, local
