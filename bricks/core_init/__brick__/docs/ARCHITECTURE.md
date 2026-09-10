@@ -646,6 +646,32 @@ If you have a real reason to break one of these, that's an ADR in
 
 ## The parts around the code
 
+### The Flutter SDK pin
+
+`.fvmrc` pins the exact Flutter version the project is built and verified
+against — `3.44.7`. This is not arbitrary caution: two things here are
+SDK-sensitive.
+
+- **The dependency pins.** `pubspec.yaml` holds `freezed` and
+  `injectable_generator` at specific versions (ADR-0004) that were
+  resolved against this SDK's bundled analyzer. A different SDK can
+  resolve a different analyzer and break code generation.
+- **The golden tests.** Font metrics and the rendering engine change
+  between SDK versions, so a golden captured on one SDK mismatches a run
+  on another.
+
+So the pin keeps `build_runner` output and golden tests reproducible
+across every machine and across time. `.github/workflows/ci.yml` reads
+the same `.fvmrc` (`flutter-version-file: .fvmrc`), so CI and local
+builds use the identical toolchain — see ADR-0016.
+
+It is a pin, not a cage. Bumping it is routine, just coordinated: edit
+`.fvmrc`, re-run `dart run build_runner build`, run
+`flutter test --update-goldens`, and check the ADR-0004 dependency pins
+still resolve on the new analyzer. FVM is the convenient way to match the
+pin; it is not required — a matching `flutter` on `PATH` works, and
+nothing in the project invokes `fvm`.
+
 ### Configuration and flavors
 
 `config/development.json`, `config/staging.json`, `config/production.json`
@@ -725,6 +751,7 @@ one only when you need the *why*.
 | 0013 | A valueless `AppSpacing` scale ships; the theme extension is no longer a throwaway |
 | 0014 | Small shared helpers (`confirmDialog`, `unexpectedError`) and folder conventions carried back from downstream apps |
 | 0015 | The `feature` brick derives `project_name` from `pubspec.yaml` instead of prompting |
+| 0016 | `.fvmrc` pins the Flutter SDK (`3.44.7`) and CI builds against that pin |
 
 ## Further reading
 

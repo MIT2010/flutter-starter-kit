@@ -11,9 +11,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Uses the exact SDK pinned in .fvmrc, so CI and local (FVM) builds
+      # match — see docs/decisions/ADR-0016. subosito/flutter-action reads
+      # the `flutter` key from that file.
       - uses: subosito/flutter-action@v2
         with:
-          channel: stable
+          flutter-version-file: .fvmrc
 
       - name: Install dependencies
         run: flutter pub get

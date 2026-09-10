@@ -6,7 +6,7 @@ Two [Mason](https://pub.dev/packages/mason_cli) bricks generate a complete,
 tested, single-package project and scaffold every feature into it. Opinionated
 where it prevents bugs, deliberately silent on visual identity.
 
-![Flutter 3.44+](https://img.shields.io/badge/Flutter-3.44%2B-02569B?logo=flutter&logoColor=white)
+![Flutter 3.44.7 (pinned)](https://img.shields.io/badge/Flutter-3.44.7%20pinned-02569B?logo=flutter&logoColor=white)
 ![Tooling: Mason](https://img.shields.io/badge/tooling-Mason-F9A825)
 ![Lints: flutter_lints](https://img.shields.io/badge/lints-flutter__lints-4BC0F5)
 ![ADRs: 15](https://img.shields.io/badge/ADRs-15-6E56CF)
@@ -52,6 +52,13 @@ cd ../my_app
 That directory is a runnable project. Its own
 [`docs/QUICKSTART.md`](bricks/core_init/__brick__/docs/QUICKSTART.md) takes it
 from there — `flutter pub get`, code-gen, `flutter run`.
+
+The generated project pins its Flutter SDK in `.fvmrc` (`3.44.7`), and its
+CI builds against that pin — the golden tests and the `freezed` /
+`injectable_generator` versions are tied to a specific analyzer, so the
+SDK can't float. [FVM](https://fvm.app) is the easy way to match it but
+isn't required; nothing shells out to `fvm`. See
+[ADR-0016](bricks/core_init/__brick__/docs/decisions/ADR-0016-flutter-sdk-pin.md).
 
 To add a feature, from the project root:
 

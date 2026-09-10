@@ -3,6 +3,21 @@
 Get from a freshly generated project to a running example screen. This is
 the only doc you need to read to get started.
 
+## Flutter SDK
+
+`.fvmrc` pins the Flutter version this project is verified against
+(`3.44.7`). CI uses it too, so local and CI builds match.
+
+- With [FVM](https://fvm.app): `fvm install` once, then prefix commands
+  with `fvm` (`fvm flutter pub get`, `fvm flutter test`) — or run
+  `fvm use` and let your IDE pick it up.
+- Without FVM: a matching `flutter` on your `PATH` works. Nothing in this
+  project shells out to `fvm`; `.fvmrc` is just a version hint.
+
+Bumping the pin is fine — edit `.fvmrc`, then re-run step 2 below and
+`flutter test --update-goldens`, and confirm `pubspec.yaml`'s pinned
+`freezed` / `injectable_generator` still resolve (ADR-0004, ADR-0016).
+
 ## 1. Install dependencies
 
 ```bash
