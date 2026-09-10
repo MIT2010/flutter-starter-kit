@@ -48,6 +48,27 @@ mason make feature -o ../my_new_app --feature_name payments --project_name my_ne
 brick from this repo over git — see
 `bricks/core_init/__brick__/docs/decisions/ADR-0006-*.md`.)
 
+### Windows: point `MASON_CACHE` at a short path
+
+Mason caches a git-sourced brick under
+`%LOCALAPPDATA%\Mason\Cache\git\<repo>_<base64 url>_<40-char sha>\…`. That
+prefix is ~180 characters before the brick's own files, so on Windows —
+especially with a long user name — `mason add --git-url` / `mason get`
+for these bricks blows past the 260-character path limit and fails with
+`PathNotFoundException: Directory listing failed`.
+
+Fix: move the cache somewhere short, once:
+
+```bat
+setx MASON_CACHE C:\mc
+```
+
+Open a new terminal (so it picks up the variable), then `mason add` /
+`mason get` / `mason make` all work. Without it, use a local clone and a
+`--path` source instead of `--git-url` — `git clone` this repo somewhere
+short, then `mason add core_init --path <clone>\bricks\core_init`. macOS
+and Linux are unaffected.
+
 ## Understanding the generated project
 
 `bricks/core_init/__brick__/docs/ARCHITECTURE.md` is the full walkthrough

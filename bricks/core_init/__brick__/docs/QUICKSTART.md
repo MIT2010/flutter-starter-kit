@@ -97,6 +97,18 @@ mason make feature --feature_name my_feature --project_name <this_project's_pubs
 This generates all three layers, registers DI, and adds a route skeleton in
 one pass. See `docs/decisions/` for the reasoning behind that rule.
 
+**Windows:** `mason get` pulls the `feature` brick from the starter kit's
+git repo into a cache directory whose path is long enough that, combined
+with a long user name, it can exceed the 260-character limit and fail with
+`PathNotFoundException: Directory listing failed`. If that happens, move
+the cache once:
+
+```bat
+setx MASON_CACHE C:\mc
+```
+
+then re-run `mason get` from a new terminal. (macOS/Linux don't hit this.)
+
 ## Tests
 
 ```bash

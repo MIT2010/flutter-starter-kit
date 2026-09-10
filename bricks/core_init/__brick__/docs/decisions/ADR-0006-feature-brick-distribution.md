@@ -14,11 +14,17 @@ brick's source somehow.
 Embedding a raw copy of `bricks/feature/` inside `bricks/core_init/__brick__/`
 was tried and rejected: Mason templates every file (and directory name)
 under `__brick__/` using `core_init`'s own variables. The `feature` brick's
-own template files contain `{{feature_name.snakeCase()}}` directory names
-and `{{feature_name.pascalCase()}}` class names — variables `core_init`
-doesn't define. Nesting them would have silently rendered those tags as
-empty strings during `mason make core_init`, corrupting the embedded copy
-before a user ever touched it.
+own template files contain mustache tags for `feature_name` (in
+`snakeCase()` for directory names, `pascalCase()` for class names) —
+variables `core_init` doesn't define. Nesting them would have silently
+rendered those tags as empty strings during `mason make core_init`,
+corrupting the embedded copy before a user ever touched it.
+
+(This ADR file itself is subject to that same templating pass. It
+deliberately avoids writing a literal mustache tag anywhere above, because
+a `feature_name`-shaped tag in this prose would render to an empty string
+in every generated project's copy of this document — the exact failure
+being described.)
 
 ## Decision
 
@@ -56,3 +62,10 @@ own remote.
 - A private fork must change the URL in
   `bricks/core_init/__brick__/mason.yaml` to its own remote, or
   `mason make feature` in downstream projects will hit the public repo.
+- On Windows, `mason get` for this git source caches the brick under
+  `%LOCALAPPDATA%\Mason\Cache\git\<repo>_<base64 url>_<sha>\…` — a ~180-
+  character prefix that, with a long user name, pushes the brick's own
+  files past the 260-character path limit (`mason` fails with
+  `PathNotFoundException: Directory listing failed` while copying the
+  clone into the cache). Workaround: `setx MASON_CACHE C:\mc` and use a
+  fresh terminal. Not an issue on macOS/Linux. See `docs/QUICKSTART.md`.
