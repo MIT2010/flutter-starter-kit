@@ -54,6 +54,49 @@ mason make feature --feature_name payments
 brick from this repo over git — see
 `bricks/core_init/__brick__/docs/decisions/ADR-0006-*.md`.)
 
+### Install the bricks globally (run from anywhere)
+
+The flow above needs `mason.yaml` in the current directory. To run
+`mason make core_init` / `mason make feature` from any directory, register
+the bricks globally once.
+
+From the git repo (portable — works on any machine with GitHub access):
+
+```bash
+mason add -g core_init --git-url https://github.com/MIT2010/flutter-starter-kit --git-path bricks/core_init
+mason add -g feature   --git-url https://github.com/MIT2010/flutter-starter-kit --git-path bricks/feature
+```
+
+Or from a local clone (no network on each use; the only option that
+sidesteps the Windows path-length issue below, and the simplest for a
+private repo — you clone once with your own credentials):
+
+```bash
+git clone https://github.com/MIT2010/flutter-starter-kit  ~/src/fsk
+mason add -g core_init --path ~/src/fsk/bricks/core_init
+mason add -g feature   --path ~/src/fsk/bricks/feature
+```
+
+Then, from anywhere:
+
+```bash
+mkdir my_new_app && cd my_new_app
+mason make core_init -o . --project_name my_new_app --description "…"
+mason make feature --feature_name payments        # from a project root
+```
+
+Manage them with `mason list -g` and `mason remove -g <name>`. A
+`--git-url` install pins to the commit it resolved; re-run `mason add -g`
+to move it forward. A `--path` install tracks the clone — `git pull` and
+you're current.
+
+**Private repo:** mason shells out to `git clone`, so it uses your git
+credential helper — nothing mason-specific. `--git-url` against a private
+repo works wherever `git clone <that url>` works (run `gh auth setup-git`,
+or use an `ssh` URL with a key on your account). Don't put a token in the
+URL — it lands in mason's cache path. The `--path` form avoids the
+question entirely.
+
 ### Windows: point `MASON_CACHE` at a short path
 
 Mason caches a git-sourced brick under
@@ -70,10 +113,9 @@ setx MASON_CACHE C:\mc
 ```
 
 Open a new terminal (so it picks up the variable), then `mason add` /
-`mason get` / `mason make` all work. Without it, use a local clone and a
-`--path` source instead of `--git-url` — `git clone` this repo somewhere
-short, then `mason add core_init --path <clone>\bricks\core_init`. macOS
-and Linux are unaffected.
+`mason get` / `mason make` all work. Without it, use the `--path` install
+form shown above (a local clone) instead of `--git-url` — it doesn't
+touch the long cache path. macOS and Linux are unaffected.
 
 ## Understanding the generated project
 
