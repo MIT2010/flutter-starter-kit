@@ -59,12 +59,11 @@ cubit errors (see below):
    `Result.failure(UnknownFailure())` the caller already expects. Nothing
    about the `Result<F,S>` contract changes — this is purely additive
    visibility. `example_feature_repository_impl.dart` demonstrates the
-   pattern (the starter kit's one always-real network call). A class with
-   two or more such catch sites gets a small private
-   `Result<Failure, T> _unexpectedError<T>(String context, Object error,
-   StackTrace stackTrace)` helper instead of repeating the log call
-   verbatim; a class with only one stays inline — don't add the
-   abstraction for a single use site.
+   pattern (the starter kit's one always-real network call), calling the
+   shared `unexpectedError(logger, context, error, stackTrace)` helper in
+   `lib/core/logging/unexpected_error.dart`. (Originally described here as
+   a small *private* per-class helper; every downstream project promoted
+   it to `core/`, so the kit now ships it there — see ADR-0014.)
 
 `AppConfig.enableAppFlowLogging` (new, mirrors `enableNetworkLogging`
 exactly — same default-true-except-production shape, same

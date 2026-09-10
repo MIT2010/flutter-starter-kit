@@ -1,0 +1,22 @@
+# App launcher icons. Run after providing the artwork:
+#   dart run flutter_launcher_icons
+#
+# TODO before first run:
+#   1. Add a 1024x1024 PNG at assets/launcher/icon.png
+#   2. Add a transparent 1024x1024 PNG at assets/launcher/icon_adaptive_foreground.png
+#      (Android adaptive icons mask the foreground to a circle/squircle/
+#      rounded square — only the inner ~66% is guaranteed visible, so keep
+#      the artwork centered and small on a transparent canvas.)
+#   3. Set adaptive_icon_background to your brand colour.
+#   4. Delete this file if you don't ship a launcher icon yet.
+flutter_launcher_icons:
+  image_path: "assets/launcher/icon.png"
+  android: "launcher_icon"
+  min_sdk_android: 21
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/launcher/icon_adaptive_foreground.png"
+  ios: true
+  remove_alpha_ios: true
+  web:
+    generate: true
+    image_path: "assets/launcher/icon.png"

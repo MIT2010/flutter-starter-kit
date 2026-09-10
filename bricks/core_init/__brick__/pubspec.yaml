@@ -62,6 +62,13 @@ dev_dependencies:
   build_runner: ^2.15.1
   mocktail: ^1.0.5
   bloc_test: ^10.0.0
+  # App-icon and native-splash generators. Inert until you run them —
+  # provide the artwork first (see flutter_launcher_icons.yaml /
+  # flutter_native_splash.yaml at the repo root), then:
+  #   dart run flutter_launcher_icons
+  #   dart run flutter_native_splash:create
+  flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.6
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

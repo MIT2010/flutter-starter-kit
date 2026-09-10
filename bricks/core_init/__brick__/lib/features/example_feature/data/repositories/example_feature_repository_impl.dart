@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 
 import '../../../../core/failure.dart';
+import '../../../../core/logging/unexpected_error.dart';
 import '../../../../core/network/dio_error_mapper.dart';
 import '../../../../core/result.dart';
 import '../../domain/repositories/example_feature_repository.dart';
@@ -27,16 +28,17 @@ class ExampleFeatureRepositoryImpl implements ExampleFeatureRepository {
       return Result.failure(mapDioError(e));
     } catch (e, stackTrace) {
       // Deliberately NOT a DioException — e.g. a response body that parsed
-      // but didn't have the shape ExampleItem.fromJson expected. Logging
-      // here (rather than the previous bare `catch (_)`) is the difference
-      // between this being visible and it being silently indistinguishable
-      // from a routine backend rejection — see ADR-0011.
-      _logger.e(
+      // but didn't have the shape ExampleItem.fromJson expected. Routing
+      // this through `unexpectedError` (rather than a bare `catch (_)`) is
+      // the difference between it being visible in the log and it being
+      // silently indistinguishable from a routine backend rejection — see
+      // ADR-0011.
+      return unexpectedError(
+        _logger,
         'ExampleFeatureRepositoryImpl.getExampleItem: unexpected error',
-        error: e,
-        stackTrace: stackTrace,
+        e,
+        stackTrace,
       );
-      return const Result.failure(UnknownFailure());
     }
   }
 }

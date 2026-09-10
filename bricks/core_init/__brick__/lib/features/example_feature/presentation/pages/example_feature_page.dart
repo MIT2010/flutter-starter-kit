@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../app/auth_status_notifier.dart';
 import '../../../../app/di.dart';
 import '../../../../app/theme/app_spacing.dart';
+import '../../../../app/widgets/confirm_dialog.dart';
 import '../../../auth/domain/repositories/auth_repository.dart';
 import '../cubit/example_feature_cubit.dart';
 import '../cubit/example_feature_state.dart';
@@ -38,6 +39,13 @@ class _ExampleFeatureView extends StatelessWidget {
             // one here just to call logout() would create an instance
             // that's never provided to a BlocProvider and never closed.
             onPressed: () async {
+              final confirmed = await confirmDialog(
+                context,
+                title: 'Log out?',
+                message: 'You will need to sign in again to continue.',
+                confirmLabel: 'Log out',
+              );
+              if (!confirmed || !context.mounted) return;
               await getIt<AuthRepository>().logout();
               await getIt<AuthStatusNotifier>().markUnauthenticated();
             },

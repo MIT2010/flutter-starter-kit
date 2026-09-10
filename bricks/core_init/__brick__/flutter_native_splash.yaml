@@ -1,0 +1,22 @@
+# Native splash screen. Run after providing the artwork:
+#   dart run flutter_native_splash:create
+#
+# TODO before first run:
+#   1. Add a centered logo PNG at assets/launcher/splash.png (transparent
+#      background; keep it well inside the canvas — it is not cropped, but
+#      it is scaled to a modest size).
+#   2. Set `color` (and `color_dark`) to your background colour.
+#   3. Flip the platform flags to match the platforms you actually ship.
+#   4. Delete this file if you don't ship a custom splash yet.
+flutter_native_splash:
+  color: "#FFFFFF"
+  color_dark: "#121212"
+  image: "assets/launcher/splash.png"
+  image_dark: "assets/launcher/splash.png"
+  android: true
+  ios: true
+  web: true
+  android_12:
+    image: "assets/launcher/splash.png"
+    icon_background_color: "#FFFFFF"
+    icon_background_color_dark: "#121212"

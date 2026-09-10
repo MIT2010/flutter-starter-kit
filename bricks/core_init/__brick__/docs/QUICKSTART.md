@@ -109,6 +109,21 @@ would pass silently. See `test/features/example_feature/` for the pattern:
 one Cubit test (success + failure `Result` paths) and one widget/golden test
 per feature.
 
+## App icon and splash screen
+
+`flutter_launcher_icons` and `flutter_native_splash` are already
+`dev_dependencies`, with a config file each at the repo root
+(`flutter_launcher_icons.yaml`, `flutter_native_splash.yaml`). They do
+nothing until you run them. Add your artwork under `assets/launcher/` per
+the TODO header in each file, then:
+
+```bash
+dart run flutter_launcher_icons
+dart run flutter_native_splash:create
+```
+
+Delete either config file if you're not ready to ship that yet.
+
 ## Further reading
 
 - `docs/ARCHITECTURE.md` — the full picture: the philosophy, what `app/` /
