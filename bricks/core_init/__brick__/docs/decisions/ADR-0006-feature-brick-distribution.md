@@ -56,9 +56,11 @@ own remote.
 - `mason make feature` from inside a *generated* project resolves the
   brick from `github.com/MIT2010/flutter-starter-kit` over the network.
   For local development of the kit itself, and for Checkpoint 2
-  verification, `feature` is invoked directly from a clone
-  (`mason make feature -o <target>`), which doesn't touch the git
-  reference at all.
+  verification, `feature` is invoked from a clone — either run from the
+  scratch project's own root (`cd <scratch> && mason make feature
+  --feature_name x`) or from anywhere with `FEATURE_PROJECT_NAME=<pkg>`
+  set and `-o <scratch>` (the pre_gen hook needs one or the other —
+  ADR-0015). Neither touches the git reference.
 - A private fork must change the URL in
   `bricks/core_init/__brick__/mason.yaml` to its own remote, or
   `mason make feature` in downstream projects will hit the public repo.

@@ -93,9 +93,12 @@ repository and a cubit with the DI container, and adding a route. Every
 one of those is a place to make a copy-paste mistake, and none of them is
 interesting work.
 
-`mason make feature --feature_name <name> --project_name <pkg>` does all
-of it in one pass: the three layers, the `@injectable` annotations, a
-`GoRoute` entry wired into `lib/app/router.dart`, and test skeletons.
+`mason make feature --feature_name <name>`, run from the project root,
+does all of it in one pass: the three layers, the `@injectable`
+annotations, a `GoRoute` entry wired into `lib/app/router.dart`, and test
+skeletons. (The package name for the generated imports is read from
+`pubspec.yaml` by a pre-generation hook — ADR-0015 — so it isn't asked
+for.)
 `lib/app/router.dart` carries two marker comments
 (`feature_brick:import_marker`, `feature_brick:route_marker`) that a
 post-generation hook edits — that is how the route gets added without you
@@ -721,6 +724,7 @@ one only when you need the *why*.
 | 0012 | `SessionExpiryInterceptor` is the default; refresh-token is the opt-in swap |
 | 0013 | A valueless `AppSpacing` scale ships; the theme extension is no longer a throwaway |
 | 0014 | Small shared helpers (`confirmDialog`, `unexpectedError`) and folder conventions carried back from downstream apps |
+| 0015 | The `feature` brick derives `project_name` from `pubspec.yaml` instead of prompting |
 
 ## Further reading
 

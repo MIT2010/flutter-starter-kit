@@ -85,17 +85,21 @@ app bar to sign out again.
 
 ## Adding a new feature
 
-Never hand-create the `data/domain/presentation` folders yourself. If this
-project has a `bricks/feature` brick (check for a `mason.yaml` at the repo
-root):
+Never hand-create the `data/domain/presentation` folders yourself. From
+the project root (there is a `mason.yaml` here registering the `feature`
+brick):
 
 ```bash
 mason get
-mason make feature --feature_name my_feature --project_name <this_project's_pubspec_name>
+mason make feature --feature_name my_feature
 ```
 
 This generates all three layers, registers DI, and adds a route skeleton in
-one pass. See `docs/decisions/` for the reasoning behind that rule.
+one pass. The package name for the generated test imports is read from
+this project's `pubspec.yaml`, so you don't pass it (ADR-0015). Run the
+command from the project root — the hook reads `./pubspec.yaml` and
+`./lib/app/router.dart` from there. See `docs/decisions/` for the
+reasoning behind the "always use the generator" rule.
 
 **Windows:** `mason get` pulls the `feature` brick from the starter kit's
 git repo into a cache directory whose path is long enough that, combined

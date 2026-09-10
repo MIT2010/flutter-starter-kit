@@ -1,10 +1,10 @@
 # Registers the `feature` brick for use from within THIS generated project
-# (`mason make feature --feature_name my_feature --project_name {{project_name}}`).
+# (`mason make feature --feature_name my_feature`, run from the project
+# root — the package name is read from pubspec.yaml, see ADR-0015).
 #
 # The `feature` brick's source lives in the starter kit repo you generated
-# this project from, not inside this project — update the URL below to that
-# repo's real remote once you've pushed it (or push this starter kit's repo
-# yourself if you're the one maintaining it). See docs/decisions for why
+# this project from, not inside this project. If you fork or re-host the
+# kit, point the URL below at your own remote. See docs/decisions for why
 # this isn't a local path or a bundled copy.
 bricks:
   feature:

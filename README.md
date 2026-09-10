@@ -38,11 +38,17 @@ cd ../my_new_app
 cat docs/QUICKSTART.md   # onboarding path for the generated project itself
 ```
 
-To scaffold a feature into an existing generated project:
+To scaffold a feature into an existing generated project, run from that
+project's root:
 
 ```bash
-mason make feature -o ../my_new_app --feature_name payments --project_name my_new_app
+cd ../my_new_app
+mason make feature --feature_name payments
 ```
+
+`project_name` is not passed — a pre_gen hook reads it from the project's
+`pubspec.yaml` (ADR-0015). To generate from outside the project instead
+(`-o <dir>`), set `FEATURE_PROJECT_NAME=<pkg>` in the environment.
 
 (A *generated* project's own `mason make feature` resolves the `feature`
 brick from this repo over git — see

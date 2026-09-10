@@ -1,5 +1,8 @@
 name: feature_hooks
-description: Post-generation hook for the `feature` brick — wires the new screen into app/router.dart.
+description: >-
+  Hooks for the `feature` brick: pre_gen derives project_name from the
+  target project's pubspec.yaml; post_gen wires the new screen into
+  app/router.dart.
 version: 0.1.0
 publish_to: none
 
