@@ -1,41 +1,30 @@
 # Flutter Starter Kit
 
-**A progressive-disclosure Flutter starter kit — a real architecture on day one, without the ceremony.**
+**A real architecture on day one — the layering, error handling, DI, networking,
+and the known-bug guards are already decided and tested.**
 
-Two [Mason](https://pub.dev/packages/mason_cli) bricks generate a complete,
-tested, single-package project and scaffold every feature into it. Opinionated
-where it prevents bugs, deliberately silent on visual identity.
+Two [Mason](https://pub.dev/packages/mason_cli) bricks: one generates a
+complete single-package project, the other scaffolds every feature into it.
+Opinionated where it prevents bugs, deliberately silent on visual identity.
 
-![Flutter 3.44.7 (pinned)](https://img.shields.io/badge/Flutter-3.44.7%20pinned-02569B?logo=flutter&logoColor=white)
+![Flutter 3.44.7 pinned](https://img.shields.io/badge/Flutter-3.44.7%20pinned-02569B?logo=flutter&logoColor=white)
 ![Tooling: Mason](https://img.shields.io/badge/tooling-Mason-F9A825)
 ![Lints: flutter_lints](https://img.shields.io/badge/lints-flutter__lints-4BC0F5)
-![ADRs: 15](https://img.shields.io/badge/ADRs-15-6E56CF)
+![ADRs: 16](https://img.shields.io/badge/ADRs-16-6E56CF)
 ![PRs welcome](https://img.shields.io/badge/PRs-welcome-2EA043)
 
 ---
 
-## What you get
+## Is this for you?
 
-`mason make core_init` produces a project that already has:
+**Use it** when you're starting a new production Flutter app and want the
+architecture settled — one feature shape everywhere, failures as values, a
+generator for the boilerplate, and a handful of well-known production bugs
+prevented by structure rather than by review.
 
-| Area | What's in the box |
-|---|---|
-| **Structure** | `data / domain / presentation` per feature — one shape, no flat variant. Single package (Layer 0); the monorepo split is opt-in. |
-| **Errors** | `Result<Failure, S>` — no exceptions cross into the UI, no `null`-means-failure. A `Failure` hierarchy with user-safe messages. |
-| **State** | Cubit + `flutter_bloc`, one sealed state class per feature. `emit`-after-`close` guards baked into the templates. |
-| **DI** | `get_it` + `injectable` — every registration generated, never hand-typed. |
-| **Network** | One shared `Dio`. Auth, redacted-logging, and session-expiry interceptors, all attached, with a test that fails if one isn't. A refresh-token interceptor ships alongside as a one-file swap. |
-| **Routing** | One `go_router` with a cold-start-safe auth guard (tells "not checked yet" from "logged out"), plus a `requireExtra<T>()` guard for reload-safe `extra`. |
-| **Storage** | `hive_ce` behind a thin `HiveClient`. A discoverable temp-file cleanup path. |
-| **Logging** | Structured `logger`, a `BlocObserver` and a `NavigatorObserver` for app-flow tracing — type names only, never state contents. |
-| **Config** | Per-environment values via `--dart-define-from-file` JSON, defaulting so bare `flutter run` works. |
-| **Tests** | Golden tests that load real fonts, a cubit + widget test per feature, and the kit's own infrastructure tested too. |
-| **Docs** | 15 ADRs, a full `ARCHITECTURE.md`, a migration playbook, a PWA checklist. |
-
-**What it does not ship:** a design system, a component library, a palette, or
-a font. `lib/app/theme/` is a replaceable `ColorScheme.fromSeed` placeholder
-plus one valueless `AppSpacing` scale (`context.spacing.md`) — a consistency
-mechanism, not a look. See [ADR-0013](bricks/core_init/__brick__/docs/decisions/ADR-0013-spacing-scaffold.md).
+**Skip it** if you want a UI kit, a component library, or a design system —
+it ships none of those on purpose (`lib/app/theme/` is a bare placeholder).
+Also skip it if you want a minimal "hello world"; this has opinions.
 
 ## Quickstart
 
@@ -49,42 +38,70 @@ mason make core_init -o ../my_app --project_name my_app --description "My app"
 cd ../my_app
 ```
 
-That directory is a runnable project. Its own
-[`docs/QUICKSTART.md`](bricks/core_init/__brick__/docs/QUICKSTART.md) takes it
-from there — `flutter pub get`, code-gen, `flutter run`.
+That directory is a runnable project.
+[`docs/QUICKSTART.md`](bricks/core_init/__brick__/docs/QUICKSTART.md) inside it
+takes over — `flutter pub get`, code-gen, `flutter run`. The first screen is a
+"You're all set" page that fetches live data, so one run confirms the whole
+data → domain → presentation → `Result` path works.
 
-The generated project pins its Flutter SDK in `.fvmrc` (`3.44.7`), and its
-CI builds against that pin — the golden tests and the `freezed` /
-`injectable_generator` versions are tied to a specific analyzer, so the
-SDK can't float. [FVM](https://fvm.app) is the easy way to match it but
-isn't required; nothing shells out to `fvm`. See
-[ADR-0016](bricks/core_init/__brick__/docs/decisions/ADR-0016-flutter-sdk-pin.md).
-
-To add a feature, from the project root:
+Add a feature from the project root:
 
 ```bash
 mason make feature --feature_name payments
 ```
 
-All three layers, the DI annotations, a wired `GoRoute`, and test skeletons —
-in one pass. `project_name` is read from `pubspec.yaml`, so you don't pass it
+All three layers, the DI annotations, a wired `GoRoute`, and test skeletons in
+one pass. `project_name` is read from `pubspec.yaml`, so you don't pass it
 ([ADR-0015](bricks/core_init/__brick__/docs/decisions/ADR-0015-feature-brick-derives-project-name.md)).
 
-> Prefer running `mason make` from anywhere without cloning first? See
-> [Advanced install](#advanced-install-global-windows-private-repos) below.
+> To run `mason make` from any directory without cloning first, see
+> [Advanced install](#advanced-install).
 
-## The idea
+## What you get
 
-Most Flutter architecture decisions are really about scale, so this kit picks a
-default and defers the rest. You start with Layers 0–3 (single package, the
-list above). Layer 4 — a Melos multi-package split — exists but stays off until
-a separate migration brick turns it on, which is only justified once two real
-apps share code.
+`mason make core_init` produces a project that already has:
 
-The full reasoning, the `app` / `core` / `features` split, how the layers talk,
-and a guide for deciding where new code belongs are in
-[`ARCHITECTURE.md`](bricks/core_init/__brick__/docs/ARCHITECTURE.md) — it ships
-into every generated project too.
+| Area | What's in the box |
+|---|---|
+| **Structure** | `data / domain / presentation` per feature — one shape, no flat variant. Single package by default. |
+| **Errors** | `Result<Failure, S>` — no exceptions reach the UI, no `null`-means-failure. A `Failure` hierarchy with user-safe messages. |
+| **State** | Cubit + `flutter_bloc`, one sealed state per feature. `emit`-after-`close` guards baked into the templates. |
+| **DI** | `get_it` + `injectable` — every registration generated, never hand-typed. |
+| **Network** | One shared `Dio`. Auth, redacted-logging, and session-expiry interceptors, all attached, with a test that fails if one isn't. A refresh-token interceptor sits alongside as a one-file swap. |
+| **Routing** | One `go_router` with a cold-start-safe auth guard (tells "not checked yet" from "logged out"), plus a `requireExtra<T>()` guard for reload-safe `extra`. |
+| **Storage** | `hive_ce` behind a thin `HiveClient`. A discoverable temp-file cleanup path. |
+| **Logging** | Structured `logger`, a `BlocObserver` + `NavigatorObserver` for app-flow tracing — type names only, never state contents. |
+| **Config** | Per-environment values via `--dart-define-from-file` JSON, defaulting so bare `flutter run` works. |
+| **Tests** | Golden tests that load real fonts, a cubit + widget test per feature, the kit's own infrastructure tested too. CI runs it all. |
+| **Docs** | 16 ADRs, a full `ARCHITECTURE.md`, a migration playbook, a PWA checklist — all shipped into the generated project. |
+
+**What it does not ship:** a design system, a component library, a palette, or a
+font. `lib/app/theme/` is a replaceable `ColorScheme.fromSeed` placeholder plus
+one valueless `AppSpacing` scale (`context.spacing.md`) — a consistency
+mechanism, not a look
+([ADR-0013](bricks/core_init/__brick__/docs/decisions/ADR-0013-spacing-scaffold.md)).
+
+## Architecture, in one paragraph
+
+Progressive disclosure. You start at Layers 0–3: a single package with the
+list above. Layer 4 — a Melos multi-package split — exists only as an opt-in
+`upgrade_to_monorepo` migration brick (not built yet), and it is justified
+only when two or more real apps share code, never "we might need it one day".
+Nothing adds multi-package structure by hand.
+
+The full reasoning, the `app` / `core` / `features` split, how the layers
+communicate, and a guide for deciding where new code belongs are in
+[`ARCHITECTURE.md`](bricks/core_init/__brick__/docs/ARCHITECTURE.md).
+
+## SDK version
+
+`.fvmrc` pins Flutter `3.44.7`, and CI builds against that pin. The golden
+tests and the `freezed` / `injectable_generator` versions are tied to one
+analyzer, so the SDK can't float. [FVM](https://fvm.app) is the convenient way
+to match the pin — it isn't required, and nothing shells out to `fvm`. Bumping
+it is routine but coordinated: edit `.fvmrc`, re-run code-gen and
+`flutter test --update-goldens`
+([ADR-0016](bricks/core_init/__brick__/docs/decisions/ADR-0016-flutter-sdk-pin.md)).
 
 ## Repo layout
 
@@ -92,11 +109,8 @@ into every generated project too.
 flutter-starter-kit/
 ├── mason.yaml                    # registers both bricks for local use
 ├── bricks/
-│   ├── core_init/
-│   │   ├── brick.yaml
-│   │   └── __brick__/            # the generated project, verbatim + templated
+│   ├── core_init/__brick__/      # the generated project, verbatim + templated
 │   └── feature/
-│       ├── brick.yaml
 │       ├── __brick__/            # per-feature file templates
 │       └── hooks/
 │           ├── pre_gen.dart      # derives project_name from pubspec.yaml
@@ -104,8 +118,8 @@ flutter-starter-kit/
 └── docs/proposals/              # cross-project findings staged for the kit
 ```
 
-Documentation lives inside the `core_init` brick so a generated project carries
-its own copy:
+Docs live inside the `core_init` brick, so every generated project carries its
+own copy:
 
 | Doc | For |
 |---|---|
@@ -115,22 +129,19 @@ its own copy:
 | [`docs/PWA-CHECKLIST.md`](bricks/core_init/__brick__/docs/PWA-CHECKLIST.md) | what a mobile-first app gets wrong on the web |
 | [`docs/decisions/`](bricks/core_init/__brick__/docs/decisions/) | one ADR per deliberate choice |
 
-## Advanced install: global, Windows, private repos
+## Advanced install
 
-### Run `mason make` from anywhere
+### Run `mason make` from any directory
 
 The quickstart needs `mason.yaml` in the current directory. Register the bricks
-globally once to skip that.
-
-From the git repo (portable — any machine with GitHub access):
+globally once to skip that — from the git repo (portable):
 
 ```bash
 mason add -g core_init --git-url https://github.com/MIT2010/flutter-starter-kit --git-path bricks/core_init
 mason add -g feature   --git-url https://github.com/MIT2010/flutter-starter-kit --git-path bricks/feature
 ```
 
-Or from a local clone (no network per use; sidesteps the Windows path issue
-below; simplest for a private repo — you clone once with your own credentials):
+…or from a local clone (no network per use; simplest for a private repo):
 
 ```bash
 git clone https://github.com/MIT2010/flutter-starter-kit  ~/src/fsk
@@ -138,53 +149,28 @@ mason add -g core_init --path ~/src/fsk/bricks/core_init
 mason add -g feature   --path ~/src/fsk/bricks/feature
 ```
 
-Then, from anywhere:
+Then `mason make core_init -o <dir> …` and `mason make feature` work anywhere.
+`mason list -g` / `mason remove -g <name>` manage them; a `--git-url` install
+pins to a commit (re-run `mason add -g` to advance), a `--path` install tracks
+the clone.
 
-```bash
-mkdir my_app && cd my_app
-mason make core_init -o . --project_name my_app --description "…"
-mason make feature --feature_name payments        # from a project root
-```
+### Windows
 
-`mason list -g` and `mason remove -g <name>` manage them. A `--git-url` install
-pins to the commit it resolved (re-run `mason add -g` to advance it); a
-`--path` install tracks the clone (`git pull` and you're current).
-
-### Windows: point `MASON_CACHE` at a short path
-
-Mason caches a git-sourced brick under
-`%LOCALAPPDATA%\Mason\Cache\git\<repo>_<base64 url>_<40-char sha>\…` — a ~180-
-character prefix before the brick's own files. On Windows, especially with a
-long user name, `mason add --git-url` / `mason get` then exceeds the
-260-character path limit and fails with `PathNotFoundException: Directory
-listing failed`.
-
-Fix it once:
-
-```bat
-setx MASON_CACHE C:\mc
-```
-
-Open a new terminal so it picks up the variable. Or use the `--path` install
-form above, which never touches that long cache path. macOS and Linux are
-unaffected.
+Mason's git-brick cache path (`%LOCALAPPDATA%\Mason\Cache\git\<repo>_<base64
+url>_<sha>\…`) is long enough that, with a long user name, `mason get` /
+`mason add --git-url` can exceed the 260-character path limit and fail with
+`PathNotFoundException`. Fix: `setx MASON_CACHE C:\mc` and open a new terminal,
+or use the `--path` install form above. macOS and Linux are unaffected.
 
 ### Private repo
 
-Mason shells out to `git clone`, so it uses your git credential helper —
-nothing mason-specific. `--git-url` against a private repo works wherever
-`git clone <that url>` works: run `gh auth setup-git`, or use an `ssh` URL with
-a key on your account. Don't put a token in the URL — it lands in mason's cache
-path. The `--path` form avoids the question entirely.
-
-## Layer 4 (multi-package monorepo)
-
-Not built yet. It will be strictly opt-in, triggered by an explicit
-`upgrade_to_monorepo` migration brick — never the default. The trigger is "two
-or more real apps sharing code", not "we might need it one day".
+Mason runs `git clone`, so it uses your git credential helper — run
+`gh auth setup-git`, or use an `ssh` URL with a key on your account. Don't put a
+token in the URL (it lands in the cache path); the `--path` form avoids the
+question entirely.
 
 ## License
 
 No license file is bundled — add one before sharing the kit publicly. Code you
 generate with `core_init` / `feature` is your own project's, under whatever
-license you choose for it.
+license you pick for it.
